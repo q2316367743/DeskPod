@@ -1,5 +1,5 @@
 import { logDebug } from '@/lib/log'
-import { generatePlaceholders, useSnowflake } from '@/util'
+import { generatePlaceholders, useSnowflake } from '@/utils'
 import { SqlBase } from '@/lib/sql'
 
 export interface TableLike extends Record<string, unknown> {

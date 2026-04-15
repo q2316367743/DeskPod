@@ -126,7 +126,7 @@ export const getDirectory = (pluginId: string, directory: BaseDirectory) => {
       // $RESOURCE
       return join(app.getPath('appData'), 'plugins', pluginId, 'resource'))
     case 12:
-      return app.getPath('temp'))
+      return app.getPath('temp')
     case 13:
       // $APP_CONFIG
       return join(app.getPath('appData'), 'plugins', pluginId, 'config')

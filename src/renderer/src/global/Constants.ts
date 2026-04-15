@@ -1,5 +1,5 @@
 import { appDataDir } from '@tauri-apps/api/path'
-import { joinPath } from '@/util/lang/FileUtil'
+import { joinPath } from '@/utils/lang/FileUtil'
 import { exists, mkdir } from '@tauri-apps/plugin-fs'
 import { useColorMode } from '@/hooks/ColorMode'
 import { useBoolState } from '@/hooks'

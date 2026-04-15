@@ -29,10 +29,10 @@
 import { BaseDirectory, join } from '@tauri-apps/api/path'
 import { exists, mkdir, writeFile } from '@tauri-apps/plugin-fs'
 import { convertFileSrc } from '@tauri-apps/api/core'
-import { useSnowflake } from '@/util'
+import { useSnowflake } from '@/utils'
 import type { PropType } from 'vue'
 import { APP_DATA_ASSET_DIR } from '@/global/Constants'
-import { joinPath } from '@/util/lang/FileUtil'
+import { joinPath } from '@/utils/lang/FileUtil'
 
 const modelValue = defineModel({
   type: String,

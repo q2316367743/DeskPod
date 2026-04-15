@@ -3,8 +3,8 @@ import { resolveResource } from '@tauri-apps/api/path'
 import { readTextFile } from '@tauri-apps/plugin-fs'
 import { APP_DATA_DB_PATH, LOG_MIGRATE_FILES, MAIN_MIGRATE_FILES } from '@/global/Constants'
 import { logDebug, logError, logInfo } from '@/lib/log'
-import { QueryChain } from '@/util/file/QueryWrapper'
-import { BaseMapper, generatePlaceholders, type TableLike } from '@/util'
+import { QueryChain } from '@/utils/file/QueryWrapper'
+import { BaseMapper, generatePlaceholders, type TableLike } from '@/utils'
 
 type TableName =
   | 'release_project'

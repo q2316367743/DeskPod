@@ -1,5 +1,5 @@
 import { logDebug } from '@/lib/log'
-import { generatePlaceholders } from '@/util'
+import { generatePlaceholders } from '@/utils'
 import type { PageResponse } from '@/global/CommonType.ts'
 import { SqlBase } from '@/lib/sql'
 

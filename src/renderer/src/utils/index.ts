@@ -1,6 +1,6 @@
-import MessageUtil from '@/util/model/MessageUtil'
-import MessageBoxUtil from '@/util/model/MessageBoxUtil'
-import NotificationUtil from '@/util/model/NotificationUtil'
+import MessageUtil from '@/utils/model/MessageUtil'
+import MessageBoxUtil from '@/utils/model/MessageBoxUtil'
+import NotificationUtil from '@/utils/model/NotificationUtil'
 
 export * from './lang/Snowflake'
 

@@ -3,6 +3,7 @@
   "include": [
     "src/renderer/src/env.d.ts",
     "src/renderer/src/**/*",
+    "src/common/**/*",
     "src/renderer/src/**/*.vue",
     "src/preload/*.d.ts",
     "src/renderer/auto-imports.d.ts",
@@ -14,6 +15,9 @@
     "paths": {
       "@/*": [
         "src/renderer/src/*"
+      ],
+      "@common/*": [
+        "src/common/*"
       ]
     }
   }
