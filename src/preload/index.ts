@@ -4,7 +4,7 @@ import { DesktopNode } from '@common/types/DesktopNode'
 // 桌面管理相关 IPC 调用
 export const desktopAPI = {
   // 获取桌面节点树
-  getTree: (desktopId?: string): Promise<{ widgets: DesktopNode[]; items: DesktopNode[] }> => {
+  getTree: (desktopId?: string): Promise<DesktopNode[]> => {
     return ipcRenderer.invoke('desktop:getTree', desktopId)
   },
 
@@ -62,7 +62,6 @@ if (process.contextIsolated) {
     console.error(error)
   }
 } else {
-  // @ts-expect-error - fallback for non-isolated context
   window.desktopAPI = desktopAPI
 }
 

@@ -3,7 +3,7 @@
     <!-- 桌面图标网格 -->
     <DesktopGrid :items="desktopItems" @add-app="handleAddApp" @add-link="handleAddLink" />
 
-    <DockFooter />
+    <DockFooter :items="dockItems" />
 
     <!-- 添加节点弹窗 -->
     <AddNodeModal
@@ -26,18 +26,30 @@ import { openLinkAppDialog } from '@/desktop/add/AddLinkDialog'
 type ModalType = 'app' | 'link' | null
 
 const desktopItems = ref<DesktopNode[]>([])
+const dockItems = ref<DesktopNode[]>([])
 const showModal = ref(false)
 const modalType = ref<ModalType>(null)
 const DEFAULT_DESKTOP_ID = 'desktop-1'
+const DEFAULT_DOCK_ID = 'dock'
 
 // 加载桌面数据
 const loadDesktopData = async () => {
   if (window.desktopAPI) {
     try {
-      const data = await window.desktopAPI.getTree(DEFAULT_DESKTOP_ID)
-      desktopItems.value = data.items || []
+      desktopItems.value = await window.desktopAPI.getTree(DEFAULT_DESKTOP_ID)
     } catch (error) {
       console.error('Failed to load desktop data:', error)
+    }
+  }
+}
+
+// 加载 Dock 数据
+const loadDockData = async () => {
+  if (window.desktopAPI) {
+    try {
+      dockItems.value = await window.desktopAPI.getTree(DEFAULT_DOCK_ID)
+    } catch (error) {
+      console.error('Failed to load dock data:', error)
     }
   }
 }
@@ -96,6 +108,7 @@ const handleSubmitNode = async (data: {
 
 onMounted(() => {
   loadDesktopData()
+  loadDockData()
 })
 </script>
 

@@ -43,26 +43,7 @@ ipcMain.handle('desktop:getTree', (_event, desktopId: string = DEFAULT_DESKTOP_I
   const { nodes: allNodes } = readData()
 
   // 1. 过滤出当前桌面的节点
-  const desktopNodes = allNodes.filter((n) => n.desktopId === desktopId)
-
-  // 2. 构建树 (递归)
-  function buildTree(parentId: string | null): Array<DesktopNode> {
-    return desktopNodes
-      .filter((n) => n.parentId === parentId)
-      .sort((a, b) => a.sortIndex - b.sortIndex)
-      .map((node) => {
-        if (node.type === 'folder') {
-          return { ...node, children: buildTree(node.id) }
-        }
-        return node
-      })
-  }
-
-  // 返回结构：{ widgets: [...], items: [文件夹树...] }
-  return {
-    widgets: desktopNodes.filter((n) => n.type === 'widget'),
-    items: buildTree(null) // 根节点
-  }
+  return allNodes.filter((n) => n.desktopId === desktopId)
 })
 
 // 新增/更新节点

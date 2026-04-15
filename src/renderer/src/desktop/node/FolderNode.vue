@@ -26,6 +26,10 @@ defineProps({
   items: {
     type: Object as PropType<Array<DesktopNode>>,
     required: true
+  },
+  dockMode: {
+    type: Boolean,
+    default: false
   }
 })
 

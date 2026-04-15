@@ -162,6 +162,10 @@
     --fluent-radius-smooth: 8px;
     --fluent-radius-card: 12px;
     --fluent-radius-large: 16px;
+    --fluent-radius-dock: 16px;
+    --dock-padding: 8px;
+    --dock-gap: 4px;
+    --dock-gap-bottom: 16px;
 }
 
 :root[theme-mode="dark"] {
@@ -328,6 +332,10 @@
     --fluent-radius-smooth: 8px;
     --fluent-radius-card: 12px;
     --fluent-radius-large: 16px;
+    --fluent-radius-dock: 16px;
+    --dock-padding: 8px;
+    --dock-gap: 4px;
+    --dock-gap-bottom: 16px;
 }
 
 :root {

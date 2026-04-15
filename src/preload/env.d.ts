@@ -1,7 +1,7 @@
 import { DesktopNode } from '@common/types/DesktopNode'
 
 interface DesktopAPI {
-  getTree: (desktopId?: string) => Promise<{ widgets: DesktopNode[]; items: DesktopNode[] }>
+  getTree: (desktopId?: string) => Promise<DesktopNode[]>
   updateNode: (node: DesktopNode) => Promise<DesktopNode>
   updateNodes: (nodes: DesktopNode[]) => Promise<DesktopNode[]>
   deleteNode: (nodeId: string) => Promise<string[]>

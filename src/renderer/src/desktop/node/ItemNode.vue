@@ -23,12 +23,18 @@
 <script lang="ts" setup>
 import { DesktopNode } from '@common/types/DesktopNode'
 
-defineProps({
+const props = defineProps({
   node: {
     type: Object as PropType<DesktopNode>,
     required: true
+  },
+  dockMode: {
+    type: Boolean,
+    default: false
   }
 })
+
+const nodeSize = computed(() => props.dockMode ? '52px' : '48px')
 
 const getNodeIcon = (node: DesktopNode) => {
   if (node.icon) {
@@ -74,8 +80,8 @@ const handleContextMenu = (e: MouseEvent) => {
 }
 
 .icon-wrapper {
-  width: 48px;
-  height: 48px;
+  width: v-bind(nodeSize);
+  height: v-bind(nodeSize);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,15 +89,15 @@ const handleContextMenu = (e: MouseEvent) => {
 }
 
 .icon-image {
-  width: 48px;
-  height: 48px;
+  width: v-bind(nodeSize);
+  height: v-bind(nodeSize);
   border-radius: var(--fluent-radius-smooth);
   object-fit: cover;
 }
 
 .icon-placeholder {
-  width: 48px;
-  height: 48px;
+  width: v-bind(nodeSize);
+  height: v-bind(nodeSize);
   border-radius: var(--fluent-radius-smooth);
   background: var(--fluent-gradient-primary);
   display: flex;
