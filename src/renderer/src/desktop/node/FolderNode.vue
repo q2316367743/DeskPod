@@ -1,53 +1,3 @@
-<script lang="ts" setup>
-import { ref, computed, watch } from 'vue'
-import { DesktopNode } from '@common/types/DesktopNode'
-import { FolderIcon, ArrowRightIcon } from 'tdesign-icons-vue-next'
-
-const props = defineProps<{
-  items: DesktopNode[]
-  expanded?: boolean
-}>()
-
-const emit = defineEmits<{
-  click: [node: DesktopNode]
-  contextmenu: [node: DesktopNode, e: MouseEvent]
-}>()
-
-const isExpanded = ref(props.expanded ?? false)
-
-const toggleExpand = (e: MouseEvent) => {
-  e.stopPropagation()
-  isExpanded.value = !isExpanded.value
-}
-
-const handleFolderClick = (e: MouseEvent) => {
-  e.stopPropagation()
-  toggleExpand(e)
-}
-
-// 过滤出文件夹和非文件夹
-const folders = computed(() => props.items.filter((n) => n.type === 'folder'))
-const nonFolders = computed(() => props.items.filter((n) => n.type !== 'folder'))
-
-const handleItemClick = (node: DesktopNode) => {
-  if (node.type === 'folder') {
-    // 展开文件夹
-    isExpanded.value = true
-  } else {
-    emit('click', node)
-  }
-}
-
-watch(
-  () => props.expanded,
-  (val) => {
-    if (val !== undefined) {
-      isExpanded.value = val
-    }
-  }
-)
-</script>
-
 <template>
   <div class="folder-node">
     <div class="folder-header" @click="handleFolderClick">
@@ -58,18 +8,39 @@ watch(
 
     <transition name="folder-expand">
       <div v-if="isExpanded" class="folder-children">
-        <template v-for="item in items" :key="item.id">
-          <DesktopIcon
-            v-if="item.type !== 'folder'"
-            :node="item"
-            @click="handleItemClick"
-            @contextmenu="emit('contextmenu', item, $event)"
-          />
-        </template>
+        <ItemNode v-for="item in items" :key="item.id" :node="item" />
       </div>
     </transition>
   </div>
 </template>
+<script lang="ts" setup>
+import { DesktopNode } from '@common/types/DesktopNode'
+import { ArrowRightIcon, FolderIcon } from 'tdesign-icons-vue-next'
+import ItemNode from '@/desktop/node/ItemNode.vue'
+
+defineProps({
+  node: {
+    type: Object as PropType<DesktopNode>,
+    required: true
+  },
+  items: {
+    type: Object as PropType<Array<DesktopNode>>,
+    required: true
+  }
+})
+
+const isExpanded = ref(false)
+
+const toggleExpand = (e: MouseEvent) => {
+  e.stopPropagation()
+  isExpanded.value = !isExpanded.value
+}
+
+const handleFolderClick = (e: MouseEvent) => {
+  e.stopPropagation()
+  toggleExpand(e)
+}
+</script>
 
 <style lang="less" scoped>
 .folder-node {

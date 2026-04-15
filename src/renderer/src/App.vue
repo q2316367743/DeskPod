@@ -1,19 +1,9 @@
 <template>
   <div class="desktop-home">
-    <!-- 日期时间 -->
-    <DateTimeHeader />
-
-    <!-- 搜索栏 -->
-    <SearchBar />
-
     <!-- 桌面图标网格 -->
-    <DesktopGrid
-      :items="desktopItems"
-      @click="handleIconClick"
-      @contextmenu="handleContextMenu"
-      @add-app="handleAddApp"
-      @add-link="handleAddLink"
-    />
+    <DesktopGrid :items="desktopItems" @add-app="handleAddApp" @add-link="handleAddLink" />
+
+    <DockFooter />
 
     <!-- 添加节点弹窗 -->
     <AddNodeModal
@@ -26,13 +16,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
 import { DesktopNode } from '@common/types/DesktopNode'
-import DateTimeHeader from '@/components/desktop/DateTimeHeader.vue'
-import SearchBar from '@/components/desktop/SearchBar.vue'
-import DesktopGrid from '@/components/desktop/DesktopGrid.vue'
-import AddNodeModal from '@/components/desktop/AddNodeModal.vue'
 import { MessageUtil } from '@/utils'
+import DesktopGrid from '@/desktop/layout/DesktopGrid.vue'
+import AddNodeModal from '@/components/desktop/AddNodeModal.vue'
+import DockFooter from '@/desktop/layout/DockFooter.vue'
+import { openLinkAppDialog } from '@/desktop/add/AddLinkDialog'
 
 type ModalType = 'app' | 'link' | null
 
@@ -53,18 +42,6 @@ const loadDesktopData = async () => {
   }
 }
 
-// 点击图标
-const handleIconClick = async (node: DesktopNode) => {
-  if (window.desktopAPI) {
-    await window.desktopAPI.openApp(node)
-  }
-}
-
-// 右键菜单
-const handleContextMenu = (_node: DesktopNode, e: MouseEvent) => {
-  console.log('contextmenu', e)
-}
-
 // 打开添加应用弹窗
 const handleAddApp = () => {
   modalType.value = 'app'
@@ -73,8 +50,7 @@ const handleAddApp = () => {
 
 // 打开添加链接弹窗
 const handleAddLink = () => {
-  modalType.value = 'link'
-  showModal.value = true
+  openLinkAppDialog(DEFAULT_DESKTOP_ID, loadDesktopData)
 }
 
 // 关闭弹窗
@@ -99,6 +75,8 @@ const handleSubmitNode = async (data: {
       parentId: null,
       sortIndex: desktopItems.value.length,
       desktopId: DEFAULT_DESKTOP_ID,
+      row: 0,
+      column: 0,
       meta: {
         ...(data.path && { executablePath: data.path }),
         ...(data.url && { url: data.url })

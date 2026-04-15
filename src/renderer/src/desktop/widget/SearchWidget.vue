@@ -1,3 +1,44 @@
+<template>
+  <div class="search-bar-container">
+    <div class="engine-tabs">
+      <button
+        v-for="engine in engines"
+        :key="engine.key"
+        :class="['engine-tab', { active: currentEngine === engine.key }]"
+        @click="switchEngine(engine.key)"
+      >
+        {{ engine.name }}
+      </button>
+    </div>
+
+    <div class="search-input-wrapper">
+      <SearchIcon class="search-icon" size="20px" />
+      <input
+        v-model="query"
+        type="text"
+        class="search-input"
+        :placeholder="activeEngine.placeholder"
+        @keydown="handleKeyDown"
+      />
+      <button class="search-btn" @click="handleSearch">搜索</button>
+    </div>
+
+    <!-- 自动完成建议 -->
+    <transition name="fade">
+      <div v-if="showSuggestions && suggestions.length > 0" class="suggestions-dropdown">
+        <div
+          v-for="(item, index) in suggestions"
+          :key="index"
+          class="suggestion-item"
+          @click="selectSuggestion(item.text)"
+        >
+          <span class="suggestion-text">{{ item.text }}</span>
+        </div>
+      </div>
+    </transition>
+  </div>
+</template>
+
 <script lang="ts" setup>
 import { SearchIcon } from 'tdesign-icons-vue-next'
 
@@ -138,47 +179,6 @@ import { onMounted, onUnmounted } from 'vue'
 onMounted(() => document.addEventListener('click', handleClickOutside))
 onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 </script>
-
-<template>
-  <div class="search-bar-container">
-    <div class="engine-tabs">
-      <button
-        v-for="engine in engines"
-        :key="engine.key"
-        :class="['engine-tab', { active: currentEngine === engine.key }]"
-        @click="switchEngine(engine.key)"
-      >
-        {{ engine.name }}
-      </button>
-    </div>
-
-    <div class="search-input-wrapper">
-      <SearchIcon class="search-icon" size="20px" />
-      <input
-        v-model="query"
-        type="text"
-        class="search-input"
-        :placeholder="activeEngine.placeholder"
-        @keydown="handleKeyDown"
-      />
-      <button class="search-btn" @click="handleSearch">搜索</button>
-    </div>
-
-    <!-- 自动完成建议 -->
-    <transition name="fade">
-      <div v-if="showSuggestions && suggestions.length > 0" class="suggestions-dropdown">
-        <div
-          v-for="(item, index) in suggestions"
-          :key="index"
-          class="suggestion-item"
-          @click="selectSuggestion(item.text)"
-        >
-          <span class="suggestion-text">{{ item.text }}</span>
-        </div>
-      </div>
-    </transition>
-  </div>
-</template>
 
 <style lang="less" scoped>
 .search-bar-container {

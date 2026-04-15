@@ -1,135 +1,16 @@
-<script lang="ts" setup>
-import { DesktopNode } from '@common/types/DesktopNode'
-import DesktopIcon from './DesktopIcon.vue'
-import DesktopFolder from './DesktopFolder.vue'
-import { AddIcon } from 'tdesign-icons-vue-next'
-
-const props = defineProps<{
-  items: DesktopNode[]
-}>()
-
-const emit = defineEmits<{
-  click: [node: DesktopNode]
-  contextmenu: [node: DesktopNode, e: MouseEvent]
-  addApp: []
-  addLink: []
-}>()
-
-const DEFAULT_DESKTOP_ID = 'desktop-1'
-
-// 分类：widget 区域和普通图标区域
-const widgets = computed(() => props.items.filter((n) => n.type === 'widget'))
-const regularItems = computed(() => props.items.filter((n) => n.type !== 'widget'))
-
-// 文件夹项和非文件夹项
-const folderItems = computed(() => {
-  const folders = new Map<string, DesktopNode[]>()
-  const standalone: DesktopNode[] = []
-
-  for (const item of regularItems.value) {
-    if (item.parentId) {
-      if (!folders.has(item.parentId)) {
-        folders.set(item.parentId, [])
-      }
-      folders.get(item.parentId)!.push(item)
-    } else {
-      standalone.push(item)
-    }
-  }
-
-  return { folders, standalone }
-})
-
-const handleClick = (node: DesktopNode) => {
-  emit('click', node)
-}
-
-const handleContextMenu = (node: DesktopNode, e: MouseEvent) => {
-  emit('contextmenu', node, e)
-}
-
-// 打开应用
-const openNode = async (node: DesktopNode) => {
-  if (window.desktopAPI) {
-    await window.desktopAPI.openApp(node)
-  }
-}
-
-const onIconClick = async (node: DesktopNode) => {
-  emit('click', node)
-  await openNode(node)
-}
-
-// 添加应用/链接
-const handleAddApp = () => {
-  emit('addApp')
-}
-
-const handleAddLink = () => {
-  emit('addLink')
-}
-
-// 加载桌面数据
-const loadDesktopData = async () => {
-  if (window.desktopAPI) {
-    try {
-      const data = await window.desktopAPI.getTree(DEFAULT_DESKTOP_ID)
-      // 如果父组件没有传 items，使用 IPC 获取的数据
-      if (props.items.length === 0) {
-        // 这里可以通过事件通知父组件
-      }
-    } catch (error) {
-      console.error('Failed to load desktop data:', error)
-    }
-  }
-}
-
-onMounted(() => {
-  loadDesktopData()
-})
-</script>
-
 <template>
   <div class="desktop-grid-container">
-    <!-- Widget 区域 -->
-    <div v-if="widgets.length > 0" class="widget-area">
-      <div
-        v-for="widget in widgets"
-        :key="widget.id"
-        class="widget-slot"
-        :style="{
-          gridColumn: `span ${widget.meta?.width || 2}`,
-          gridRow: `span ${widget.meta?.height || 1}`
-        }"
-      >
-        <!-- Widget 占位，后续可扩展 -->
-        <div class="widget-placeholder">
-          <span>{{ widget.name }}</span>
-        </div>
-      </div>
-    </div>
-
     <!-- 普通图标网格 -->
     <div class="icon-grid">
       <!-- 独立图标 -->
-      <template v-for="item in folderItems.standalone" :key="item.id">
-        <DesktopIcon
-          v-if="item.type !== 'folder'"
+      <template v-for="item in list" :key="item.id">
+        <WidgetNode v-if="item.type === 'widget'" :node="item" />
+        <FolderNode
+          v-else-if="item.type === 'folder'"
           :node="item"
-          @click="onIconClick"
-          @contextmenu="handleContextMenu"
+          :items="folderMap.get(item.id) || []"
         />
-        <DesktopFolder
-          v-else
-          :items="folderItems.folders.get(item.id) || [item]"
-          @click="handleClick"
-          @contextmenu="handleContextMenu"
-        />
-      </template>
-
-      <!-- 文件夹 -->
-      <template v-for="[folderId, children] in folderItems.folders" :key="folderId">
-        <DesktopFolder :items="children" @click="handleClick" @contextmenu="handleContextMenu" />
+        <ItemNode v-else :node="item" />
       </template>
 
       <!-- 添加按钮 -->
@@ -199,6 +80,47 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+import { DesktopNode } from '@common/types/DesktopNode'
+import { AddIcon } from 'tdesign-icons-vue-next'
+import WidgetNode from '@/desktop/node/WidgetNode.vue'
+import FolderNode from '@/desktop/node/FolderNode.vue'
+import ItemNode from '@/desktop/node/ItemNode.vue'
+
+const props = defineProps<{
+  items: DesktopNode[]
+}>()
+
+const emit = defineEmits<{
+  addApp: []
+  addLink: []
+}>()
+
+const list = computed(() => props.items.filter((item) => item.parentId === '0' || !item.parentId))
+const folderMap = computed(() => {
+  const l = props.items.filter((item) => item.parentId !== '0' && item.parentId)
+  const map = new Map<string, Array<DesktopNode>>()
+  for (let desktopNode of l) {
+    const t = map.get(desktopNode.parentId!)
+    if (t) {
+      t.push(desktopNode)
+    } else {
+      map.set(desktopNode.id, [desktopNode])
+    }
+  }
+  return map
+})
+
+// 添加应用/链接
+const handleAddApp = () => {
+  emit('addApp')
+}
+
+const handleAddLink = () => {
+  emit('addLink')
+}
+</script>
 
 <style lang="less" scoped>
 .desktop-grid-container {

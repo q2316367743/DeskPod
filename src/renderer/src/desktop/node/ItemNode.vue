@@ -1,23 +1,34 @@
+<template>
+  <div
+    class="desktop-icon"
+    :title="node.name"
+    @click="handleClick(node)"
+    @contextmenu="handleContextMenu($event)"
+  >
+    <div class="icon-wrapper">
+      <img
+        v-if="getNodeIcon(node)"
+        :src="getNodeIcon(node)"
+        :alt="node.name"
+        class="icon-image"
+        @error="($event.target as HTMLImageElement).style.display = 'none'"
+      />
+      <div v-else class="icon-placeholder">
+        <span class="icon-letter">{{ node.name.charAt(0).toUpperCase() }}</span>
+      </div>
+    </div>
+    <span class="icon-name">{{ node.name }}</span>
+  </div>
+</template>
 <script lang="ts" setup>
 import { DesktopNode } from '@common/types/DesktopNode'
 
-defineProps<{
-  node: DesktopNode
-}>()
-
-const emit = defineEmits<{
-  click: [node: DesktopNode]
-  contextmenu: [node: DesktopNode, e: MouseEvent]
-}>()
-
-const handleClick = (e: MouseEvent) => {
-  emit('click', props.node)
-}
-
-const handleContextMenu = (e: MouseEvent) => {
-  e.preventDefault()
-  emit('contextmenu', props.node, e)
-}
+defineProps({
+  node: {
+    type: Object as PropType<DesktopNode>,
+    required: true
+  }
+})
 
 const getNodeIcon = (node: DesktopNode) => {
   if (node.icon) {
@@ -31,34 +42,16 @@ const getNodeIcon = (node: DesktopNode) => {
   // 默认图标
   return ''
 }
+
+const handleClick = (node: DesktopNode) => {
+  window.desktopAPI.openApp(toRaw(node))
+}
+const handleContextMenu = (e: MouseEvent) => {
+  e.preventDefault()
+  e.stopPropagation()
+}
 </script>
-
-<template>
-  <div
-    class="desktop-icon"
-    @click="handleClick"
-    @contextmenu="handleContextMenu"
-    :title="node.name"
-  >
-    <div class="icon-wrapper">
-      <img
-        v-if="getNodeIcon(node)"
-        :src="getNodeIcon(node)"
-        :alt="node.name"
-        class="icon-image"
-        @error="
-          ($event.target as HTMLImageElement).style.display = 'none'
-        "
-      />
-      <div v-else class="icon-placeholder">
-        <span class="icon-letter">{{ node.name.charAt(0).toUpperCase() }}</span>
-      </div>
-    </div>
-    <span class="icon-name">{{ node.name }}</span>
-  </div>
-</template>
-
-<style lang="less" scoped>
+<style scoped lang="less">
 .desktop-icon {
   display: flex;
   flex-direction: column;

@@ -1,4 +1,4 @@
-import { ipcMain, shell, app } from 'electron'
+import { ipcMain, shell, app, BrowserWindow } from 'electron'
 import fs from 'fs'
 import path from 'path'
 import { DesktopNode } from '@common/types/DesktopNode'
@@ -26,7 +26,10 @@ const readData = (): { nodes: DesktopNode[]; desktops: Array<{ id: string; name:
 }
 
 // 写入数据
-const writeData = (data: { nodes: DesktopNode[]; desktops: Array<{ id: string; name: string }> }) => {
+const writeData = (data: {
+  nodes: DesktopNode[]
+  desktops: Array<{ id: string; name: string }>
+}) => {
   try {
     const dataPath = getDataPath()
     fs.writeFileSync(dataPath, JSON.stringify(data, null, 2), 'utf-8')
@@ -159,13 +162,22 @@ ipcMain.handle('desktop:deleteDesktop', (_event, desktopId: string) => {
 })
 
 // 打开应用
-ipcMain.handle('desktop:openApp', (_event, node: DesktopNode) => {
+ipcMain.handle('desktop:openApp', async (_event, node: DesktopNode) => {
   if (node.type === 'app' && node.meta?.executablePath) {
-    shell.openPath(node.meta.executablePath)
+    await shell.openPath(node.meta.executablePath)
     return true
   }
   if (node.type === 'link' && node.meta?.url) {
-    shell.openExternal(node.meta.url)
+    if (node.meta?.openWith === 'inner') {
+      const bw = new BrowserWindow({
+        title: node.name,
+        width: node.meta?.width,
+        height: node.meta?.height
+      })
+      await bw.loadURL(node.meta.url)
+      return true
+    }
+    await shell.openExternal(node.meta.url)
     return true
   }
   return false

@@ -5,12 +5,13 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { TDesignResolver } from '@tdesign-vue-next/auto-import-resolver'
 import UnoCSS from 'unocss/vite'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig({
   main: {
     resolve: {
       alias: {
-        '$': resolve('src/main')
+        $: resolve('src/main')
       }
     }
   },
@@ -25,11 +26,12 @@ export default defineConfig({
     resolve: {
       alias: {
         '@': resolve('src/renderer/src'),
-        '@common': resolve('src/common'),
+        '@common': resolve('src/common')
       }
     },
     plugins: [
       vue(),
+      vueJsx(),
       // ...
       AutoImport({
         resolvers: [

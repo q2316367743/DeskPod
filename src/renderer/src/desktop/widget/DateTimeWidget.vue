@@ -1,3 +1,13 @@
+<template>
+  <div class="datetime-header">
+    <div class="date-line">
+      <span class="date-text">{{ dateString }}</span>
+    </div>
+    <div class="time-line">
+      <span class="time-text">{{ timeString }}</span>
+    </div>
+  </div>
+</template>
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import dayjs from 'dayjs'
@@ -33,18 +43,6 @@ onUnmounted(() => {
   }
 })
 </script>
-
-<template>
-  <div class="datetime-header">
-    <div class="date-line">
-      <span class="date-text">{{ dateString }}</span>
-    </div>
-    <div class="time-line">
-      <span class="time-text">{{ timeString }}</span>
-    </div>
-  </div>
-</template>
-
 <style lang="less" scoped>
 .datetime-header {
   text-align: center;
