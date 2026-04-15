@@ -6,9 +6,13 @@ import icon from '../../resources/icon.png?asset'
 // 导入插件事件
 import '$/plugin/PluginEvent'
 
+// 导入桌面管理
+import '$/desktop'
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    title: 'DeskPod',
     width: 900,
     height: 670,
     show: false,

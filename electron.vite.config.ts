@@ -10,21 +10,22 @@ export default defineConfig({
   main: {
     resolve: {
       alias: {
-        '$': resolve('src/main/src')
+        '$': resolve('src/main')
       }
     }
   },
   preload: {
     resolve: {
       alias: {
-        '~': resolve('src/preload/src')
+        '~': resolve('src/preload')
       }
     }
   },
   renderer: {
     resolve: {
       alias: {
-        '@': resolve('src/renderer/src')
+        '@': resolve('src/renderer/src'),
+        '@common': resolve('src/common'),
       }
     },
     plugins: [

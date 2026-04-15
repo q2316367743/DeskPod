@@ -1,0 +1,127 @@
+<script lang="ts" setup>
+import { DesktopNode } from '@common/types/DesktopNode'
+
+defineProps<{
+  node: DesktopNode
+}>()
+
+const emit = defineEmits<{
+  click: [node: DesktopNode]
+  contextmenu: [node: DesktopNode, e: MouseEvent]
+}>()
+
+const handleClick = (e: MouseEvent) => {
+  emit('click', props.node)
+}
+
+const handleContextMenu = (e: MouseEvent) => {
+  e.preventDefault()
+  emit('contextmenu', props.node, e)
+}
+
+const getNodeIcon = (node: DesktopNode) => {
+  if (node.icon) {
+    // 如果是图片路径
+    if (node.icon.startsWith('/') || node.icon.startsWith('C:') || node.icon.startsWith('http')) {
+      return node.icon
+    }
+    // 内置图标标识
+    return ''
+  }
+  // 默认图标
+  return ''
+}
+</script>
+
+<template>
+  <div
+    class="desktop-icon"
+    @click="handleClick"
+    @contextmenu="handleContextMenu"
+    :title="node.name"
+  >
+    <div class="icon-wrapper">
+      <img
+        v-if="getNodeIcon(node)"
+        :src="getNodeIcon(node)"
+        :alt="node.name"
+        class="icon-image"
+        @error="
+          ($event.target as HTMLImageElement).style.display = 'none'
+        "
+      />
+      <div v-else class="icon-placeholder">
+        <span class="icon-letter">{{ node.name.charAt(0).toUpperCase() }}</span>
+      </div>
+    </div>
+    <span class="icon-name">{{ node.name }}</span>
+  </div>
+</template>
+
+<style lang="less" scoped>
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  padding: 8px;
+  border-radius: var(--fluent-radius-card);
+  cursor: pointer;
+  transition: all var(--fluent-transition-fast);
+
+  &:hover {
+    background: var(--fluent-item-hover);
+  }
+
+  &:active {
+    background: var(--fluent-item-active);
+    transform: scale(0.95);
+  }
+}
+
+.icon-wrapper {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.icon-image {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--fluent-radius-smooth);
+  object-fit: cover;
+}
+
+.icon-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--fluent-radius-smooth);
+  background: var(--fluent-gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--fluent-card-shadow);
+}
+
+.icon-letter {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.icon-name {
+  font-size: 12px;
+  color: var(--td-text-color-primary);
+  text-align: center;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 72px;
+}
+</style>

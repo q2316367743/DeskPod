@@ -11,7 +11,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AddNodeModal: typeof import('./src/components/desktop/AddNodeModal.vue')['default']
     AppToolLayout: typeof import('./src/components/PageLayout/AppToolLayout.vue')['default']
+    DateTimeHeader: typeof import('./src/components/desktop/DateTimeHeader.vue')['default']
+    DesktopFolder: typeof import('./src/components/desktop/DesktopFolder.vue')['default']
+    DesktopGrid: typeof import('./src/components/desktop/DesktopGrid.vue')['default']
+    DesktopIcon: typeof import('./src/components/desktop/DesktopIcon.vue')['default']
     EmptyResult: typeof import('./src/components/Result/EmptyResult.vue')['default']
     InfoResult: typeof import('./src/components/Result/InfoResult.vue')['default']
     LoadingResult: typeof import('./src/components/Result/LoadingResult.vue')['default']
@@ -19,9 +24,12 @@ declare module 'vue' {
     NFileSelect: typeof import('./src/components/native/NFileSelect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchBar: typeof import('./src/components/desktop/SearchBar.vue')['default']
     SubPageLayout: typeof import('./src/components/PageLayout/SubPageLayout.vue')['default']
     SubTitle: typeof import('./src/components/PageTitle/SubTitle.vue')['default']
     SuccessResult: typeof import('./src/components/Result/SuccessResult.vue')['default']
+    TButton: typeof import('tdesign-vue-next')['Button']
+    TInput: typeof import('tdesign-vue-next')['Input']
     WdCell: typeof import('./src/components/wod/wd-cell.vue')['default']
     WdCellGroup: typeof import('./src/components/wod/wd-cell-group.vue')['default']
   }
