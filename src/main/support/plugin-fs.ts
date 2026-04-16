@@ -73,7 +73,7 @@ export default [
     'plugin:fs|write_text_file',
     async (args, options) => {
       return await fs.writeFile(
-        decodeURIComponent(options.headers.path),
+        decodeURIComponent(options!.headers.path),
         Buffer.from(args instanceof Uint8Array ? args : new Uint8Array(args)),
         {
           encoding: 'utf-8'
@@ -149,13 +149,12 @@ export default [
   defineApi<Uint8Array | ArrayLike<number>, WriteOptions>(
     "'plugin:fs|write_file'",
     async (args, options) => {
-      const { headers } = options
-      const { path } = headers
+      const { path } = options!.headers
       let createNew = false
       let mode = undefined
-      if (headers.options) {
+      if (options!.headers.options) {
         try {
-          const o = JSON.parse(headers.options)
+          const o = JSON.parse(options!.headers.options)
           createNew = o.createNew
           mode = o.mode
         } catch (e) {

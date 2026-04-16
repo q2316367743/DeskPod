@@ -1,4 +1,4 @@
-import { PluginEntity } from '$/plugin/PluginManager'
+import { PluginEntity } from '@common/types/PluginEntity'
 
 export interface ApiPayload {
   pluginId: string
