@@ -26,6 +26,7 @@
     "@vitejs/plugin-vue-jsx": "^5.1.5",
     "@vueuse/core": "^14.2.1",
     "@vueuse/integrations": "^14.2.1",
+    "adm-zip": "^0.5.17",
     "axios": "^1.15.0",
     "better-sqlite3": "^12.9.0",
     "dayjs": "^1.11.20",
@@ -35,6 +36,7 @@
     "pinia": "^3.0.4",
     "tdesign-icons-vue-next": "^0.4.4",
     "tdesign-vue-next": "^1.19.0",
+    "typebox": "^1.1.23",
     "vue-router": "^5.0.4"
   },
   "devDependencies": {
@@ -53,6 +55,7 @@
     "@tauri-apps/plugin-store": "~2.4.1",
     "@tauri-apps/plugin-upload": "~2.4.0",
     "@tdesign-vue-next/auto-import-resolver": "^0.1.6",
+    "@types/adm-zip": "^0.5.8",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.19.1",
     "@vitejs/plugin-vue": "^6.0.2",
@@ -75,7 +78,9 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "better-sqlite3",
       "electron",
+      "electron-winstaller",
       "esbuild"
     ]
   },

@@ -1,4 +1,6 @@
+/// <reference types="vite/client" />
 import { DesktopNode } from '@common/types/DesktopNode'
+import { PluginEntityWrap, PluginVerifyResult } from '@common/types/PluginEntity'
 
 interface DesktopAPI {
   getTree: (desktopId?: string) => Promise<{ widgets: DesktopNode[]; items: DesktopNode[] }>
@@ -13,7 +15,15 @@ interface DesktopAPI {
   fetchFavicon: (url: string) => Promise<{ success: boolean; icon: string }>
 }
 
+interface PluginAPI {
+  list: () => Promise<Array<PluginEntityWrap>>
+  verify(path: string): Promise<PluginVerifyResult>
+  install(path: string): Promise<void>
+  upgrade(identifier: string, path: string): Promise<void>
+  uninstall(identifier: string): Promise<void>
+}
+
 interface Window {
   desktopAPI: DesktopAPI
+  pluginAPI: PluginAPI
 }
-/// <reference types="vite/client" />

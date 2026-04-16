@@ -2,17 +2,19 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { APP_NAME } from '$/global/Constant'
+import { pluginManager } from '$/global/BeanFactory'
 
 // 导入插件事件
 import '$/plugin/PluginEvent'
 
 // 导入桌面管理
-import '$/desktop'
+import '$/router'
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    title: 'DeskPod',
+    title: APP_NAME,
     width: 900,
     height: 670,
     show: false,
@@ -46,6 +48,16 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  // 初始化插件列表
+  pluginManager
+    .initPlugins()
+    .then(() => {
+      console.log('PluginManager initialized')
+    })
+    .catch((e) => {
+      console.error('PluginManager initialize fail', e)
+    })
+
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 

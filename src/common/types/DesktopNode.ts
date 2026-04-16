@@ -50,3 +50,4 @@ export interface DesktopNode {
     height?: number // 小部件高 (网格单位，如占 1 格)
   }
 }
+

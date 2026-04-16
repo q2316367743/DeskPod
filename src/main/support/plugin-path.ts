@@ -102,62 +102,40 @@ export enum BaseDirectory {
  */
 export const getDirectory = (pluginId: string, directory: BaseDirectory) => {
   switch (directory) {
-    case 1:
+    case BaseDirectory.Audio:
       return app.getPath('music')
-    case 2:
-      return app.getPath('cache')
-    case 3:
-      return app.getPath('config')
-    case 4:
-      return app.getPath('userData')
-    case 5:
-      return app.getPath('localData')
-    case 6:
+    case BaseDirectory.Document:
       return app.getPath('documents')
-    case 7:
+    case BaseDirectory.Download:
       return app.getPath('downloads')
-    case 8:
+    case BaseDirectory.Picture:
       return app.getPath('pictures')
-    case 9:
-      return app.getPath('public')
-    case 10:
+    case BaseDirectory.Video:
       return app.getPath('videos')
-    case 11:
-      // $RESOURCE
+    case BaseDirectory.Resource:
       return join(app.getPath('appData'), 'plugins', pluginId, 'resource')
-    case 12:
+    case BaseDirectory.Temp:
       return app.getPath('temp')
-    case 13:
-      // $APP_CONFIG
+    case BaseDirectory.AppConfig:
       return join(app.getPath('appData'), 'plugins', pluginId, 'config')
-    case 14:
-      // $APP_DATA
+    case BaseDirectory.AppData:
       return join(app.getPath('appData'), 'plugins', pluginId, 'data')
-    case 15:
-      // $APP_LOCAL_DATA
+    case BaseDirectory.AppLocalData:
       return join(app.getPath('appData'), 'plugins', pluginId, 'localData')
-    case 16:
-      // $APP_CACHE
+    case BaseDirectory.AppCache:
       return join(app.getPath('appData'), 'plugins', pluginId, 'cache')
-    case 17:
-      // $APP_LOG
+    case BaseDirectory.AppLog:
       return join(app.getPath('appData'), 'plugins', pluginId, 'log')
-    case 18:
+    case BaseDirectory.Desktop:
       return app.getPath('desktop')
-    case 19:
-      return app.getPath('executable')
-    case 20:
-      return app.getPath('font')
-    case 21:
+    // case 20:
+    //   return app.getPath('font')
+    case BaseDirectory.Home:
       return app.getPath('home')
-    case 22:
-      // 运行时目录
-      // $RUNTIME
+    case BaseDirectory.Runtime:
       return join(app.getPath('appData'), 'plugins', pluginId, 'runtime')
-    case 23:
-      return app.getPath('temp')
     default:
-      return join(app.getPath('appData'), 'plugins', pluginId, 'data')
+      throw new Error(`Unknown plugin ${pluginId} dir in ${directory}`)
   }
 }
 

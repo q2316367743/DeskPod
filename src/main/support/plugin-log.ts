@@ -1,7 +1,13 @@
 import { defineApi } from '$/types/DefineApi'
 
+interface BaseArgs {
+  level: number
+  message: string
+  location: string
+}
+
 export default [
-  defineApi('plugin:log', async (args) => {
+  defineApi<BaseArgs>('plugin:log|log', async (args) => {
     // 插件日志
     const {
       // Trace|Debug|Info|Warn|Error

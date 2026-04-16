@@ -1,0 +1,50 @@
+export type PluginEntityCapability =
+  | string
+  | {
+      identifier: string
+      allow?: Array<string>
+      deny?: Array<string>
+    }
+
+export interface PluginEntity {
+  identifier: string
+  productName: string
+  version: string
+  // 启动窗口，只能一个
+  main?: {
+    label: string
+    title: string
+    width?: number
+    height?: number
+    minWidth?: number
+    minHeight?: number
+  }
+  /**
+   * 小部件
+   */
+  weight?: Array<{
+    label: string
+    title: string
+    // 预览图片
+    preview: string
+    // 支持的布局
+    layouts: Array<{
+      rows: number
+      cols: number
+    }>
+  }>
+  // 权限
+  capabilities: Array<PluginEntityCapability>
+}
+
+export interface PluginEntityWrap extends PluginEntity {
+  // 插件根路径
+  root: string
+}
+
+export interface PluginVerifyResult {
+  // 插件配置
+  config: PluginEntity
+  // 插件是否存在
+  exists: boolean
+}

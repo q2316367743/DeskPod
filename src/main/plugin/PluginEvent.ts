@@ -12,7 +12,7 @@ import shell from '$/support/plugin-shell'
 // import event from './plugins/plugin-event'
 import { ApiFunc } from '$/types/DefineApi'
 import { ipcMain } from 'electron'
-import { PluginManager } from '$/plugin/PluginManager'
+import { pluginManager } from '$/global/BeanFactory'
 
 // 事件处理器
 const invokeHandleMap = new Map<string, ApiFunc<unknown, unknown, unknown>>()
@@ -32,8 +32,7 @@ handleList.flatMap(({ cmd, plugin }) => {
   invokeHandleMap.set(cmd, plugin as ApiFunc<unknown, unknown, unknown>)
 })
 
-// 插件管理器
-const pluginManager = new PluginManager()
+
 
 // 接收命令
 ipcMain.handle('plugin:cmd', (event, props) => {
@@ -94,7 +93,7 @@ ipcMain.on('plugin:event:emit', (event, args) => {
   const { kind } = target
   if (kind === 'App') {
     // 发给主线程
-    const appLabel = (entity.main || entity.weight)!.label
+    const appLabel = (entity.main || entity.weight?.[0])!.label
     const appBw = getBrowserWindowByKey(bwk.pluginId, appLabel)
     if (appBw) {
       appBw.webContents.send(channel, payload)
