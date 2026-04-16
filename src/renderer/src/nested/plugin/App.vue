@@ -236,17 +236,22 @@ const closeUpgradeDialog = () => {
 }
 
 const selectUpgradeFile = async () => {
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.accept = '.zip'
-  input.onchange = async (e) => {
-    const file = (e.target as HTMLInputElement).files?.[0]
-    if (file) {
-      state.upgradePath = file.path || file.name
-      await verifyPlugin(state.upgradePath)
-    }
+  const paths = await window.supportAPI.shellOpenDialog({
+    title: '请选择插件安装包',
+    properties: ['openFile'],
+    filters: [
+      {
+        name: '安装包',
+        extensions: ['zip']
+      }
+    ],
+    buttonLabel: '选择'
+  })
+  if (!paths || !paths[0]) {
+    return MessageUtil.error('请选择插件安装盘路径')
   }
-  input.click()
+  state.upgradePath = paths[0]
+  await verifyPlugin(state.upgradePath)
 }
 
 const doUpgrade = async () => {
@@ -312,7 +317,7 @@ watch(
 
 <style lang="less" scoped>
 .plugin-manager {
-  min-height: 100vh;
+  min-height: calc(100vh - 48px);
   background: var(--td-bg-color-page);
   padding: 24px;
 }

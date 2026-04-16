@@ -171,7 +171,8 @@ ipcMain.handle('desktop:openApp', async (_event, node: DesktopNode) => {
       autoHideMenuBar: true,
       webPreferences: {
         preload: join(__dirname, '../preload/index.js'),
-        sandbox: false
+        sandbox: false,
+        webSecurity: false
       }
     })
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {

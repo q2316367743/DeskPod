@@ -1,15 +1,11 @@
 <template>
   <transition name="modal-fade">
     <div v-if="visible" class="modal-overlay" @click.self="$emit('close')">
-      <div class="modal-container modal-container-lg">
+      <div v-if="plugin" class="modal-container modal-container-lg">
         <div class="modal-header">
           <div class="detail-header">
             <div class="detail-icon">
-              <img
-                v-if="plugin.icon"
-                :src="iconSrc"
-                :alt="plugin.productName"
-              />
+              <img v-if="plugin.icon" :src="iconSrc" :alt="plugin.productName" />
               <div v-else class="plugin-icon-placeholder plugin-icon-lg">
                 {{ plugin.productName.charAt(0).toUpperCase() }}
               </div>
@@ -71,17 +67,9 @@
           <div v-if="plugin.weight && plugin.weight.length > 0" class="detail-section">
             <h4 class="section-title">小部件</h4>
             <div class="weight-grid">
-              <div
-                v-for="(weight, index) in plugin.weight"
-                :key="index"
-                class="weight-card"
-              >
+              <div v-for="(weight, index) in plugin.weight" :key="index" class="weight-card">
                 <div class="weight-preview">
-                  <img
-                    v-if="weight.preview"
-                    :src="assetSrc(weight.preview)"
-                    :alt="weight.title"
-                  />
+                  <img v-if="weight.preview" :src="assetSrc(weight.preview)" :alt="weight.title" />
                   <div v-else class="weight-placeholder">
                     {{ weight.title.charAt(0) }}
                   </div>
@@ -90,11 +78,7 @@
                   <div class="weight-name">{{ weight.title }}</div>
                   <div class="weight-label">{{ weight.label }}</div>
                   <div class="weight-layouts">
-                    <span
-                      v-for="(layout, i) in weight.layouts"
-                      :key="i"
-                      class="layout-tag"
-                    >
+                    <span v-for="(layout, i) in weight.layouts" :key="i" class="layout-tag">
                       {{ layout.rows }}×{{ layout.cols }}
                     </span>
                   </div>
@@ -106,11 +90,7 @@
           <div class="detail-section">
             <h4 class="section-title">权限</h4>
             <div class="capabilities-list">
-              <span
-                v-for="(cap, index) in plugin.capabilities"
-                :key="index"
-                class="capability-tag"
-              >
+              <span v-for="(cap, index) in plugin.capabilities" :key="index" class="capability-tag">
                 {{ typeof cap === 'string' ? cap : cap.identifier }}
               </span>
             </div>
@@ -141,7 +121,7 @@ defineEmits<{
 const iconSrc = computed(() => {
   const plugin = unref(props.plugin)
   if (!plugin?.icon) return ''
-  return `file://${plugin.root}/${plugin.icon}`
+  return `file://${plugin.root}/runtime/${plugin.icon}`
 })
 
 const assetSrc = (assetPath: string) => {
@@ -355,6 +335,7 @@ const assetSrc = (assetPath: string) => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 250px;
 }
 
 .weight-grid {

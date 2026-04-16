@@ -39,7 +39,7 @@
         <InfoCircleIcon size="16px" />
       </button>
       <button class="action-btn" title="升级插件" @click="$emit('upgrade', plugin)">
-        <RefreshIcon size="16px" />
+        <cloud-upload-icon size="16px" />
       </button>
       <button
         class="action-btn action-btn-danger"
@@ -55,10 +55,10 @@
 <script lang="ts" setup>
 import {
   DeleteIcon,
-  RefreshIcon,
   InfoCircleIcon,
   WindowIcon,
-  GridViewIcon
+  GridViewIcon,
+  CloudUploadIcon
 } from 'tdesign-icons-vue-next'
 import type { PluginEntityWrap } from '@common/types/PluginEntity'
 
