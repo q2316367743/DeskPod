@@ -22,6 +22,35 @@ interface PluginAPI {
   uninstall(identifier: string): Promise<void>
 }
 
+interface FileFilter {
+  extensions: string[]
+  name: string
+}
+
+interface OpenDialogSyncOptions {
+  title?: string
+  defaultPath?: string
+  buttonLabel?: string
+  filters?: FileFilter[]
+  properties?: Array<
+    | 'openFile'
+    | 'openDirectory'
+    | 'multiSelections'
+    | 'showHiddenFiles'
+    | 'createDirectory'
+    | 'promptToCreate'
+    | 'noResolveAliases'
+    | 'treatPackageAsDirectory'
+    | 'dontAddToRecent'
+  >
+  message?: string
+  securityScopedBookmarks?: boolean
+}
+
+interface supportAPI {
+  shellOpenDialog(options: OpenDialogSyncOptions): Promise<Array<string> | undefined>
+}
+
 global {
   interface Window {
     __TAURI_OS_PLUGIN_INTERNALS__: Record<string, unknown>
@@ -30,5 +59,6 @@ global {
     __TAURI_EVENT_PLUGIN_INTERNALS__: Record<string, unknown>
     desktopAPI: DesktopAPI
     pluginAPI: PluginAPI
+    supportAPI: supportAPI
   }
 }

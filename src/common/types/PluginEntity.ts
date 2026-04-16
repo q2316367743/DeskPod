@@ -16,6 +16,7 @@ export interface PluginEntity {
   main?: {
     label: string
     title: string
+    path: string
     width?: number
     height?: number
     minWidth?: number
@@ -27,6 +28,7 @@ export interface PluginEntity {
   weight?: Array<{
     label: string
     title: string
+    path: string
     // 预览图片
     preview: string
     // 支持的布局

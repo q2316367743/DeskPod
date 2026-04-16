@@ -11,14 +11,16 @@ export default defineConfig({
   main: {
     resolve: {
       alias: {
-        $: resolve('src/main')
+        $: resolve('src/main'),
+        '@common': resolve('src/common')
       }
     }
   },
   preload: {
     resolve: {
       alias: {
-        '~': resolve('src/preload')
+        '~': resolve('src/preload'),
+        '@common': resolve('src/common')
       }
     }
   },

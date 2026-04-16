@@ -13,7 +13,27 @@
           <ItemNode v-else :node="item" :dock-mode="true" />
         </template>
 
-        <div class="disabled-btn" title="即将上线">
+        <div class="dock-divider"></div>
+
+        <t-tooltip v-for="b in builtinList" :key="b.id" :content="b.name">
+          <div class="disabled-btn" @click="handleClick(b)">
+            <div class="disabled-icon-wrapper">
+              <svg
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <line x1="3" y1="9" x2="21" y2="9" />
+                <line x1="9" y1="21" x2="9" y2="9" />
+              </svg>
+            </div></div
+        ></t-tooltip>
+
+        <div class="disabled-btn" title="插件管理">
           <div class="disabled-icon-wrapper">
             <svg
               viewBox="0 0 24 24"
@@ -29,8 +49,7 @@
             </svg>
           </div>
         </div>
-        <div class="dock-divider"></div>
-        <div class="disabled-btn" title="即将上线">
+        <div class="disabled-btn" title="设置">
           <div class="disabled-icon-wrapper">
             <svg
               viewBox="0 0 24 24"
@@ -56,6 +75,7 @@
 import { DesktopNode } from '@common/types/DesktopNode'
 import ItemNode from '@/desktop/node/ItemNode.vue'
 import FolderNode from '@/desktop/node/FolderNode.vue'
+import { builtinList } from '@/global/BuiltinList'
 
 const props = defineProps<{
   items: DesktopNode[]
@@ -75,6 +95,10 @@ const folderMap = computed(() => {
   }
   return map
 })
+
+const handleClick = (node: DesktopNode) => {
+  window.desktopAPI.openApp(toRaw(node))
+}
 </script>
 
 <style lang="less" scoped>
@@ -120,7 +144,7 @@ const folderMap = computed(() => {
   border-radius: var(--fluent-radius-card);
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  &:hover{
+  &:hover {
     transform: scale(1.1);
   }
 }

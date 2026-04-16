@@ -22,6 +22,7 @@ const pluginVerifyType = Type.Object({
     Type.Object({
       label: Type.String(),
       title: Type.String(),
+      path: Type.String(),
       width: Type.Optional(Type.Number()),
       height: Type.Optional(Type.Number()),
       minWidth: Type.Optional(Type.Number()),
@@ -35,6 +36,7 @@ const pluginVerifyType = Type.Object({
       Type.Object({
         label: Type.String(),
         title: Type.String(),
+        path: Type.String(),
         layouts: Type.Array(
           Type.Object({
             rows: Type.Number(),

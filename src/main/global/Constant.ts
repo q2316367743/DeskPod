@@ -11,11 +11,10 @@ export const APP_VERSION = '1.0.0'
 
 export const APP_PASSWORD = 'FmH24q7!*DDUcd'
 
-
-export const APP_DATA_DIR = app.getPath('appData')
+export const APP_DATA_DIR = join(app.getPath('appData'), APP_ID)
 export const APP_DATA_ASSET_DIR = join(APP_DATA_DIR, 'asset')
 export const APP_DATA_DB_DIR = join(APP_DATA_DIR, 'db')
-export const APP_DATA_STORE_DIR =  join(APP_DATA_DIR, 'store')
+export const APP_DATA_STORE_DIR = join(APP_DATA_DIR, 'store')
 
 // 插件目录
 export const APP_PLUGIN_DIR = join(APP_DATA_DIR, 'plugins')
@@ -28,13 +27,13 @@ export const createPluginDirs = async (pluginId: string) => {
   const baseDir = join(APP_PLUGIN_DIR, pluginId)
   const runtime = join(baseDir, 'runtime')
   await Promise.all([
-    mkdir(runtime),
+    mkdir(runtime, { recursive: true }),
     // mkdir(join(baseDir, 'resource')),
-    mkdir(join(baseDir, 'config')),
-    mkdir(join(baseDir, 'data')),
-    mkdir(join(baseDir, 'cache')),
-    mkdir(join(baseDir, 'log')),
-    mkdir(join(baseDir, 'localData'))
+    mkdir(join(baseDir, 'config'), { recursive: true }),
+    mkdir(join(baseDir, 'data'), { recursive: true }),
+    mkdir(join(baseDir, 'cache'), { recursive: true }),
+    mkdir(join(baseDir, 'log'), { recursive: true }),
+    mkdir(join(baseDir, 'localData'), { recursive: true })
   ])
   return runtime
 }

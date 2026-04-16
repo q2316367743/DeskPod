@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, unlink } from 'node:fs/promises'
+import { mkdir, readdir, readFile, rm } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { app } from 'electron'
@@ -12,8 +12,6 @@ import {
   removePluginDirs
 } from '$/global/Constant'
 import { useSnowflake } from '@common/utils'
-
-
 
 /**
  * 插件管理器
@@ -48,6 +46,7 @@ export class PluginManager {
         return null
       })
     )
+    console.log('PluginManager initialized', items)
     for (const item of items) {
       if (item.status === 'fulfilled') {
         if (item.value) {
@@ -106,7 +105,7 @@ export class PluginManager {
       return Promise.reject(e)
     } finally {
       // 删除临时目录
-      await unlink(tempFolder)
+      await rm(tempFolder, { recursive: true, force: true })
     }
   }
 
@@ -159,7 +158,7 @@ export class PluginManager {
     // 获取运行时目录
     const runtime = join(plugin.root, 'runtime')
     // 删除旧的运行目录，并创建新的
-    await unlink(runtime)
+    await rm(runtime, { recursive: true, force: true })
     await mkdir(runtime)
     // 解压到运行目录
     const zip = new AdmZip(path)
@@ -187,7 +186,7 @@ export class PluginManager {
     // 获取插件
     const plugin = this.pluginMap.get(identifier)
     if (!plugin) return Promise.reject(new Error('插件不存在'))
-    await unlink(plugin.root)
+    await rm(plugin.root, { recursive: true, force: true })
     this.pluginMap.delete(identifier)
   }
 }
