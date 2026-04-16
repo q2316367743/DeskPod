@@ -1,6 +1,7 @@
 import { join, basename, extname, isAbsolute, normalize, resolve } from 'node:path'
 import { app } from 'electron'
 import { defineApi } from '$/types/DefineApi'
+import { pluginManager } from '$/global/BeanFactory'
 
 export enum BaseDirectory {
   /**
@@ -101,6 +102,8 @@ export enum BaseDirectory {
  * 获取目录
  */
 export const getDirectory = (pluginId: string, directory: BaseDirectory) => {
+  const entity = pluginManager.getById(pluginId);
+  if (!entity) throw new Error(`pluginId ${pluginId} not found`)
   switch (directory) {
     case BaseDirectory.Audio:
       return app.getPath('music')
@@ -112,28 +115,28 @@ export const getDirectory = (pluginId: string, directory: BaseDirectory) => {
       return app.getPath('pictures')
     case BaseDirectory.Video:
       return app.getPath('videos')
-    case BaseDirectory.Resource:
-      return join(app.getPath('appData'), 'plugins', pluginId, 'resource')
     case BaseDirectory.Temp:
       return app.getPath('temp')
+    case BaseDirectory.Resource:
+      return join(entity.root, 'resource')
     case BaseDirectory.AppConfig:
-      return join(app.getPath('appData'), 'plugins', pluginId, 'config')
+      return join(entity.root, 'config')
     case BaseDirectory.AppData:
-      return join(app.getPath('appData'), 'plugins', pluginId, 'data')
+      return join(entity.root, 'data')
     case BaseDirectory.AppLocalData:
-      return join(app.getPath('appData'), 'plugins', pluginId, 'localData')
+      return join(entity.root, 'localData')
     case BaseDirectory.AppCache:
-      return join(app.getPath('appData'), 'plugins', pluginId, 'cache')
+      return join(entity.root, 'cache')
     case BaseDirectory.AppLog:
-      return join(app.getPath('appData'), 'plugins', pluginId, 'log')
+      return join(entity.root, 'log')
+    case BaseDirectory.Runtime:
+      return join(entity.root, 'runtime')
     case BaseDirectory.Desktop:
       return app.getPath('desktop')
     // case 20:
     //   return app.getPath('font')
     case BaseDirectory.Home:
       return app.getPath('home')
-    case BaseDirectory.Runtime:
-      return join(app.getPath('appData'), 'plugins', pluginId, 'runtime')
     default:
       throw new Error(`Unknown plugin ${pluginId} dir in ${directory}`)
   }

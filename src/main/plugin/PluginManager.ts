@@ -91,11 +91,6 @@ export class PluginManager {
         return Promise.reject(new Error('plugin.json 格式校验失败'))
       }
 
-      // 4. 判断插件是否已经存在了
-      if (this.pluginMap.has(configJson.identifier)) {
-        return Promise.reject(new Error('插件 identifier 已存在，无法安装'))
-      }
-
       return {
         config: configJson,
         exists: this.pluginMap.has(configJson.identifier)

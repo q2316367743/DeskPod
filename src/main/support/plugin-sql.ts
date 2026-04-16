@@ -39,26 +39,28 @@ export default [
     const { db, query, values } = args
     const database = map.get(db)
 
-    const statements = `${query}`
+    const statements = `${query.replace(/\$\d+/g, '?')}`
       .split(';')
       .map((e) => e.trim())
       .filter((e) => !!e)
+    console.log('开始执行，发现语句：', statements.length)
     if (statements.length > 1) {
       for (const statement of statements) {
         database?.exec(statement)
       }
       return [statements.length, null]
     }
+    console.log(`开始执行，语句 ${statements[0]}, 条件: ${values ? JSON.stringify(values) : ''}`)
 
-    const update = database?.prepare(query)
-    const info = update?.run(values)
+    const update = database?.prepare(statements[0])
+    const info = update?.run(...values)
     return [info?.changes, info?.lastInsertRowid]
   }),
   defineApi<SelectArgs>('plugin:sql|select', async (args) => {
     const { db, query, values } = args
     const database = map.get(db)
-    const update = database?.prepare(query)
-    return update?.all(values)
+    const update = database?.prepare(query.replace(/\$\d+/g, '?'))
+    return update?.all(...values)
   }),
   defineApi<CloseArgs>('plugin:sql|close', async (args) => {
     map.get(args.db)?.close()

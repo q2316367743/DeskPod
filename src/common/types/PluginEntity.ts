@@ -39,6 +39,11 @@ export interface PluginEntity {
   }>
   // 权限
   capabilities: Array<PluginEntityCapability>
+
+  /**
+   * 资源目录，基于根目录的相对目录，安装时会将此目录的文件拷贝到资源目录中
+   */
+  resources: Array<string> | Record<string, string>
 }
 
 export interface PluginEntityWrap extends PluginEntity {
