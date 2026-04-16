@@ -1,5 +1,5 @@
 <template>
-  <div class="desktop-grid-container">
+  <div class="desktop-grid-container" @contextmenu="handleDesktopGridCxt($event)">
     <!-- 普通图标网格 -->
     <div class="icon-grid">
       <!-- 独立图标 -->
@@ -12,55 +12,22 @@
         />
         <ItemNode v-else :node="item" />
       </template>
-
-      <!-- 添加按钮 -->
-      <div class="add-section">
-        <div class="add-btn" @click="handleAddApp">
-          <div class="add-icon-wrapper">
-            <AddIcon size="24px" />
-          </div>
-          <span class="add-label">添加应用</span>
-        </div>
-        <div class="add-btn" @click="handleAddLink">
-          <div class="add-icon-wrapper link">
-            <svg
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-            </svg>
-          </div>
-          <span class="add-label">添加链接</span>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { DesktopNode } from '@common/types/DesktopNode'
-import { AddIcon } from 'tdesign-icons-vue-next'
+import { handleDesktopGridCxt } from '@/desktop/layout/func/DesktopGridCxt'
+import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 import WidgetNode from '@/desktop/node/WidgetNode.vue'
 import FolderNode from '@/desktop/node/FolderNode.vue'
 import ItemNode from '@/desktop/node/ItemNode.vue'
 
-const props = defineProps<{
-  items: DesktopNode[]
-}>()
-
-const emit = defineEmits<{
-  addApp: []
-  addLink: []
-}>()
-
-const list = computed(() => props.items.filter((item) => item.parentId === '0' || !item.parentId))
+const items = computed(() => useDesktopNodeStore().nodes)
+const list = computed(() => items.value.filter((item) => item.parentId === '0' || !item.parentId))
 const folderMap = computed(() => {
-  const l = props.items.filter((item) => item.parentId !== '0' && item.parentId)
+  const l = items.value.filter((item) => item.parentId !== '0' && item.parentId)
   const map = new Map<string, Array<DesktopNode>>()
   for (let desktopNode of l) {
     const t = map.get(desktopNode.parentId!)
@@ -72,20 +39,13 @@ const folderMap = computed(() => {
   }
   return map
 })
-
-// 添加应用/链接
-const handleAddApp = () => {
-  emit('addApp')
-}
-
-const handleAddLink = () => {
-  emit('addLink')
-}
 </script>
 
 <style lang="less" scoped>
 .desktop-grid-container {
-  padding: 16px 24px 24px;
+  padding: 16px;
+  width: calc(100vw - 32px);
+  height: calc(100vh - 98px);
 }
 
 .widget-area {

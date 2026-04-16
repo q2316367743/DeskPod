@@ -49,6 +49,7 @@ interface OpenDialogSyncOptions {
 
 interface supportAPI {
   shellOpenDialog(options: OpenDialogSyncOptions): Promise<Array<string> | undefined>
+  isWindows: () => boolean
 }
 
 global {

@@ -9,8 +9,9 @@ import {
 } from 'tdesign-vue-next'
 import { DesktopNode } from '@common/types/DesktopNode'
 import { MessageUtil } from '@/utils'
+import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 
-export const openLinkAppDialog = (desktopId: string, onUpdate: () => void) => {
+export const openLinkAppDialog = (desktopId: string) => {
   const data = ref({
     name: '',
     url: '',
@@ -76,7 +77,7 @@ export const openLinkAppDialog = (desktopId: string, onUpdate: () => void) => {
         .updateNode(node)
         .then(() => {
           MessageUtil.success('成功添加链接')
-          onUpdate()
+          useDesktopNodeStore().init()
           dp.destroy()
         })
         .catch((e) => {

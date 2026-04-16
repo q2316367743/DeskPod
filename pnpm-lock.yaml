@@ -14,6 +14,9 @@ importers:
       '@electron-toolkit/utils':
         specifier: ^4.0.0
         version: 4.0.0(electron@39.8.7)
+      '@imengyu/vue3-context-menu':
+        specifier: ^1.5.4
+        version: 1.5.4
       '@vitejs/plugin-vue-jsx':
         specifier: ^5.1.5
         version: 5.1.5(vite@7.3.2(@types/node@22.19.17)(jiti@2.6.1)(less@4.6.4)(yaml@2.8.3))(vue@3.5.32(typescript@5.9.3))
@@ -755,6 +758,12 @@ packages:
 
   '@iconify/utils@3.1.0':
     resolution: {integrity: sha512-Zlzem1ZXhI1iHeeERabLNzBHdOa4VhQbqAcOQaMKuTuyZCpwKbC2R4Dd0Zo3g9EAc+Y4fiarO8HIHRAth7+skw==}
+
+  '@imengyu/vue-scroll-rect@0.1.8':
+    resolution: {integrity: sha512-Mg7rgHlsGPO0tcMFjp1kB2BZ3oRrRtFN8MoE52jTgQnlc+Y0N6ttFnbIxOh2fc9j82uhdQ8zgZcXlFHUXeGnCA==}
+
+  '@imengyu/vue3-context-menu@1.5.4':
+    resolution: {integrity: sha512-/a6Quyn3V320/Mi6UoH+6wSTBYrln70RovT3iyfoXQQpIHpC7ZPWObzS0BXQTRlWtyJB92XmGDT703UxSO8Tvg==}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -4182,6 +4191,12 @@ snapshots:
       '@antfu/install-pkg': 1.1.0
       '@iconify/types': 2.0.0
       mlly: 1.8.2
+
+  '@imengyu/vue-scroll-rect@0.1.8': {}
+
+  '@imengyu/vue3-context-menu@1.5.4':
+    dependencies:
+      '@imengyu/vue-scroll-rect': 0.1.8
 
   '@isaacs/cliui@8.0.2':
     dependencies:

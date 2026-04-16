@@ -1,9 +1,6 @@
-import { sep } from '@tauri-apps/api/path'
-import { platform } from '@tauri-apps/plugin-os'
+export const isWindows = window.supportAPI.isWindows()
 
-export const separator = sep()
-
-export const isWindows = platform() === 'windows'
+export const separator = isWindows ? '\\' : '/'
 
 /**
  * 拼接路径

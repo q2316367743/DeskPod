@@ -76,14 +76,13 @@ import { DesktopNode } from '@common/types/DesktopNode'
 import ItemNode from '@/desktop/node/ItemNode.vue'
 import FolderNode from '@/desktop/node/FolderNode.vue'
 import { builtinList } from '@/global/BuiltinList'
+import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 
-const props = defineProps<{
-  items: DesktopNode[]
-}>()
+const items = computed(() => useDesktopNodeStore().dockNodes)
 
-const list = computed(() => props.items.filter((item) => item.parentId === '0' || !item.parentId))
+const list = computed(() => items.value.filter((item) => item.parentId === '0' || !item.parentId))
 const folderMap = computed(() => {
-  const l = props.items.filter((item) => item.parentId !== '0' && item.parentId)
+  const l = items.value.filter((item) => item.parentId !== '0' && item.parentId)
   const map = new Map<string, Array<DesktopNode>>()
   for (let desktopNode of l) {
     const t = map.get(desktopNode.parentId!)
@@ -104,7 +103,7 @@ const handleClick = (node: DesktopNode) => {
 <style lang="less" scoped>
 .dock-footer {
   position: fixed;
-  bottom: var(--dock-gap-bottom);
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
