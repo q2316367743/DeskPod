@@ -1,6 +1,6 @@
 import { logDebug } from '@/lib/log'
 import { generatePlaceholders } from '@/utils'
-import type { PageResponse } from '@/global/CommonType.ts'
+import type { PageResponse } from '@common/types/CommonType.ts'
 import { SqlBase } from '@/lib/sql'
 
 export class QueryChain<

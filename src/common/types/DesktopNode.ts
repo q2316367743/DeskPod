@@ -4,6 +4,7 @@ export type DesktopNodeType =
   | 'link' // 网站链接
   | 'plugin' // 插件
   | 'widget' // 小组件
+  | 'builtin' // 内置窗口
 
 // 统一的节点接口定义 (TypeScript 描述，便于理解结构)
 export interface DesktopNode {

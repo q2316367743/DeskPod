@@ -52,6 +52,14 @@ export default defineConfig({
         ]
       }),
       UnoCSS()
-    ]
+    ],
+    build: {
+      rollupOptions: {
+        input: {
+          main: resolve('src/renderer/index.html'),
+          plugin: resolve('src/renderer/plugin.html')
+        }
+      }
+    }
   }
 })

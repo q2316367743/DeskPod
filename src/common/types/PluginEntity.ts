@@ -10,6 +10,8 @@ export interface PluginEntity {
   identifier: string
   productName: string
   version: string
+  // 图片，是个相对目录，相对插件根目录
+  icon: string
   // 启动窗口，只能一个
   main?: {
     label: string

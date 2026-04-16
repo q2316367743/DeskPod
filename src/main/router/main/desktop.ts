@@ -1,7 +1,8 @@
 import { ipcMain, shell, app, BrowserWindow } from 'electron'
 import fs from 'fs'
-import path from 'path'
+import path, { join } from 'path'
 import { DesktopNode } from '@common/types/DesktopNode'
+import { is } from '@electron-toolkit/utils'
 
 const DEFAULT_DESKTOP_ID = 'desktop-1'
 
@@ -160,6 +161,26 @@ ipcMain.handle('desktop:openApp', async (_event, node: DesktopNode) => {
     }
     await shell.openExternal(node.meta.url)
     return true
+  }
+  if (node.type === 'builtin') {
+    const builtinWindow = new BrowserWindow({
+      title: node.name,
+      width: node.meta?.width || 800,
+      height: node.meta?.height || 600,
+      show: true,
+      autoHideMenuBar: true,
+      webPreferences: {
+        preload: join(__dirname, '../preload/index.js'),
+        sandbox: false
+      }
+    })
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+      await builtinWindow.loadURL(
+        `${process.env['ELECTRON_RENDERER_URL']}/${node.meta?.builtinId}.html`
+      )
+    } else {
+      await builtinWindow.loadFile(join(__dirname, `../renderer/${node.meta?.builtinId}.html`))
+    }
   }
   return false
 })
