@@ -1,15 +1,17 @@
-import { ipcMain, shell, app, BrowserWindow } from 'electron'
+import { ipcMain, shell, BrowserWindow } from 'electron'
 import fs from 'fs'
 import path, { join } from 'path'
 import { DesktopNode } from '@common/types/DesktopNode'
 import { is } from '@electron-toolkit/utils'
+import { APP_DATA_DB_DIR } from '$/global/Constant'
+import { createPluginWindow } from '$/plugin/PluginWindow'
+import { pluginManager } from '$/global/BeanFactory'
 
 const DEFAULT_DESKTOP_ID = 'desktop-1'
 
 // 数据文件路径
 const getDataPath = () => {
-  const userDataPath = app.getPath('userData')
-  return path.join(userDataPath, 'desktop_data.json')
+  return path.join(APP_DATA_DB_DIR, 'desktop_data.json')
 }
 
 // 读取数据
@@ -182,6 +184,24 @@ ipcMain.handle('desktop:openApp', async (_event, node: DesktopNode) => {
     } else {
       await builtinWindow.loadFile(join(__dirname, `../renderer/${node.meta?.builtinId}.html`))
     }
+  }
+  if (node.type === 'plugin') {
+    const pluginId = node.meta!.pluginId!
+    // 启动插件
+    const entity = pluginManager.getById(pluginId)
+    if (!entity) return false
+    await createPluginWindow(
+      {
+        label: entity.main!.label,
+        url: entity.main!.path,
+        icon: entity.icon,
+        width: entity.main?.width,
+        height: entity.main?.height,
+        minHeight: entity.main?.minHeight,
+        minWidth: entity.main?.minWidth
+      },
+      pluginId
+    )
   }
   return false
 })

@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { APP_NAME } from '$/global/Constant'
+import { APP_NAME, appDirInit } from '$/global/Constant'
 import { pluginManager } from '$/global/BeanFactory'
 
 // 导入插件事件
@@ -22,7 +22,8 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      webSecurity: false
     }
   })
 
@@ -48,6 +49,13 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  appDirInit()
+    .then(() => {
+      console.log('App Dir Init')
+    })
+    .catch((e) => {
+      console.error('App Dir Init Fail', e)
+    })
   // 初始化插件列表
   pluginManager
     .initPlugins()

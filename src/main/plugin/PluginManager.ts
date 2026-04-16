@@ -6,7 +6,7 @@ import AdmZip from 'adm-zip'
 import { PluginEntityWrap, PluginVerifyResult } from '@common/types/PluginEntity'
 import { pluginVerify } from '$/plugin/PluginVerify'
 import {
-  APP_PLUGIN_DIR,
+  APP_DATA_PLUGIN_DIR,
   appPluginConfigPath,
   createPluginDirs,
   removePluginDirs
@@ -26,7 +26,7 @@ export class PluginManager {
    * 初始化插件列表
    */
   async initPlugins(): Promise<void> {
-    const pluginIds = await readdir(APP_PLUGIN_DIR)
+    const pluginIds = await readdir(APP_DATA_PLUGIN_DIR)
     const items = await Promise.allSettled(
       pluginIds.map(async (pluginId) => {
         const configPath = appPluginConfigPath(pluginId)
@@ -39,14 +39,13 @@ export class PluginManager {
             // 验证通过，返回
             return {
               ...pc,
-              root: join(APP_PLUGIN_DIR, pluginId)
+              root: join(APP_DATA_PLUGIN_DIR, pluginId)
             } as PluginEntityWrap
           }
         }
         return null
       })
     )
-    console.log('PluginManager initialized', items)
     for (const item of items) {
       if (item.status === 'fulfilled') {
         if (item.value) {
@@ -136,7 +135,7 @@ export class PluginManager {
       // 没有问题，加入当前插件列表
       this.pluginMap.set(configJson.identifier, {
         ...configJson,
-        root: join(APP_PLUGIN_DIR, id)
+        root: join(APP_DATA_PLUGIN_DIR, id)
       })
     } catch (e) {
       // 发生异常，删除插件目录

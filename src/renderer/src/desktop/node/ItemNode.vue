@@ -7,8 +7,8 @@
   >
     <div class="icon-wrapper">
       <img
-        v-if="getNodeIcon(node)"
-        :src="getNodeIcon(node)"
+        v-if="node.icon"
+        :src="node.icon"
         :alt="node.name"
         class="icon-image"
         @error="($event.target as HTMLImageElement).style.display = 'none'"
@@ -34,7 +34,7 @@ const props = defineProps({
   }
 })
 
-const nodeSize = computed(() => props.dockMode ? '52px' : '48px')
+const nodeSize = computed(() => (props.dockMode ? '52px' : '48px'))
 
 const getNodeIcon = (node: DesktopNode) => {
   if (node.icon) {

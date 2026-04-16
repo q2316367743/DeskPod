@@ -12,19 +12,25 @@ export const APP_VERSION = '1.0.0'
 export const APP_PASSWORD = 'FmH24q7!*DDUcd'
 
 export const APP_DATA_DIR = join(app.getPath('appData'), APP_ID)
+
 export const APP_DATA_ASSET_DIR = join(APP_DATA_DIR, 'asset')
 export const APP_DATA_DB_DIR = join(APP_DATA_DIR, 'db')
-export const APP_DATA_STORE_DIR = join(APP_DATA_DIR, 'store')
+export const APP_DATA_PLUGIN_DIR = join(APP_DATA_DIR, 'plugins')
 
-// 插件目录
-export const APP_PLUGIN_DIR = join(APP_DATA_DIR, 'plugins')
+export const appDirInit =async () => {
+  await Promise.all([
+    mkdir(APP_DATA_PLUGIN_DIR, { recursive: true }),
+    mkdir(APP_DATA_ASSET_DIR, { recursive: true }),
+    mkdir(APP_DATA_DB_DIR, { recursive: true })
+  ])
+}
 
 export const appPluginConfigPath = (pluginId: string) =>
-  join(APP_PLUGIN_DIR, pluginId, 'runtime', 'plugin.json')
+  join(APP_DATA_PLUGIN_DIR, pluginId, 'runtime', 'plugin.json')
 
 // 创建一个插件的全部目录
 export const createPluginDirs = async (pluginId: string) => {
-  const baseDir = join(APP_PLUGIN_DIR, pluginId)
+  const baseDir = join(APP_DATA_PLUGIN_DIR, pluginId)
   const runtime = join(baseDir, 'runtime')
   await Promise.all([
     mkdir(runtime, { recursive: true }),
@@ -39,7 +45,7 @@ export const createPluginDirs = async (pluginId: string) => {
 }
 
 export const removePluginDirs = async (pluginId: string) => {
-  const baseDir = join(APP_PLUGIN_DIR, pluginId)
+  const baseDir = join(APP_DATA_PLUGIN_DIR, pluginId)
   await Promise.all([
     unlink(join(baseDir, 'runtime')),
     // mkdir(join(baseDir, 'resource')),

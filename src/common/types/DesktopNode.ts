@@ -36,8 +36,7 @@ export interface DesktopNode {
 
     // type === 'plugin' 或 type ===  'widget' && source === 'extension' 时
     pluginId?: string // 插件的唯一ID (如 'sys-settings')
-    entry?: string // 插件入口文件 (如 'index.html')
-    permissions?: string[] // 插件权限 (仅 plugin 有)
+    root?: string // 插件的根目录
 
     // type === 'widget' 时
     source?: 'builtin' | 'extension' // 【新增】区分来源

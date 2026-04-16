@@ -1,5 +1,4 @@
-import { contextBridge } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
+import { contextBridge, ipcRenderer } from 'electron'
 import { sep, delimiter } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import {
@@ -54,7 +53,7 @@ const __TAURI_INTERNALS__ = {
       return Promise.resolve()
     }
     // 直接执行命令
-    return electronAPI.ipcRenderer.invoke('plugin:cmd', {
+    return ipcRenderer.invoke('plugin:cmd', {
       cmd: cmd,
       args: args,
       options: options

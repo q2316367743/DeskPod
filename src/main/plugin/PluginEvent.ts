@@ -4,7 +4,8 @@ import opener from '$/support/plugin-opener'
 import dialog from '$/support/plugin-dialog'
 import fs from '$/support/plugin-fs'
 import store from '$/support/plugin-store'
-import win, { getBrowserWindowByKey, getBrowserWindowKeyById } from '$/support/plugin-window'
+import win from '$/support/plugin-window'
+import { getBrowserWindowByKey, getBrowserWindowKeyById } from '$/plugin/PluginWindow'
 import pluginApp from '$/support/plugin-app'
 import log from '$/support/plugin-log'
 import shell from '$/support/plugin-shell'
@@ -31,8 +32,6 @@ const handleList = [
 handleList.flatMap(({ cmd, plugin }) => {
   invokeHandleMap.set(cmd, plugin as ApiFunc<unknown, unknown, unknown>)
 })
-
-
 
 // 接收命令
 ipcMain.handle('plugin:cmd', (event, props) => {

@@ -22,6 +22,14 @@ export default defineConfig({
         '~': resolve('src/preload'),
         '@common': resolve('src/common')
       }
+    },
+    build: {
+      rollupOptions: {
+        input: {
+          index: 'src/preload/index.ts',
+          plugin: 'src/preload/plugin.ts'
+        }
+      }
     }
   },
   renderer: {
