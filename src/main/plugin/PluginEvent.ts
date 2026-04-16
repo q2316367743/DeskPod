@@ -11,7 +11,7 @@ import log from '$/support/plugin-log'
 import shell from '$/support/plugin-shell'
 
 // import event from './plugins/plugin-event'
-import { ApiFunc } from '$/types/DefineApi'
+import { ApiFunc } from '$/global/DefineApi'
 import { ipcMain } from 'electron'
 import { pluginManager } from '$/global/BeanFactory'
 

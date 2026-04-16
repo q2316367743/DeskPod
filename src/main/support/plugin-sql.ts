@@ -2,7 +2,7 @@ import sqlite3 from 'better-sqlite3'
 import { mkdir } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { dirname } from 'node:path'
-import { defineApi } from '$/types/DefineApi'
+import { defineApi } from '$/global/DefineApi'
 
 /**
  * 数据库缓存

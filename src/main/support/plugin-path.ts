@@ -1,6 +1,6 @@
 import { join, basename, extname, isAbsolute, normalize, resolve } from 'node:path'
 import { app } from 'electron'
-import { defineApi } from '$/types/DefineApi'
+import { defineApi } from '$/global/DefineApi'
 import { pluginManager } from '$/global/BeanFactory'
 
 export enum BaseDirectory {

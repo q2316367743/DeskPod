@@ -1,4 +1,4 @@
-import { defineApi } from '$/types/DefineApi'
+import { defineApi } from '$/global/DefineApi'
 import { dialog } from 'electron'
 import { DialogFilter } from '@tauri-apps/plugin-dialog'
 

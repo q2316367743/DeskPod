@@ -1,43 +1,29 @@
-import Database, { type QueryResult } from '@tauri-apps/plugin-sql'
-import { resolveResource } from '@tauri-apps/api/path'
-import { readTextFile } from '@tauri-apps/plugin-fs'
-import { APP_DATA_DB_PATH, LOG_MIGRATE_FILES, MAIN_MIGRATE_FILES } from '@/global/Constants'
-import { logDebug, logError, logInfo } from '@/lib/log'
-import { QueryChain } from '@/utils/file/QueryWrapper'
-import { BaseMapper, generatePlaceholders, type TableLike } from '@/utils'
+import sqlite3 from 'better-sqlite3'
+import { readFile } from 'node:fs/promises'
 
-type TableName =
-  | 'release_project'
-  | 'release_version'
-  | 'release_version_log'
-  | 'release_instance'
-  | 'release_deploy'
-  | 'release_asset_meta'
-  | 'release_asset_content'
-  | 'release_credential_group'
-  | 'release_credential_item'
-  | 'host'
-  | 'host_credential'
-  | 'deploy_script'
+import { APP_DATA_DB_PATH, MAIN_MIGRATE_FILES } from '$/global/Constant'
+import { logError, logInfo } from '$/lib/log'
+import { QueryChain } from '$/util/file/QueryWrapper'
+import { generatePlaceholders } from '@common/utils'
+import { BaseMapper, type TableLike } from '$/util/file'
 
-type LogTableName = 'deploy_record' | 'deploy_step' | 'deploy_log'
+type TableName = 'release_project'
+
+export interface QueryResult {
+  rowsAffected: number
+  lastInsertId?: number
+}
 
 export class SqlBase<N extends string> {
-  protected db: Database | null = null
+  protected db: sqlite3.Database
   private readonly fileName: string
 
   constructor(fileName: string) {
     this.fileName = fileName
-  }
-
-  async getDb(): Promise<Database> {
-    // 将新的 SQL 调用追加到 Promise 链尾部
-    if (this.db) return this.db
     const path = APP_DATA_DB_PATH(this.fileName)
     logInfo('[sql] db path: ', path)
-    this.db = await Database.load(`sqlite:${path}`)
+    this.db = new sqlite3(path)
     logInfo('[sql] db init success', this.db)
-    return this.db
   }
 
   private executionChain: Promise<void> = Promise.resolve()
@@ -45,9 +31,15 @@ export class SqlBase<N extends string> {
   /**
    * 串行执行 SQL 命令，确保同一时间只有一个查询在运行
    */
-  public async execute(query: string, bindValues?: unknown[]): Promise<QueryResult> {
+  public async execute(query: string, bindValues: unknown[] = []): Promise<QueryResult> {
     // 封装当前操作为一个函数
-    const operation = () => this.db!.execute(query, bindValues)
+    const operation = (): QueryResult => {
+      const r = this.db.prepare(query).run(...bindValues)
+      return {
+        rowsAffected: r.changes,
+        lastInsertId: r.lastInsertRowid as number
+      }
+    }
 
     // 将操作加入执行链
     const result = this.executionChain.then(() => operation())
@@ -65,8 +57,8 @@ export class SqlBase<N extends string> {
     return result
   }
 
-  async select<T>(query: string, bindValues?: unknown[]): Promise<T> {
-    return this.db!.select<T>(query, bindValues)
+  async select<T>(query: string, bindValues: unknown[] = []): Promise<T> {
+    return this.db.prepare(query).all(...bindValues) as T
   }
 
   query<T extends TableLike>(tableName: N) {
@@ -77,27 +69,6 @@ export class SqlBase<N extends string> {
     return new BaseMapper<T, N>(tableName, this)
   }
 
-  // 开启一个事务
-  async beginTransaction<T = any>(callback: (sql: SqlBase<N>) => Promise<T>): Promise<T> {
-    try {
-      logDebug('[sql] begin transaction')
-      await this.db!.execute(`BEGIN`)
-      const r = await callback(this)
-      logDebug('[sql] commit transaction')
-      await this.db!.execute(`COMMIT`)
-      return r
-    } catch (e) {
-      logError('[sql] rollback transaction')
-      console.error(e)
-      try {
-        await this.db!.execute(`ROLLBACK`)
-      } catch (err) {
-        logError('[sql] 回滚失败')
-        console.error(err)
-      }
-      throw e
-    }
-  }
 }
 
 export class SqlWrapper<N extends string> extends SqlBase<N> {
@@ -127,8 +98,6 @@ export class SqlWrapper<N extends string> extends SqlBase<N> {
   }
 
   async migrate() {
-    // 获取 db
-    await this.getDb()
     // 1. 检查 schema_version 表是否存在
     logInfo('[sql] 1. 检查 schema_version 表是否存在')
     const rows = await this.select<
@@ -154,8 +123,7 @@ export class SqlWrapper<N extends string> extends SqlBase<N> {
       .sort((a, b) => a.version - b.version)
 
     for (const { file, version } of pending) {
-      const resourcePath = await resolveResource(file)
-      const sql = await readTextFile(resourcePath)
+      const sql = await readFile(file, 'utf-8')
       logInfo('[sql] 开始处理文件：', file, ',版本：', version)
       await this.execute('BEGIN')
       try {
@@ -180,7 +148,5 @@ export class SqlWrapper<N extends string> extends SqlBase<N> {
 }
 
 const sql = new SqlWrapper<TableName>('main', MAIN_MIGRATE_FILES)
-const logSql = new SqlWrapper<LogTableName>('log', LOG_MIGRATE_FILES)
 
 export const useSql = () => sql
-export const useLogSql = () => logSql

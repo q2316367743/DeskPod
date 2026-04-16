@@ -1,4 +1,4 @@
-import { defineApi } from '$/types/DefineApi'
+import { defineApi } from '$/global/DefineApi'
 import { spawn } from 'node:child_process'
 
 const programMap = {

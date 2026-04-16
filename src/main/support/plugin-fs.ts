@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join, basename } from 'node:path'
-import { defineApi } from '$/types/DefineApi'
+import { defineApi } from '$/global/DefineApi'
 
 interface BaseArgs {
   path: string

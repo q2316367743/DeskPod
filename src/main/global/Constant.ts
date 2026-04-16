@@ -17,7 +17,16 @@ export const APP_DATA_ASSET_DIR = join(APP_DATA_DIR, 'asset')
 export const APP_DATA_DB_DIR = join(APP_DATA_DIR, 'db')
 export const APP_DATA_PLUGIN_DIR = join(APP_DATA_DIR, 'plugins')
 
-export const appDirInit =async () => {
+export const APP_DATA_DB_PATH = (filename: string) => join(APP_DATA_DB_DIR, filename)
+
+export const MAIN_MIGRATE_FILES = [
+  {
+    file: '',
+    version: 0
+  }
+]
+
+export const appDirInit = async () => {
   await Promise.all([
     mkdir(APP_DATA_PLUGIN_DIR, { recursive: true }),
     mkdir(APP_DATA_ASSET_DIR, { recursive: true }),

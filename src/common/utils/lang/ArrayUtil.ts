@@ -1,5 +1,3 @@
-import { isTauri } from '@tauri-apps/api/core'
-
 export function contains<T>(arr: T[], keyword: T): boolean {
   try {
     for (const item of arr) {
@@ -173,19 +171,14 @@ export function distinct<T extends Record<string, unknown>, K extends keyof T>(
 /**
  * 生成占位符字符串，例如 generatePlaceholders(3) => "$1,$2,$3"
  * @param n - 占位符数量（必须为正整数）
- * @param offset - 占位符的起始索引（默认为 0）
  * @returns 格式为 "$1,$2,...,$n" 的字符串
  */
-export function generatePlaceholders(n: number, offset = 0): string {
+export function generatePlaceholders(n: number): string {
   if (!Number.isInteger(n) || n < 0) {
     throw Error('Input must be a non-negative integer')
   }
   if (n === 0) return ''
-  if (isTauri()) {
-    return Array.from({ length: n }, (_, i) => `$${i + 1 + offset}`).join(',')
-  } else {
-    return Array.from({ length: n }, () => `?`).join(',')
-  }
+  return Array.from({ length: n }, () => `?`).join(',')
 }
 
 /**

@@ -5,6 +5,7 @@ export type DesktopNodeType =
   | 'plugin' // 插件
   | 'widget' // 小组件
   | 'builtin' // 内置窗口
+  | 'quick' // 快应用，就是只有一个 html 文件的纯 web 应用
 
 // 统一的节点接口定义 (TypeScript 描述，便于理解结构)
 export interface DesktopNode {
@@ -33,8 +34,7 @@ export interface DesktopNode {
     url?: string // 网站地址
     openWith?: 'default' | 'inner' // 打开方式，默认浏览器还是内置浏览器
 
-
-    // type === 'plugin' 或 type ===  'widget' && source === 'extension' 时
+    // type === 'plugin' 或 type ===  'widget' && source === 'extension' 或 type === 'quick' 时
     pluginId?: string // 插件的唯一ID (如 'sys-settings')
     root?: string // 插件的根目录
 
@@ -50,4 +50,3 @@ export interface DesktopNode {
     height?: number // 小部件高 (网格单位，如占 1 格)
   }
 }
-

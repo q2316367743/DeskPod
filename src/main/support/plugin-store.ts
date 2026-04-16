@@ -1,4 +1,4 @@
-import { defineApi } from '$/types/DefineApi'
+import { defineApi } from '$/global/DefineApi'
 import { BaseDirectory, getDirectory } from '$/support/plugin-path'
 import { getBrowserWindowByKey } from '$/plugin/PluginWindow'
 import { join } from 'node:path'

@@ -1,6 +1,6 @@
-import { logDebug } from '@/lib/log'
-import { generatePlaceholders, useSnowflake } from '@/utils'
-import { SqlBase } from '@/lib/sql'
+import { logDebug } from '$/lib/log'
+import { generatePlaceholders, useSnowflake } from '@common/utils'
+import { SqlBase } from '$/lib/sql'
 
 export interface TableLike extends Record<string, unknown> {
   id: string
@@ -21,14 +21,14 @@ export class BaseMapper<T extends TableLike, N extends string> {
     for (const key in params) {
       const value = params[key]
       if (typeof value === 'undefined' || value === null) continue
-      query.push(`\`${key}\` = ${generatePlaceholders(1, values.length)}`)
+      query.push(`\`${key}\` = ${generatePlaceholders(1)}`)
       values.push(value)
     }
     if (query.length === 0) {
       // 没有更新的
       return
     }
-    const sql = `update ${this.tableName} set ${query.join(', ')} where id = ${generatePlaceholders(1, values.length)}`
+    const sql = `update ${this.tableName} set ${query.join(', ')} where id = ${generatePlaceholders(1)}`
     const val = [...values, id]
     logDebug('[sql] update sql:\t\t' + sql)
     logDebug('[sql] update values:\t' + val)
@@ -54,11 +54,11 @@ export class BaseMapper<T extends TableLike, N extends string> {
 
   async insert(params: Partial<Omit<T, 'id'>>): Promise<T> {
     const query = new Array<string>()
-    const values = new Array<any>()
+    const values = new Array<unknown>()
     for (const key in params) {
       if (key === 'id') continue
       query.push(`\`${key}\``)
-      values.push((params as any)[key])
+      values.push(params[key])
     }
     const sql = `insert into ${this.tableName} (id, ${query.join(
       ', '
@@ -86,7 +86,7 @@ export class BaseMapper<T extends TableLike, N extends string> {
 
     // 生成所有ID
     const ids: Array<string> = []
-    const allValues: Array<any> = []
+    const allValues: Array<unknown> = []
 
     for (const _param of params) {
       const id = useSnowflake().nextId()
@@ -101,12 +101,7 @@ export class BaseMapper<T extends TableLike, N extends string> {
     }
 
     // 构建SQL语句
-    const valuePlaceholders = params
-      .map(
-        (_v, index) =>
-          `(${generatePlaceholders(keys.length + 1, index > 0 ? keys.length * index + index : 0)})`
-      )
-      .join(', ')
+    const valuePlaceholders = `(${generatePlaceholders((keys.length + 1) * params.length)})`
 
     const sql = `insert into ${this.tableName} (id, ${columnNames.join(
       ', '
@@ -123,7 +118,7 @@ export class BaseMapper<T extends TableLike, N extends string> {
 
   async insertSelf(params: Partial<T> & TableLike) {
     const query = new Array<string>()
-    const values = new Array<any>()
+    const values = new Array<unknown>()
     for (const key in params) {
       const value = params[key]
       if (typeof value === 'undefined') continue

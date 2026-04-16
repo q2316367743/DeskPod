@@ -4,9 +4,7 @@ import NotificationUtil from '@/utils/model/NotificationUtil'
 
 export * from '@common/utils/lang/Snowflake'
 
-export * from './file'
-
-export * from './lang/ArrayUtil'
+export * from '@common/utils/lang/ArrayUtil'
 export * from './lang/FieldUtil'
 
 export { MessageUtil, MessageBoxUtil, NotificationUtil }

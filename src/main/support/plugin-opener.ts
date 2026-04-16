@@ -1,6 +1,6 @@
 import { shell } from 'electron'
 
-import { defineApi } from '$/types/DefineApi'
+import { defineApi } from '$/global/DefineApi'
 
 export default [
   defineApi<{ url: string }>('plugin:opener|open_url', async (args) => {

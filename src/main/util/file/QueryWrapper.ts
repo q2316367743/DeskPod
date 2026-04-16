@@ -1,7 +1,7 @@
-import { logDebug } from '@/lib/log'
-import { generatePlaceholders } from '@/utils'
+import { logDebug } from '$/lib/log'
+import { generatePlaceholders } from '@common//utils'
 import type { PageResponse } from '@common/types/CommonType.ts'
-import { SqlBase } from '@/lib/sql'
+import { SqlBase } from '$/lib/sql'
 
 export class QueryChain<
   T extends Record<string, unknown>,
@@ -38,7 +38,7 @@ export class QueryChain<
 
   private simpleWhere(k: K, op: string, v?: T[K]) {
     if (typeof v === 'undefined' || v === null) return this
-    this.params.push(`\`${String(k)}\` ${op} ${generatePlaceholders(1, this.values.length)}`)
+    this.params.push(`\`${String(k)}\` ${op} ${generatePlaceholders(1)}`)
     this.values.push(v)
     return this
   }
@@ -70,7 +70,7 @@ export class QueryChain<
   like(k: K, v?: T[K]) {
     if (typeof v === 'undefined' || v === null) return this
     this.params.push(
-      `\`${String(k)}\` like CONCAT('%', ${generatePlaceholders(1, this.values.length)}, '%')`
+      `\`${String(k)}\` like CONCAT('%', ${generatePlaceholders(1)}, '%')`
     )
     this.values.push(v)
     return this
@@ -79,7 +79,7 @@ export class QueryChain<
   likeLeft(k: K, v?: T[K]) {
     if (typeof v === 'undefined' || v === null) return this
     this.params.push(
-      `\`${String(k)}\` like CONCAT('%', ${generatePlaceholders(1, this.values.length)})`
+      `\`${String(k)}\` like CONCAT('%', ${generatePlaceholders(1)})`
     )
     this.values.push(v)
     return this
@@ -88,7 +88,7 @@ export class QueryChain<
   likeRight(k: K, v?: T[K]) {
     if (typeof v === 'undefined' || v === null) return this
     this.params.push(
-      `\`${String(k)}\` like CONCAT(${generatePlaceholders(1, this.values.length)}, '%')`
+      `\`${String(k)}\` like CONCAT(${generatePlaceholders(1)}, '%')`
     )
     this.values.push(v)
     return this
@@ -115,7 +115,7 @@ export class QueryChain<
   in(k: K, sql: string | Array<T[K]>) {
     if (Array.isArray(sql)) {
       this.params.push(
-        `\`${String(k)}\` in (${generatePlaceholders(sql.length, this.values.length)})`
+        `\`${String(k)}\` in (${generatePlaceholders(sql.length)})`
       )
       this.values.push(...sql)
     } else {

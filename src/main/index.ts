@@ -10,6 +10,8 @@ import '$/plugin/PluginEvent'
 
 // 导入桌面管理
 import '$/router'
+import { useSql } from '$/lib/sql'
+import { logDebug, logError } from '$/lib/log'
 
 function createWindow(): void {
   // Create the browser window.
@@ -49,12 +51,20 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  // 初始化目录
   appDirInit()
     .then(() => {
       console.log('App Dir Init')
     })
     .catch((e) => {
       console.error('App Dir Init Fail', e)
+    })
+    .finally(() => {
+      // 初始化数据库
+      useSql()
+        .migrate()
+        .then(() => logDebug('数据库初始化成功'))
+        .catch((e) => logError('数据库初始化失败', e))
     })
   // 初始化插件列表
   pluginManager
