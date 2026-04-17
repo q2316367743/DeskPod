@@ -22,22 +22,26 @@ export class QuickManager {
     return Array.from(this.map.values())
   }
 
-  private async handleFile(form: QuickAppCore, data: QuickAppCore, root: string) {
+  getById(id: string) {
+    return this.map.get(id)
+  }
+
+  private async handleFile(form: QuickAppCore, data: QuickAppCore) {
     if (form.icon && existsSync(form.icon)) {
       // 存在图标
       const ibn = basename(form.icon)
-      await copyFile(form.icon, join(root, ibn))
+      await copyFile(form.icon, join(data.root, ibn))
       data.icon = ibn
     }
     // 3. 判断来源
     if (form.from === 'ai' || form.from === 'html') {
       // 这个最简单，吧 entry 写入到文件
-      await writeFile(join(root, 'index.html'), form.entry, 'utf-8')
+      await writeFile(join(data.root, 'index.html'), form.root, 'utf-8')
       data.entry = 'index.html'
     } else if (form.from === 'zip') {
       // 先解压
       const z = new AdmZip(form.root)
-      z.extractAllTo(root, true)
+      z.extractAllTo(data.root, true)
     } else {
       return Promise.reject(new Error('创建快应用失败，不支持的来源'))
     }
@@ -56,7 +60,7 @@ export class QuickManager {
       root: root
     }
     try {
-      await this.handleFile(form, data, root)
+      await this.handleFile(form, data)
       // 创建
       await addQuickApp(data)
     } catch (e) {
@@ -84,7 +88,7 @@ export class QuickManager {
       root: root
     }
     try {
-      await this.handleFile(form, data, root)
+      await this.handleFile(form, data)
       // 更新
       await updateQuickApp(id, data)
     } catch (e) {

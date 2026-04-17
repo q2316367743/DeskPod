@@ -5,8 +5,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { open } from '@tauri-apps/plugin-dialog'
-
 interface DialogFilter {
   /** Filter name. */
   name: string
@@ -26,17 +24,33 @@ const data = defineModel({
 })
 
 const props = defineProps({
-  placeholder: String,
   title: String,
-  filters: Array as PropType<Array<DialogFilter>>,
   defaultPath: String,
-  directory: Boolean,
-  recursive: Boolean,
-  canCreateDirectories: Boolean,
-  label: {
-    type: String,
-    default: ''
-  }
+  buttonLabel: String,
+  filters: {
+    type: Object as PropType<Array<DialogFilter>>
+  },
+  placeholder: String,
+  btn: String,
+  properties: {
+    type: Object as PropType<
+      Array<
+        | 'openFile'
+        | 'openDirectory'
+        | 'multiSelections'
+        | 'showHiddenFiles'
+        | 'createDirectory'
+        | 'promptToCreate'
+        | 'noResolveAliases'
+        | 'treatPackageAsDirectory'
+        | 'dontAddToRecent'
+      >
+    >
+  },
+  message: String,
+  securityScopedBookmarks: String,
+  label: String,
+  directory: String
 })
 
 const btn = computed(() => {
@@ -46,11 +60,8 @@ const btn = computed(() => {
 })
 
 const handleSelect = () => {
-  open({
-    ...props,
-    multiple: false
-  }).then((result) => {
-    data.value = result || ''
+  window.supportAPI.shellOpenDialog(toRaw(props) as never).then((result) => {
+    data.value = result?.[0] || ''
   })
 }
 </script>

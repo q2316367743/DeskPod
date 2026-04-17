@@ -1,6 +1,7 @@
 import { join } from 'node:path'
 import { mkdir, rm } from 'node:fs/promises'
 import { app } from 'electron'
+import s0000 from '../../../resources/migrate/0000.sql?asset'
 
 export const APP_ID = 'xyz.esion.desk-pod'
 export const APP_NAME = 'DeskPod'
@@ -18,11 +19,11 @@ export const APP_DATA_DB_DIR = join(APP_DATA_DIR, 'db')
 export const APP_DATA_PLUGIN_DIR = join(APP_DATA_DIR, 'plugins')
 export const APP_DATA_QUICK_DIR = join(APP_DATA_DIR, 'quick')
 
-export const APP_DATA_DB_PATH = (filename: string) => join(APP_DATA_DB_DIR, filename)
+export const APP_DATA_DB_PATH = (filename: string) => join(APP_DATA_DB_DIR, filename + '.sqlite')
 
 export const MAIN_MIGRATE_FILES = [
   {
-    file: '',
+    file: s0000,
     version: 0
   }
 ]

@@ -1,24 +1,18 @@
 <template>
-  <div class="plugin-dialog-content">
-    <div v-if="loading" class="plugin-dialog-loading">加载中...</div>
-    <div v-else-if="plugins.length === 0" class="plugin-dialog-empty">暂无已安装的插件</div>
-    <div v-else class="plugin-dialog-list">
+  <div class="quick-dialog-content">
+    <div v-if="loading" class="quick-dialog-loading">加载中...</div>
+    <div v-else-if="apps.length === 0" class="quick-dialog-empty">暂无已安装的快应用</div>
+    <div v-else class="quick-dialog-list">
       <div
-        v-for="plugin in plugins"
-        :key="plugin.identifier"
-        class="plugin-dialog-item"
-        @click="handleAddPlugin(plugin)"
+        v-for="app in apps"
+        :key="app.id"
+        class="quick-dialog-item"
+        @click="handleAddPlugin(app)"
       >
-        <img
-          v-if="plugin.icon"
-          :src="`file://${plugin.root}/runtime/${plugin.icon}`"
-          class="plugin-dialog-icon"
-          :alt="plugin.productName"
-        />
-        <div class="plugin-dialog-info">
-          <div class="plugin-dialog-name">{{ plugin.productName }}</div>
-          <div class="plugin-dialog-version">v{{ plugin.version }}</div>
-          <div v-if="plugin.main" class="plugin-dialog-main">{{ plugin.main.title }}</div>
+        <QuickIcon :app="app" class="quick-dialog-icon" />
+        <div class="quick-dialog-info">
+          <div class="quick-dialog-name">{{ app.name }}</div>
+          <div class="quick-dialog-main">{{ app.from }}</div>
         </div>
       </div>
     </div>
@@ -26,61 +20,60 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import { PluginEntityWrap } from '@common/types'
+import { QuickApp } from '@common/types'
 import { DesktopNode } from '@common/types'
 import { MessageUtil } from '@/utils'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
+import QuickIcon from '@/desktop/icon/QuickIcon.vue'
 
-const props = defineProps<{
-  desktopId: string
-  onDestroy: () => void
-}>()
+const props = defineProps({
+  desktopId: {
+    type: String,
+    required: true
+  }
+})
+const emit = defineEmits(['destroy'])
 
-const plugins = ref<Array<PluginEntityWrap>>([])
+const apps = ref<Array<QuickApp>>([])
 const loading = ref(false)
 
 onMounted(() => {
   loading.value = true
-  window.pluginAPI
+  window.quickAPI
     .list()
     .then((data) => {
-      // 过滤掉没有主窗口的插件
-      plugins.value = data.filter((app) => Boolean(app.main))
+      apps.value = data.filter((app) => app.type === 'window')
     })
     .finally(() => {
       loading.value = false
     })
 })
 
-const handleAddPlugin = (plugin: PluginEntityWrap) => {
-  if (!plugin.main) {
-    MessageUtil.warning('该插件没有主窗口，无法添加到桌面')
-    return
-  }
-
+const handleAddPlugin = (app: QuickApp) => {
   const node: DesktopNode = {
     id: crypto.randomUUID(),
-    type: 'plugin',
-    name: plugin.productName,
-    icon: `file://${plugin.root}/runtime/${plugin.icon}`,
+    type: 'quick',
+    name: app.name,
+    icon: app.icon ? `file://${app.root}/${app.icon}` : '',
     parentId: null,
     sortIndex: 0,
     desktopId: props.desktopId,
     row: 0,
     column: 0,
     meta: {
-      pluginId: plugin.identifier,
-      root: plugin.root
+      pluginId: app.id,
+      root: app.root,
+      width: app.width,
+      height: app.height
     }
   }
 
   window.desktopAPI
     .updateNode(node)
     .then(() => {
-      MessageUtil.success('成功添加插件')
+      MessageUtil.success('成功添加快应用')
       useDesktopNodeStore().init()
-      props.onDestroy()
+      emit('destroy')
     })
     .catch((e) => {
       MessageUtil.error('添加失败', e)
@@ -89,19 +82,19 @@ const handleAddPlugin = (plugin: PluginEntityWrap) => {
 </script>
 
 <style lang="less" scoped>
-.plugin-dialog-content {
+.quick-dialog-content {
   min-width: 320px;
 }
 
-.plugin-dialog-loading,
-.plugin-dialog-empty {
+.quick-dialog-loading,
+.quick-dialog-empty {
   padding: 40px 20px;
   text-align: center;
   color: var(--td-text-color-placeholder);
   font-size: 14px;
 }
 
-.plugin-dialog-list {
+.quick-dialog-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -109,7 +102,7 @@ const handleAddPlugin = (plugin: PluginEntityWrap) => {
   overflow-y: auto;
 }
 
-.plugin-dialog-item {
+.quick-dialog-item {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -125,7 +118,7 @@ const handleAddPlugin = (plugin: PluginEntityWrap) => {
   }
 }
 
-.plugin-dialog-icon {
+.quick-dialog-icon {
   width: 40px;
   height: 40px;
   border-radius: var(--fluent-radius-smooth);
@@ -133,12 +126,12 @@ const handleAddPlugin = (plugin: PluginEntityWrap) => {
   flex-shrink: 0;
 }
 
-.plugin-dialog-info {
+.quick-dialog-info {
   flex: 1;
   min-width: 0;
 }
 
-.plugin-dialog-name {
+.quick-dialog-name {
   font-size: 14px;
   font-weight: 500;
   color: var(--td-text-color-primary);
@@ -147,13 +140,13 @@ const handleAddPlugin = (plugin: PluginEntityWrap) => {
   text-overflow: ellipsis;
 }
 
-.plugin-dialog-version {
+.quick-dialog-version {
   font-size: 12px;
   color: var(--td-text-color-placeholder);
   margin-top: 2px;
 }
 
-.plugin-dialog-main {
+.quick-dialog-main {
   font-size: 12px;
   color: var(--td-text-color-secondary);
   margin-top: 2px;

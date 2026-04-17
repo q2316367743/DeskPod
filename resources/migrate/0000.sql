@@ -7,7 +7,7 @@ CREATE TABLE quick_app
   root       TEXT    NOT NULL DEFAULT '',       -- 根目录
   entry      TEXT    NOT NULL DEFAULT '',       -- 入口文件
   icon       TEXT    NOT NULL DEFAULT '',       -- 图标文件
-  from       TEXT    NOT NULL DEFAULT 'ai',     -- 来源
+  `from`     TEXT    NOT NULL DEFAULT 'ai',     -- 来源
   type       TEXT    NOT NULL DEFAULT 'window', -- 类型：独立窗口(window) / 小部件(widget)
   width      INTEGER          DEFAULT 1,        -- 宽度，独立窗口 px，小部件列数
   height     INTEGER          DEFAULT 1         -- 高度，独立窗口 px，小部件行数1

@@ -4,3 +4,5 @@ import './desktop'
 import './plugin'
 // 支持类事件
 import './support'
+// 快应用事件
+import './quick'

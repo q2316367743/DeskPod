@@ -5,6 +5,7 @@ import { openLinkAppDialog } from '@/desktop/add/AddLinkDialog'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 import { AppIcon, LinkIcon } from 'tdesign-icons-vue-next'
 import { openPluginAppDialog } from '@/desktop/add/AddPluginDialog'
+import { openQuickAppDialog } from '@/desktop/add/AddQuickDialog'
 
 export function handleDesktopGridCxt(e: MouseEvent) {
   e.preventDefault()
@@ -32,6 +33,12 @@ export function handleDesktopGridCxt(e: MouseEvent) {
         label: '添加插件',
         onClick: () => {
           openPluginAppDialog(useDesktopNodeStore().desktopId)
+        }
+      },
+      {
+        label: '添加快应用',
+        onClick: () => {
+          openQuickAppDialog(useDesktopNodeStore().desktopId)
         }
       }
     ]

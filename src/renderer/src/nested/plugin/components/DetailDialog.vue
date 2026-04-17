@@ -150,7 +150,7 @@ const assetSrc = (assetPath: string) => {
   width: 600px;
   max-width: 90vw;
   max-height: 85vh;
-  background: var(--fluent-acrylic-bg);
+  background: var(--td-bg-color-container);
   backdrop-filter: var(--fluent-acrylic-blur);
   border: 1px solid var(--fluent-border-subtle);
   border-radius: var(--fluent-radius-large);

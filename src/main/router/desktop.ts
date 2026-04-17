@@ -1,11 +1,9 @@
-import { ipcMain, shell, BrowserWindow } from 'electron'
+import { ipcMain } from 'electron'
 import fs from 'fs'
-import path, { join } from 'path'
+import path from 'path'
 import { DesktopNode } from '@common/types'
-import { is } from '@electron-toolkit/utils'
 import { APP_DATA_DB_DIR } from '$/global/Constant'
-import { createPluginWindow } from '$/module/plugin'
-import { pluginManager } from '$/global/BeanFactory'
+import { openApp } from '$/global/OpenApp'
 
 const DEFAULT_DESKTOP_ID = 'desktop-1'
 
@@ -146,64 +144,8 @@ ipcMain.handle('desktop:deleteDesktop', (_event, desktopId: string) => {
 })
 
 // 打开应用
-ipcMain.handle('desktop:openApp', async (_event, node: DesktopNode) => {
-  if (node.type === 'app' && node.meta?.executablePath) {
-    await shell.openPath(node.meta.executablePath)
-    return true
-  }
-  if (node.type === 'link' && node.meta?.url) {
-    if (node.meta?.openWith === 'inner') {
-      const bw = new BrowserWindow({
-        title: node.name,
-        width: node.meta?.width,
-        height: node.meta?.height
-      })
-      await bw.loadURL(node.meta.url)
-      return true
-    }
-    await shell.openExternal(node.meta.url)
-    return true
-  }
-  if (node.type === 'builtin') {
-    const builtinWindow = new BrowserWindow({
-      title: node.name,
-      width: node.meta?.width || 800,
-      height: node.meta?.height || 600,
-      show: true,
-      autoHideMenuBar: true,
-      webPreferences: {
-        preload: join(__dirname, '../preload/index.js'),
-        sandbox: false,
-        webSecurity: false
-      }
-    })
-    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-      await builtinWindow.loadURL(
-        `${process.env['ELECTRON_RENDERER_URL']}/${node.meta?.builtinId}.html`
-      )
-    } else {
-      await builtinWindow.loadFile(join(__dirname, `../renderer/${node.meta?.builtinId}.html`))
-    }
-  }
-  if (node.type === 'plugin') {
-    const pluginId = node.meta!.pluginId!
-    // 启动插件
-    const entity = pluginManager.getById(pluginId)
-    if (!entity) return false
-    await createPluginWindow(
-      {
-        label: entity.main!.label,
-        url: entity.main!.path,
-        icon: entity.icon,
-        width: entity.main?.width,
-        height: entity.main?.height,
-        minHeight: entity.main?.minHeight,
-        minWidth: entity.main?.minWidth
-      },
-      pluginId
-    )
-  }
-  return false
+ipcMain.handle('desktop:openApp', async (_event, node) => {
+  return openApp(node)
 })
 
 // 获取应用列表（从系统获取已安装应用）
