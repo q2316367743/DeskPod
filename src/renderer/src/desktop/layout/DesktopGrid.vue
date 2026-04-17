@@ -10,7 +10,7 @@
           :node="item"
           :items="folderMap.get(item.id) || []"
         />
-        <ItemNode v-else :node="item" />
+        <ItemNode v-else :node="item" @contextmenu="handleDesktopNodeCxt($event, item)" />
       </template>
     </div>
   </div>
@@ -23,6 +23,7 @@ import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 import WidgetNode from '@/desktop/node/WidgetNode.vue'
 import FolderNode from '@/desktop/node/FolderNode.vue'
 import ItemNode from '@/desktop/node/ItemNode.vue'
+import { handleDesktopNodeCxt } from '@/desktop/layout/func/DesktopNodeCxt'
 
 const items = computed(() => useDesktopNodeStore().nodes)
 const list = computed(() => items.value.filter((item) => item.parentId === '0' || !item.parentId))
