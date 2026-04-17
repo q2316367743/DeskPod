@@ -67,7 +67,8 @@ export default defineConfig({
       rollupOptions: {
         input: {
           main: resolve('src/renderer/index.html'),
-          plugin: resolve('src/renderer/plugin.html')
+          plugin: resolve('src/renderer/plugin.html'),
+          quick: resolve('src/renderer/quick.html')
         }
       }
     }
