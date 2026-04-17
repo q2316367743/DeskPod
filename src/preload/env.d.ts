@@ -1,5 +1,5 @@
-import { DesktopNode } from '@common/types/DesktopNode'
-import { PluginEntityWrap, PluginVerifyResult } from '@common/types/PluginEntity'
+import { DesktopNode, QuickApp, QuickAppCore } from '@common/types'
+import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
 
 interface DesktopAPI {
   getTree: (desktopId?: string) => Promise<DesktopNode[]>
@@ -47,19 +47,29 @@ interface OpenDialogSyncOptions {
   securityScopedBookmarks?: boolean
 }
 
-interface supportAPI {
+interface SupportAPI {
   shellOpenDialog(options: OpenDialogSyncOptions): Promise<Array<string> | undefined>
   isWindows: () => boolean
 }
 
+interface QuickAPI {
+  list: () => Promise<Array<QuickApp>>
+  install: (form: QuickAppCore) => Promise<void>
+  upgrade: (id: string, form: QuickAppCore) => Promise<void>
+  uninstall: (id: string) => Promise<void>
+}
+
 global {
   interface Window {
+    // tauri 需要的定义
     __TAURI_OS_PLUGIN_INTERNALS__: Record<string, unknown>
     __TAURI_INTERNALS__: Record<string, unknown>
     isTauri: boolean
     __TAURI_EVENT_PLUGIN_INTERNALS__: Record<string, unknown>
+    // 内置窗口需要的定义
     desktopAPI: DesktopAPI
     pluginAPI: PluginAPI
-    supportAPI: supportAPI
+    supportAPI: SupportAPI
+    quickAPI: QuickAPI
   }
 }

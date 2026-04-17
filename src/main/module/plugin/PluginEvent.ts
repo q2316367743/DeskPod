@@ -5,7 +5,6 @@ import dialog from '$/support/plugin-dialog'
 import fs from '$/support/plugin-fs'
 import store from '$/support/plugin-store'
 import win from '$/support/plugin-window'
-import { getBrowserWindowByKey, getBrowserWindowKeyById } from '$/plugin/PluginWindow'
 import pluginApp from '$/support/plugin-app'
 import log from '$/support/plugin-log'
 import shell from '$/support/plugin-shell'
@@ -14,6 +13,7 @@ import shell from '$/support/plugin-shell'
 import { ApiFunc } from '$/global/DefineApi'
 import { ipcMain } from 'electron'
 import { pluginManager } from '$/global/BeanFactory'
+import { getBrowserWindowByKey, getBrowserWindowKeyById } from '$/module/plugin/index'
 
 // 事件处理器
 const invokeHandleMap = new Map<string, ApiFunc<unknown, unknown, unknown>>()

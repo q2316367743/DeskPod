@@ -1,10 +1,11 @@
 import { logDebug } from '$/lib/log'
 import { generatePlaceholders } from '@common//utils'
-import type { PageResponse } from '@common/types/CommonType.ts'
+import type { PageResponse } from '@common/types.ts'
 import { SqlBase } from '$/lib/sql'
+import { BaseEntity } from '@common/types'
 
 export class QueryChain<
-  T extends Record<string, unknown>,
+  T extends BaseEntity,
   N extends string,
   K extends keyof T = keyof T
 > {

@@ -3,8 +3,8 @@ import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { app } from 'electron'
 import AdmZip from 'adm-zip'
-import { PluginEntityWrap, PluginVerifyResult } from '@common/types/PluginEntity'
-import { pluginVerify } from '$/plugin/PluginVerify'
+import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
+import { pluginVerify } from '$/module/plugin'
 import {
   APP_DATA_PLUGIN_DIR,
   appPluginConfigPath,

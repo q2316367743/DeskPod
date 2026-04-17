@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import { DesktopNode } from '@common/types/DesktopNode'
+import { DesktopNode } from '@common/types'
 import { handleDesktopGridCxt } from '@/desktop/layout/func/DesktopGridCxt'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 import WidgetNode from '@/desktop/node/WidgetNode.vue'

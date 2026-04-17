@@ -1,5 +1,5 @@
 import { defineApi } from '$/global/DefineApi'
-import { createPluginWindow, WindowOptions } from '$/plugin/PluginWindow'
+import { createPluginWindow, WindowOptions } from '$/module/plugin'
 
 
 interface BaseArgs {

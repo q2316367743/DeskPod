@@ -66,7 +66,7 @@
 
 <script lang="ts" setup>
 import { PlusIcon } from 'tdesign-icons-vue-next'
-import type { PluginEntityWrap, PluginVerifyResult } from '@common/types/PluginEntity'
+import type { PluginEntityWrap, PluginVerifyResult } from '@common/types'
 import PluginCard from '@/nested/plugin/components/PluginCard.vue'
 import InstallDialog from '@/nested/plugin/components/InstallDialog.vue'
 import UpgradeDialog from '@/nested/plugin/components/UpgradeDialog.vue'

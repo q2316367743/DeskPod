@@ -3,10 +3,10 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { APP_NAME, appDirInit } from '$/global/Constant'
-import { pluginManager } from '$/global/BeanFactory'
+import { pluginManager, quickManager } from '$/global/BeanFactory'
 
 // 导入插件事件
-import '$/plugin/PluginEvent'
+import '$/module/plugin/PluginEvent'
 
 // 导入桌面管理
 import '$/router'
@@ -65,6 +65,13 @@ app.whenReady().then(() => {
         .migrate()
         .then(() => logDebug('数据库初始化成功'))
         .catch((e) => logError('数据库初始化失败', e))
+        .finally(() => {
+          // 数据库初始化完成后，进行快应用初始化
+          quickManager
+            .init()
+            .then(() => logDebug('快应用初始化成功'))
+            .catch((e) => logError('快应用初始化失败', e))
+        })
     })
   // 初始化插件列表
   pluginManager

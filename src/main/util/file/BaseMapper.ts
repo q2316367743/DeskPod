@@ -1,10 +1,9 @@
 import { logDebug } from '$/lib/log'
 import { generatePlaceholders, useSnowflake } from '@common/utils'
 import { SqlBase } from '$/lib/sql'
+import { BaseEntity } from '@common/types'
 
-export interface TableLike extends Record<string, unknown> {
-  id: string
-}
+export interface TableLike extends BaseEntity {}
 
 export class BaseMapper<T extends TableLike, N extends string> {
   protected readonly db: SqlBase<N>

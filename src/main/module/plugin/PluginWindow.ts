@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron'
 import { join } from 'path'
 import { pluginManager } from '$/global/BeanFactory'
-import icon from '../../../resources/icon.png?asset'
+import icon from '../../../../resources/icon.png?asset'
 
 export interface WindowOptions {
   // 窗口标签，必填

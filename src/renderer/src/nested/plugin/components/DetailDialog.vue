@@ -107,7 +107,7 @@
 
 <script lang="ts" setup>
 import { CloseIcon } from 'tdesign-icons-vue-next'
-import type { PluginEntityWrap } from '@common/types/PluginEntity'
+import type { PluginEntityWrap } from '@common/types'
 
 const props = defineProps<{
   visible: boolean

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { DesktopNode } from '@common/types/DesktopNode'
+import { DesktopNode } from '@common/types'
 
 const DEFAULT_DOCK_ID = 'dock'
 

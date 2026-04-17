@@ -2,7 +2,7 @@
   <div>小组件</div>
 </template>
 <script lang="ts" setup>
-import { DesktopNode } from '@common/types/DesktopNode'
+import { DesktopNode } from '@common/types'
 
 defineProps({
   node: {

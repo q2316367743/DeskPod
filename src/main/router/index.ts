@@ -1,2 +1,6 @@
-// 主窗口相关事件
-import './main'
+// 桌面事件
+import './desktop'
+// 插件事件
+import './plugin'
+// 支持类事件
+import './support'

@@ -85,7 +85,7 @@ import {
   CheckCircleIcon,
   InfoCircleIcon,
 } from 'tdesign-icons-vue-next'
-import type { PluginVerifyResult } from '@common/types/PluginEntity'
+import type { PluginVerifyResult } from '@common/types'
 
 defineProps<{
   visible: boolean

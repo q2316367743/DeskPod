@@ -14,7 +14,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { DesktopNode } from '@common/types/DesktopNode'
+import { DesktopNode } from '@common/types'
 import { ArrowRightIcon, FolderIcon } from 'tdesign-icons-vue-next'
 import ItemNode from '@/desktop/node/ItemNode.vue'
 

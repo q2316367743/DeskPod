@@ -7,7 +7,7 @@ import { QueryChain } from '$/util/file/QueryWrapper'
 import { generatePlaceholders } from '@common/utils'
 import { BaseMapper, type TableLike } from '$/util/file'
 
-type TableName = 'release_project'
+type TableName = 'quick_app'
 
 export interface QueryResult {
   rowsAffected: number

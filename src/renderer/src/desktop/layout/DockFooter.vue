@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts" setup>
-import { DesktopNode } from '@common/types/DesktopNode'
+import { DesktopNode } from '@common/types'
 import ItemNode from '@/desktop/node/ItemNode.vue'
 import FolderNode from '@/desktop/node/FolderNode.vue'
 import { builtinList } from '@/global/BuiltinList'

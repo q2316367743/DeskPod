@@ -1,4 +1,4 @@
-import { PluginEntityWrap, PluginVerifyResult } from '@common/types/PluginEntity'
+import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
 import { ipcRenderer } from 'electron'
 
 export const pluginAPI = {

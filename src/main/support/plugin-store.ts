@@ -1,6 +1,6 @@
 import { defineApi } from '$/global/DefineApi'
 import { BaseDirectory, getDirectory } from '$/support/plugin-path'
-import { getBrowserWindowByKey } from '$/plugin/PluginWindow'
+import { getBrowserWindowByKey } from '$/module/plugin'
 import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { readFile, writeFile } from 'node:fs/promises'

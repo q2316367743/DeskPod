@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { mkdir, unlink } from 'node:fs/promises'
+import { mkdir, rm } from 'node:fs/promises'
 import { app } from 'electron'
 
 export const APP_ID = 'xyz.esion.desk-pod'
@@ -16,6 +16,7 @@ export const APP_DATA_DIR = join(app.getPath('appData'), APP_ID)
 export const APP_DATA_ASSET_DIR = join(APP_DATA_DIR, 'asset')
 export const APP_DATA_DB_DIR = join(APP_DATA_DIR, 'db')
 export const APP_DATA_PLUGIN_DIR = join(APP_DATA_DIR, 'plugins')
+export const APP_DATA_QUICK_DIR = join(APP_DATA_DIR, 'quick')
 
 export const APP_DATA_DB_PATH = (filename: string) => join(APP_DATA_DB_DIR, filename)
 
@@ -30,7 +31,8 @@ export const appDirInit = async () => {
   await Promise.all([
     mkdir(APP_DATA_PLUGIN_DIR, { recursive: true }),
     mkdir(APP_DATA_ASSET_DIR, { recursive: true }),
-    mkdir(APP_DATA_DB_DIR, { recursive: true })
+    mkdir(APP_DATA_DB_DIR, { recursive: true }),
+    mkdir(APP_DATA_QUICK_DIR, { recursive: true })
   ])
 }
 
@@ -56,12 +58,22 @@ export const createPluginDirs = async (pluginId: string) => {
 export const removePluginDirs = async (pluginId: string) => {
   const baseDir = join(APP_DATA_PLUGIN_DIR, pluginId)
   await Promise.all([
-    unlink(join(baseDir, 'runtime')),
-    // mkdir(join(baseDir, 'resource')),
-    unlink(join(baseDir, 'config')),
-    unlink(join(baseDir, 'data')),
-    unlink(join(baseDir, 'cache')),
-    unlink(join(baseDir, 'log')),
-    unlink(join(baseDir, 'localData'))
+    rm(join(baseDir, 'runtime'), { recursive: true, force: true }),
+    // rm(join(baseDir, 'resource')),
+    rm(join(baseDir, 'config'), { recursive: true, force: true }),
+    rm(join(baseDir, 'data'), { recursive: true, force: true }),
+    rm(join(baseDir, 'cache'), { recursive: true, force: true }),
+    rm(join(baseDir, 'log'), { recursive: true, force: true }),
+    rm(join(baseDir, 'localData'), { recursive: true, force: true })
   ])
+}
+
+export const createQuickAppDirs = async (quickAppId: string) => {
+  const quickAppDir = join(APP_DATA_QUICK_DIR, quickAppId)
+  await mkdir(quickAppDir, { recursive: true })
+  return quickAppDir
+}
+
+export const removeQuickAppDirs = async (quickAppId: string) => {
+  await rm(join(APP_DATA_QUICK_DIR, quickAppId), { recursive: true, force: true })
 }

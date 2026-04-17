@@ -1,4 +1,4 @@
-import { DesktopNode } from '@common/types/DesktopNode'
+import { DesktopNode } from '@common/types'
 
 export const builtinList: Array<DesktopNode> = [
   {

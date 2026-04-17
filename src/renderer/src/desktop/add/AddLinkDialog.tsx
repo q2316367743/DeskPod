@@ -7,7 +7,7 @@ import {
   Radio,
   RadioGroup
 } from 'tdesign-vue-next'
-import { DesktopNode } from '@common/types/DesktopNode'
+import { DesktopNode } from '@common/types'
 import { MessageUtil } from '@/utils'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 

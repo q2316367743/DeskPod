@@ -56,7 +56,7 @@ import {
   RefreshIcon,
   CheckCircleIcon,
 } from 'tdesign-icons-vue-next'
-import type { PluginEntityWrap, PluginVerifyResult } from '@common/types/PluginEntity'
+import type { PluginEntityWrap, PluginVerifyResult } from '@common/types'
 
 defineProps<{
   visible: boolean

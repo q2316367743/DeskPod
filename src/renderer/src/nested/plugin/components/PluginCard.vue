@@ -60,7 +60,7 @@ import {
   GridViewIcon,
   CloudUploadIcon
 } from 'tdesign-icons-vue-next'
-import type { PluginEntityWrap } from '@common/types/PluginEntity'
+import type { PluginEntityWrap } from '@common/types'
 
 const props = defineProps<{
   plugin: PluginEntityWrap

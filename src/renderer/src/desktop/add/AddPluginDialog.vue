@@ -27,8 +27,8 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import { PluginEntityWrap } from '@common/types/PluginEntity'
-import { DesktopNode } from '@common/types/DesktopNode'
+import { PluginEntityWrap } from '@common/types'
+import { DesktopNode } from '@common/types'
 import { MessageUtil } from '@/utils'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 

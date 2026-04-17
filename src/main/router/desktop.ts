@@ -1,10 +1,10 @@
 import { ipcMain, shell, BrowserWindow } from 'electron'
 import fs from 'fs'
 import path, { join } from 'path'
-import { DesktopNode } from '@common/types/DesktopNode'
+import { DesktopNode } from '@common/types'
 import { is } from '@electron-toolkit/utils'
 import { APP_DATA_DB_DIR } from '$/global/Constant'
-import { createPluginWindow } from '$/plugin/PluginWindow'
+import { createPluginWindow } from '$/module/plugin'
 import { pluginManager } from '$/global/BeanFactory'
 
 const DEFAULT_DESKTOP_ID = 'desktop-1'

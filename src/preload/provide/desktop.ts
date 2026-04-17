@@ -1,6 +1,6 @@
 // 桌面管理相关 IPC 调用
 import {  ipcRenderer } from 'electron'
-import { DesktopNode } from '@common/types/DesktopNode'
+import { DesktopNode } from '@common/types'
 
 export const desktopAPI = {
   // 获取桌面节点树
