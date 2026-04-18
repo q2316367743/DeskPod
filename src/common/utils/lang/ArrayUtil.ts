@@ -100,7 +100,7 @@ export function set<T extends S[A], S extends Record<string, unknown>, A extends
  * @param attrName 属性名
  * @returns 分组后的结果
  */
-export function group<T extends Record<string, unknown>, K extends T[A], A extends keyof T>(
+export function group<T extends object, K extends T[A], A extends keyof T>(
   arr: T[],
   attrName: A
 ): MapWrapper<K, T[]> {

@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { APP_NAME, appDirInit } from '$/global/Constant'
-import { pluginManager, quickManager } from '$/global/BeanFactory'
+import { desktopManager, pluginManager, quickManager } from '$/global/BeanFactory'
 
 // 导入插件事件
 import '$/module/plugin/PluginEvent'
@@ -51,36 +51,18 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  // 初始化目录
   appDirInit()
-    .then(() => {
-      console.log('App Dir Init')
-    })
-    .catch((e) => {
-      console.error('App Dir Init Fail', e)
-    })
+    .then(() => logDebug('基础目录初始化成功'))
+    .catch((e) => logError('基础目录初始化失败', e))
     .finally(() => {
-      // 初始化数据库
-      useSql()
-        .migrate()
-        .then(() => logDebug('数据库初始化成功'))
-        .catch((e) => logError('数据库初始化失败', e))
+      Promise.allSettled([useSql().migrate(), desktopManager.init(), pluginManager.initPlugins()])
+        .then((res) => logDebug('初始化结果：', res))
         .finally(() => {
-          // 数据库初始化完成后，进行快应用初始化
           quickManager
             .init()
             .then(() => logDebug('快应用初始化成功'))
             .catch((e) => logError('快应用初始化失败', e))
         })
-    })
-  // 初始化插件列表
-  pluginManager
-    .initPlugins()
-    .then(() => {
-      console.log('PluginManager initialized')
-    })
-    .catch((e) => {
-      console.error('PluginManager initialize fail', e)
     })
 
   // Set app user model id for windows
