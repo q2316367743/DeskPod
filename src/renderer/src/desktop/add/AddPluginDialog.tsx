@@ -6,6 +6,7 @@ export const openPluginAppDialog = (desktopId: string) => {
     header: '新增插件',
     closeOnEscKeydown: false,
     placement: 'center',
+    footer: false,
     default: () => (
       <AddPluginDialogContent
         desktopId={desktopId}

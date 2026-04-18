@@ -6,6 +6,7 @@ export const openQuickAppDialog = (desktopId: string) => {
     header: '新增插件',
     closeOnEscKeydown: false,
     placement: 'center',
+    footer: false,
     default: () => (
       <AddQuickDialogContent
         desktopId={desktopId}
