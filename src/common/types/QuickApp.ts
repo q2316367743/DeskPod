@@ -70,3 +70,25 @@ export function quickAppToDesktopNode(app: QuickApp, desktopId: string): Desktop
     }
   }
 }
+
+
+export function quickAppToWidgetNode(app: QuickApp, desktopId: string): DesktopNode {
+  return {
+    id: '',
+    type: 'widget',
+    name: app.name,
+    icon: app.icon ? `file://${app.root}/${app.icon}` : '',
+    parentId: null,
+    sortIndex: 0,
+    desktopId: desktopId,
+    row: 0,
+    column: 0,
+    meta: {
+      pluginId: app.id,
+      root: `file://${app.root}/${app.entry}`,
+      source: 'quick',
+      width: app.width,
+      height: app.height
+    }
+  }
+}

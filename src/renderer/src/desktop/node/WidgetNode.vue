@@ -1,6 +1,11 @@
 <template>
   <div class="widget-node" :style="{ width, height }">
-    <webview :src="node.meta?.url" :preload="preload"></webview>
+    <webview
+      class="widget-node-content"
+      :style="{ width, height }"
+      :src="node.meta?.root"
+      :preload="node.meta?.source === 'plugin' ? preload : undefined"
+    ></webview>
   </div>
 </template>
 <script lang="ts" setup>
@@ -19,5 +24,8 @@ const preload = window.pluginAPI.preload()
 <style scoped lang="less">
 .widget-node {
   padding: 8px;
+  .widget-node-content {
+    border-radius: 8px;
+  }
 }
 </style>

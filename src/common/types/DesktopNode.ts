@@ -39,7 +39,7 @@ export interface DesktopNode {
     root?: string // 插件的根目录
 
     // type === 'widget' 时
-    source?: 'builtin' | 'extension' // 【新增】区分来源
+    source?: 'builtin' | 'quick' | 'plugin' // 【新增】区分来源
 
     // 当 source === 'builtin' 时使用
     builtinId?: string // 内部标识符，如 'sys-clock', 'sys-cpu'

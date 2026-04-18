@@ -80,3 +80,30 @@ export function pluginEntityToDesktopNode(
     }
   }
 }
+
+export function pluginEntityToWidgetNode(
+  plugin: PluginEntityWrap,
+  desktopId: string
+): Array<DesktopNode> {
+  if (!plugin.weight) return []
+  return plugin.weight.flatMap((widget) => {
+    return widget.layouts.map((layout) => {
+      return {
+        id: '',
+        type: 'widget',
+        name: plugin.productName,
+        icon: `file://${plugin.root}/runtime/${widget.preview}`,
+        parentId: null,
+        sortIndex: 0,
+        desktopId: desktopId,
+        row: layout.rows,
+        column: layout.cols,
+        meta: {
+          pluginId: plugin.identifier + '#' + widget.label,
+          root: `file://${plugin.root}/runtime/${widget.path}`,
+          source: 'plugin'
+        }
+      } as DesktopNode
+    })
+  })
+}

@@ -1,0 +1,74 @@
+
+.add-widget-dialog {
+  .widget-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 12px;
+    padding: 8px;
+  }
+
+  .widget-card {
+    background: var(--td-bg-color-container);
+    border: 1px solid var(--td-border-level-1-color);
+    border-radius: var(--fluent-radius-smooth);
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &:hover {
+      border-color: var(--td-brand-color);
+      box-shadow: 0 2px 8px rgba(0, 120, 212, 0.2);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .widget-preview {
+    width: 100%;
+    flex: 1;
+    min-height: 60px;
+    border-radius: 4px;
+    background-color: var(--td-bg-color-page);
+  }
+
+  .widget-placeholder {
+    width: 100%;
+    flex: 1;
+    min-height: 60px;
+    border-radius: 4px;
+    background-color: var(--td-bg-color-page);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--td-gray-color-5);
+  }
+
+  .widget-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--td-text-color-primary);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .widget-size {
+    font-size: 11px;
+    color: var(--td-text-color-secondary);
+    text-align: center;
+  }
+
+  .widget-empty {
+    font-size: 14px;
+    padding: 48px;
+    text-align: center;
+    color: var(--td-text-color-secondary);
+  }
+}
