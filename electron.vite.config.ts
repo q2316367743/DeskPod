@@ -40,7 +40,18 @@ export default defineConfig({
       }
     },
     plugins: [
-      vue(),
+      vue({
+        template: {
+          compilerOptions: {
+            // 方式一：使用正则表达式匹配（推荐）
+            // 将所有以 my- 开头的标签视为自定义元素
+            // isCustomElement: (tag) => tag.startsWith('my-')
+
+            // 方式二：指定具体的标签名
+            isCustomElement: (tag) => ['webview'].includes(tag)
+          }
+        }
+      }),
       vueJsx(),
       // ...
       AutoImport({

@@ -14,10 +14,38 @@ export const useDesktopNodeStore = defineStore('desktop-node', () => {
     dockNodes.value = await window.desktopAPI.getTree(DEFAULT_DOCK_ID)
   }
 
+  const move = async (nodeId: string, column: number, row: number) => {
+    for (const node of nodes.value) {
+      if (node.id === nodeId) {
+        node.column = column
+        node.row = row
+        await window.desktopAPI.updateNode(toRaw(node))
+        await init()
+        return
+      }
+    }
+  }
+
+  const resize = async (nodeId: string, width: number, height: number) => {
+    for (const node of nodes.value) {
+      if (node.id === nodeId) {
+        if (!node.meta) {
+          node.meta = {}
+        }
+        node.meta.width = width
+        node.meta.height = height
+        await window.desktopAPI.updateNode(toRaw(node))
+        await init()
+        return
+      }
+    }
+  }
+
   return {
     nodes,
     dockNodes,
     desktopId,
-    init
+    init,
+    move, resize
   }
 })

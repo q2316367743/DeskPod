@@ -3,7 +3,6 @@
     class="desktop-icon"
     :title="node.name"
     @click="handleClick(node)"
-    @contextmenu="handleContextMenu($event)"
   >
     <div class="icon-wrapper">
       <img
@@ -51,10 +50,6 @@ const getNodeIcon = (node: DesktopNode) => {
 
 const handleClick = (node: DesktopNode) => {
   window.desktopAPI.openApp(toRaw(node))
-}
-const handleContextMenu = (e: MouseEvent) => {
-  e.preventDefault()
-  e.stopPropagation()
 }
 </script>
 <style scoped lang="less">

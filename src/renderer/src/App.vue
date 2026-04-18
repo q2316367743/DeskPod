@@ -35,6 +35,6 @@ onMounted(() => {
 <style lang="less" scoped>
 .desktop-home {
   min-height: 100vh;
-  background: var(--td-bg-color-page);
+  background: var(--td-bg-color-container);
 }
 </style>

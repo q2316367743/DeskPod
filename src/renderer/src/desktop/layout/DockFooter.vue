@@ -131,8 +131,8 @@ const handleClick = (node: DesktopNode) => {
   align-items: center;
   justify-content: center;
   border-radius: var(--fluent-radius-smooth);
-  background: var(--td-gray-color-3);
-  color: var(--td-gray-color-7);
+  background: var(--td-bg-color-component);
+  color: var(--td-text-color-primary);
 }
 
 .disabled-label {
