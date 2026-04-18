@@ -34,6 +34,8 @@ import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 
 const props = defineProps<{
   desktopId: string
+  column: number
+  row: number
   onDestroy: () => void
 }>()
 
@@ -61,7 +63,9 @@ const handleAddPlugin = (plugin: PluginEntityWrap) => {
 
   const node: DesktopNode = {
     ...pluginEntityToDesktopNode(plugin, props.desktopId),
-    id: crypto.randomUUID()
+    id: crypto.randomUUID(),
+    column: props.column,
+    row: props.row
   }
 
   window.desktopAPI

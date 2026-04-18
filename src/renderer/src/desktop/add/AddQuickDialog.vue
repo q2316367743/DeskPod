@@ -30,6 +30,14 @@ const props = defineProps({
   desktopId: {
     type: String,
     required: true
+  },
+  column: {
+    type: Number,
+    required: true
+  },
+  row: {
+    type: Number,
+    required: true
   }
 })
 const emit = defineEmits(['destroy'])
@@ -52,7 +60,9 @@ onMounted(() => {
 const handleAddPlugin = (app: QuickApp) => {
   const node: DesktopNode = {
     ...quickAppToDesktopNode(app, props.desktopId),
-    id: crypto.randomUUID()
+    id: crypto.randomUUID(),
+    column: props.column,
+    row: props.row
   }
 
   window.desktopAPI

@@ -11,7 +11,7 @@ import { MessageUtil } from '@/utils'
 import { InnerWeight } from '../widget'
 import './AddWidgetDialog.less'
 
-export function openAddWidgetDialog(desktopId: string) {
+export function openAddWidgetDialog(desktopId: string, column: number, row: number) {
   const active = ref(1)
 
   const builtins = ref(new Array<DesktopNode>())
@@ -52,7 +52,9 @@ export function openAddWidgetDialog(desktopId: string) {
     window.desktopAPI
       .updateNode({
         ...toRaw(node),
-        id: useSnowflake().nextId()
+        id: useSnowflake().nextId(),
+        column: column,
+        row: row,
       })
       .then(() => {
         MessageUtil.success('成功添加小部件')
@@ -105,7 +107,10 @@ export function openAddWidgetDialog(desktopId: string) {
   const WidgetList = (props: { nodes: DesktopNode[] }) => {
     if (props.nodes.length === 0) {
       return (
-        <div class="widget-empty" style={{ color: 'var(--td-gray-color-7)', textAlign: 'center', padding: '48px' }}>
+        <div
+          class="widget-empty"
+          style={{ color: 'var(--td-gray-color-7)', textAlign: 'center', padding: '48px' }}
+        >
           暂无小部件
         </div>
       )

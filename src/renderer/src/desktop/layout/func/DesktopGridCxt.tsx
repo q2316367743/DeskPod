@@ -8,7 +8,7 @@ import { openPluginAppDialog } from '@/desktop/add/AddPluginDialog'
 import { openQuickAppDialog } from '@/desktop/add/AddQuickDialog'
 import { openAddWidgetDialog } from '@/desktop/add/AddWidgetDialog'
 
-export function handleDesktopGridCxt(e: MouseEvent) {
+export function handleDesktopGridCxt(e: MouseEvent, column: number, row: number) {
   e.preventDefault()
   e.stopPropagation()
   Cxt.showContextMenu({
@@ -27,25 +27,25 @@ export function handleDesktopGridCxt(e: MouseEvent) {
         label: '添加链接',
         icon: () => <LinkIcon />,
         onClick: () => {
-          openLinkAppDialog(useDesktopNodeStore().desktopId)
+          openLinkAppDialog(useDesktopNodeStore().desktopId, column, row)
         }
       },
       {
         label: '添加插件',
         onClick: () => {
-          openPluginAppDialog(useDesktopNodeStore().desktopId)
+          openPluginAppDialog(useDesktopNodeStore().desktopId, column, row)
         }
       },
       {
         label: '添加快应用',
         onClick: () => {
-          openQuickAppDialog(useDesktopNodeStore().desktopId)
+          openQuickAppDialog(useDesktopNodeStore().desktopId, column, row)
         }
       },
       {
         label: '添加小部件',
         onClick: () => {
-          openAddWidgetDialog(useDesktopNodeStore().desktopId)
+          openAddWidgetDialog(useDesktopNodeStore().desktopId, column, row)
         }
       }
     ]

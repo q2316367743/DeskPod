@@ -11,7 +11,7 @@ import { DesktopNode } from '@common/types'
 import { MessageUtil } from '@/utils'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 
-export const openLinkAppDialog = (desktopId: string) => {
+export const openLinkAppDialog = (desktopId: string, column: number, row: number) => {
   const data = ref({
     name: '',
     url: '',
@@ -64,8 +64,8 @@ export const openLinkAppDialog = (desktopId: string) => {
         parentId: null,
         sortIndex: 0,
         desktopId: desktopId,
-        row: 0,
-        column: 0,
+        row: row,
+        column: column,
         meta: {
           url: data.value.url,
           openWith: data.value.openWith,

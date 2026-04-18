@@ -1,7 +1,7 @@
 import { DialogPlugin } from 'tdesign-vue-next'
 import AddQuickDialogContent from '@/desktop/add/AddQuickDialog.vue'
 
-export const openQuickAppDialog = (desktopId: string) => {
+export const openQuickAppDialog = (desktopId: string, column: number, row: number) => {
   const dp = DialogPlugin({
     header: '新增插件',
     closeOnEscKeydown: false,
@@ -10,6 +10,8 @@ export const openQuickAppDialog = (desktopId: string) => {
     default: () => (
       <AddQuickDialogContent
         desktopId={desktopId}
+        column={column}
+        row={row}
         onDestroy={() => {
           dp.destroy()
         }}
