@@ -191,13 +191,13 @@ const zipFilters = [{ name: 'ZIP 文件', extensions: ['zip'] }]
 const canInstall = computed(() => {
   if (!form.name) return false
   if (form.from === 'ai') {
-    return !!form.icon && !!form.root
+    return !!form.root
   }
   if (form.from === 'html') {
-    return !!form.icon && !!htmlContent.value
+    return !!htmlContent.value
   }
   if (form.from === 'zip') {
-    return !!form.entry && !!form.icon && !!form.root
+    return !!form.entry && !!form.root
   }
   return false
 })
