@@ -20,6 +20,7 @@ interface PluginAPI {
   install(path: string): Promise<void>
   upgrade(identifier: string, path: string): Promise<void>
   uninstall(identifier: string): Promise<void>
+  preload(): string
 }
 
 interface FileFilter {

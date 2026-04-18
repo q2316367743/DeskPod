@@ -51,6 +51,7 @@ const handleFolderClick = (e: MouseEvent) => {
   display: flex;
   flex-direction: column;
   width: 80px;
+  height: 80px;
   padding: 8px;
 }
 

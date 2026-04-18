@@ -64,6 +64,7 @@ const handleContextMenu = (e: MouseEvent) => {
   align-items: center;
   justify-content: center;
   width: 80px;
+  height: 80px;
   padding: 8px;
   border-radius: var(--fluent-radius-card);
   cursor: pointer;

@@ -76,7 +76,6 @@ const folderMap = computed(() => {
 .icon-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
   justify-content: flex-start;
 }
 

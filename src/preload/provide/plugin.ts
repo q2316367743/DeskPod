@@ -1,5 +1,6 @@
 import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
 import { ipcRenderer } from 'electron'
+import { join } from 'path'
 
 export const pluginAPI = {
   list: (): Promise<Array<PluginEntityWrap>> => {
@@ -16,5 +17,8 @@ export const pluginAPI = {
   },
   uninstall: (identifier: string): Promise<void> => {
     return ipcRenderer.invoke('/main/plugin/uninstall', identifier)
+  },
+  preload: () => {
+    return join(__dirname, 'plugin.js')
   }
 }
