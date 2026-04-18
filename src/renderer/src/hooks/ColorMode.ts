@@ -1,4 +1,3 @@
-import { setTheme } from '@tauri-apps/api/app'
 import { LocalName } from '@/global/LocalName'
 import { Ref, ComputedRef } from 'vue'
 
@@ -38,8 +37,6 @@ export const useColorMode = (): ColorModeResult => {
   watch(
     colorMode,
     async () => {
-      // 设置系统主题
-      await setTheme(colorMode.value === 'auto' ? null : colorMode.value)
       // 渲染主题css
       renderColorMode()
     },

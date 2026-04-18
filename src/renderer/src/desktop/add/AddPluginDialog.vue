@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import { PluginEntityWrap } from '@common/types'
+import { pluginEntityToDesktopNode, PluginEntityWrap } from '@common/types'
 import { DesktopNode } from '@common/types'
 import { MessageUtil } from '@/utils'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
@@ -60,19 +60,8 @@ const handleAddPlugin = (plugin: PluginEntityWrap) => {
   }
 
   const node: DesktopNode = {
-    id: crypto.randomUUID(),
-    type: 'plugin',
-    name: plugin.productName,
-    icon: `file://${plugin.root}/runtime/${plugin.icon}`,
-    parentId: null,
-    sortIndex: 0,
-    desktopId: props.desktopId,
-    row: 0,
-    column: 0,
-    meta: {
-      pluginId: plugin.identifier,
-      root: plugin.root
-    }
+    ...pluginEntityToDesktopNode(plugin, props.desktopId),
+    id: crypto.randomUUID()
   }
 
   window.desktopAPI

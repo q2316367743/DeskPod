@@ -1,3 +1,5 @@
+import { DesktopNode } from '@common/types/DesktopNode'
+
 export type PluginEntityCapability =
   | string
   | {
@@ -56,4 +58,25 @@ export interface PluginVerifyResult {
   config: PluginEntity
   // 插件是否存在
   exists: boolean
+}
+
+export function pluginEntityToDesktopNode(
+  plugin: PluginEntityWrap,
+  desktopId: string
+): DesktopNode {
+  return {
+    id: '',
+    type: 'plugin',
+    name: plugin.productName,
+    icon: `file://${plugin.root}/runtime/${plugin.icon}`,
+    parentId: null,
+    sortIndex: 0,
+    desktopId: desktopId,
+    row: 0,
+    column: 0,
+    meta: {
+      pluginId: plugin.identifier,
+      root: plugin.root
+    }
+  }
 }

@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { QuickApp } from '@common/types'
+import { QuickApp, quickAppToDesktopNode } from '@common/types'
 import { DesktopNode } from '@common/types'
 import { MessageUtil } from '@/utils'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
@@ -51,21 +51,8 @@ onMounted(() => {
 
 const handleAddPlugin = (app: QuickApp) => {
   const node: DesktopNode = {
-    id: crypto.randomUUID(),
-    type: 'quick',
-    name: app.name,
-    icon: app.icon ? `file://${app.root}/${app.icon}` : '',
-    parentId: null,
-    sortIndex: 0,
-    desktopId: props.desktopId,
-    row: 0,
-    column: 0,
-    meta: {
-      pluginId: app.id,
-      root: app.root,
-      width: app.width,
-      height: app.height
-    }
+    ...quickAppToDesktopNode(app, props.desktopId),
+    id: crypto.randomUUID()
   }
 
   window.desktopAPI
