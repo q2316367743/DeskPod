@@ -96,12 +96,14 @@ export function pluginEntityToWidgetNode(
         parentId: null,
         sortIndex: 0,
         desktopId: desktopId,
-        row: layout.rows,
-        column: layout.cols,
+        row: 0,
+        column: 0,
         meta: {
           pluginId: plugin.identifier + '#' + widget.label,
           root: `file://${plugin.root}/runtime/${widget.path}`,
-          source: 'plugin'
+          source: 'plugin',
+          height: layout.rows,
+          width: layout.cols,
         }
       } as DesktopNode
     })

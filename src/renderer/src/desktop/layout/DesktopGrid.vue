@@ -4,7 +4,11 @@
     <div class="icon-grid">
       <!-- 独立图标 -->
       <template v-for="item in list" :key="item.id">
-        <WidgetNode v-if="item.type === 'widget'" :node="item" />
+        <WidgetNode
+          v-if="item.type === 'widget'"
+          :node="item"
+          @contextmenu="handleDesktopNodeCxt($event, item)"
+        />
         <FolderNode
           v-else-if="item.type === 'folder'"
           :node="item"
