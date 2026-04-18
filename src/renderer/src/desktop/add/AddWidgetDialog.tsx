@@ -1,9 +1,13 @@
 import { DialogPlugin, TabPanel, Tabs } from 'tdesign-vue-next'
 import { DesktopNode, pluginEntityToDesktopNode, quickAppToDesktopNode } from '@common/types'
+import { useSnowflake } from '@common/utils'
+import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
+import { MessageUtil } from '@/utils'
 
 export function openAddWidgetDialog(desktopId: string) {
   const active = ref(1)
 
+  const builtins = ref(new Array<DesktopNode>())
   const quickApps = ref(new Array<DesktopNode>())
   const plugins = ref(new Array<DesktopNode>())
 
@@ -18,15 +22,28 @@ export function openAddWidgetDialog(desktopId: string) {
     }
   })
 
+  const handleChoose = (node: DesktopNode) => {
+    window.desktopAPI
+      .updateNode({
+        ...node,
+        id: useSnowflake().nextId()
+      })
+      .then(() => {
+        MessageUtil.success('成功添加小部件')
+        useDesktopNodeStore().init()
+        dp.destroy()
+      })
+      .catch((e) => {
+        MessageUtil.error('添加失败', e)
+      })
+  }
+
   const dp = DialogPlugin({
     header: '新增小部件',
     placement: 'center',
     closeOnEscKeydown: false,
     footer: false,
     width: 'clamp(800px, 80vw, 1200px)',
-    onConfirm: () => {
-      dp.destroy()
-    },
     default: () => (
       <div style={{ height: 'calc(100vh - 220px)' }}>
         <Tabs v-model={active.value}>
