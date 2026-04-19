@@ -193,7 +193,7 @@ const props = defineProps<{
   upgrading: boolean
 }>()
 
-const emit = defineEmits<{
+defineEmits<{
   close: []
   upgrade: []
 }>()

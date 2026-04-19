@@ -1,5 +1,6 @@
 import { AiModelSetting, DesktopNode, QuickApp, QuickAppCore, Setting } from '@common/types'
 import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
+import { basename, dirname, extname, join, sep } from 'path'
 
 interface DesktopAPI {
   getTree: (desktopId?: string) => Promise<DesktopNode[]>
@@ -51,6 +52,11 @@ interface OpenDialogSyncOptions {
 interface SupportAPI {
   shellOpenDialog(options: OpenDialogSyncOptions): Promise<Array<string> | undefined>
   isWindows: () => boolean
+  join: (...path: Array<string>) => string
+  basename: (path: string) => string
+  extname: (path: string) => string
+  dirname: (path: string) => string
+  sep: '\\' | '/'
 }
 
 interface QuickAPI {
@@ -67,6 +73,9 @@ interface SettingAPI {
   listAiModel: () => Promise<Array<AiModelSetting>>
   addAiModel: (model: AiModelSetting) => Promise<void>
   deleteAiModel: (id: string) => Promise<void>
+  listBgImage: (theme: 'light' | 'dark') => Promise<Array<string>>
+  uploadBgImage: (theme: 'light' | 'dark', path: string) => Promise<void>
+  deleteBgImage: (path: string) => Promise<void>
 }
 
 global {

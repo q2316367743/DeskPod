@@ -100,7 +100,7 @@ const syncGridFromNodes = async () => {
   const currentNodes = grid.engine.nodes
   for (const gsNode of currentNodes) {
     if (!targetIds.has(gsNode.id as string)) {
-      grid?.removeWidget(gsNode.el, false)
+      grid?.removeWidget(gsNode.el!, false)
     }
   }
 

@@ -17,6 +17,7 @@ export type SettingMode = 'launch' | 'screen'
 export interface Setting {
   // 开机自启
   autoStart: boolean
+  // 模式
   mode: SettingMode
   // 显示界面快捷键
   shortcutKey: string

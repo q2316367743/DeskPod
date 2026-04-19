@@ -18,3 +18,13 @@ ipcMain.on('/main/setting/model-add', (_event, model) => {
 ipcMain.on('/main/setting/model-delete', (_event, id) => {
   return settingManager.deleteAiModel(id)
 })
+ipcMain.on('/main/setting/bg-image-list', (_event, theme) => {
+  return settingManager.listBgImage(theme)
+})
+
+ipcMain.on('/main/setting/bg-image-upload', async (_event, theme, path) => {
+  return settingManager.uploadBgImage(theme, path)
+})
+ipcMain.on('/main/setting/bg-image-delete', async (_event, path) => {
+  return settingManager.deleteBgImage(path)
+})

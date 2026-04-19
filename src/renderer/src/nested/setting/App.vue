@@ -10,6 +10,12 @@
         </t-menu-item>
         <t-menu-item value="2">
           <template #icon>
+            <image-icon />
+          </template>
+          背景设置
+        </t-menu-item>
+        <t-menu-item value="3">
+          <template #icon>
             <robot-icon />
           </template>
           AI 模型设置
@@ -25,7 +31,8 @@
     </t-aside>
     <t-content class="h-full">
       <BaseSetting v-if="page === '1'" />
-      <AiSetting v-if="page === '2'" />
+      <BgSetting v-if="page === '2'" />
+      <AiSetting v-if="page === '3'" />
     </t-content>
   </t-layout>
 </template>
@@ -34,6 +41,7 @@ import { useBoolState } from '@/hooks'
 import { RobotIcon, Setting1Icon, ViewListIcon } from 'tdesign-icons-vue-next'
 import BaseSetting from '@/nested/setting/components/BaseSetting.vue'
 import AiSetting from '@/nested/setting/components/AiSetting.vue'
+import BgSetting from '@/nested/setting/components/BgSetting.vue'
 
 const [collapsed, toggleCollapsed] = useBoolState(false, '/page/setting/collapsed')
 const page = ref('1')

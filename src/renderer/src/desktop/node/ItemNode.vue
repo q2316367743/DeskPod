@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="desktop-icon"
-    :title="node.name"
-    @click="handleClick(node)"
-  >
+  <div class="desktop-icon" :title="node.name" @click="handleClick(node)">
     <div class="icon-wrapper">
       <img
         v-if="node.icon"
@@ -34,19 +30,6 @@ const props = defineProps({
 })
 
 const nodeSize = computed(() => (props.dockMode ? '52px' : '48px'))
-
-const getNodeIcon = (node: DesktopNode) => {
-  if (node.icon) {
-    // 如果是图片路径
-    if (node.icon.startsWith('/') || node.icon.startsWith('C:') || node.icon.startsWith('http')) {
-      return node.icon
-    }
-    // 内置图标标识
-    return ''
-  }
-  // 默认图标
-  return ''
-}
 
 const handleClick = (node: DesktopNode) => {
   window.desktopAPI.openApp(toRaw(node))

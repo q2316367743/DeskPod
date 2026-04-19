@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { AddIcon, PlusIcon } from 'tdesign-icons-vue-next'
+import { AddIcon } from 'tdesign-icons-vue-next'
 import type { QuickApp, QuickAppCore } from '@common/types'
 import QuickAppCard from '@/nested/quick/components/QuickAppCard.vue'
 import InstallDialog from '@/nested/quick/components/InstallDialog.vue'

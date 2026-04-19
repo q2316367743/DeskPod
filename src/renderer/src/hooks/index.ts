@@ -1,2 +1,2 @@
-export * from "./CacheRecordStorage.ts";
-export * from "./UseState.ts";
+export * from './CacheRecordStorage'
+export * from './UseState'

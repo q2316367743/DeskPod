@@ -19,5 +19,14 @@ export const settingAPI = {
   },
   deleteAiModel(id: string): Promise<void> {
     return ipcRenderer.invoke('/main/setting/model-delete', id)
+  },
+  listBgImage(theme: 'light' | 'dark'): Promise<Array<string>> {
+    return ipcRenderer.invoke('/main/setting/bg-image-list', theme)
+  },
+  uploadBgImage(theme: 'light' | 'dark', path: string): Promise<void> {
+    return ipcRenderer.invoke('/main/setting/bg-image-upload', theme, path)
+  },
+  deleteBgImage(path: string): Promise<void> {
+    return ipcRenderer.invoke('/main/setting/bg-image-delete', path)
   }
 }

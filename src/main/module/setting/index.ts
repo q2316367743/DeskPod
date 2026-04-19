@@ -1,8 +1,9 @@
 import { AiModelSetting, defaultSetting, Setting } from '@common/types'
 import { existsSync } from 'node:fs'
-import { readFile, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
-import { APP_DATA_DB_DIR } from '$/global/Constant'
+import { copyFile, mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises'
+import { extname, join } from 'node:path'
+import { APP_DATA_ASSET_DIR, APP_DATA_DB_DIR } from '$/global/Constant'
+import { useSnowflake } from '@common/utils'
 
 export class SettingManager {
   private defaultValue = defaultSetting()
@@ -24,6 +25,9 @@ export class SettingManager {
     this.setting[key] = value
     await writeFile(this.path, JSON.stringify(this.setting, null, 2))
   }
+
+  // --------------------------- AI Model ---------------------------
+
   listAiModel() {
     return this.setting.models
   }
@@ -34,5 +38,31 @@ export class SettingManager {
   async deleteAiModel(id: string) {
     this.setting.models = this.setting.models.filter((model) => model.id !== id)
     await writeFile(this.path, JSON.stringify(this.setting, null, 2))
+  }
+
+  // --------------------------- 背景图片 ---------------------------
+
+  async listBgImage(theme: 'light' | 'dark') {
+    const folder = join(APP_DATA_ASSET_DIR, 'background', theme)
+    if (existsSync(folder)) {
+      const files = await readdir(folder)
+      return files.map((file) => join(folder, file))
+    }
+    return []
+  }
+  async uploadBgImage(theme: 'light' | 'dark', path: string) {
+    const folder = join(APP_DATA_ASSET_DIR, 'background', theme)
+    if (!existsSync(folder)) {
+      await mkdir(folder, { recursive: true })
+    }
+    const ext = extname(path)
+    const name = useSnowflake().nextId()
+    const target = join(folder, `${name}${ext}`)
+    // 复制
+    await copyFile(path, target)
+  }
+  async deleteBgImage(path: string) {
+    // 删除
+    await unlink(path)
   }
 }

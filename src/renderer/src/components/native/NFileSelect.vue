@@ -50,7 +50,7 @@ const props = defineProps({
   message: String,
   securityScopedBookmarks: String,
   label: String,
-  directory: String
+  directory: Boolean
 })
 
 const btn = computed(() => {
@@ -60,9 +60,16 @@ const btn = computed(() => {
 })
 
 const handleSelect = () => {
-  window.supportAPI.shellOpenDialog(toRaw(props) as never).then((result) => {
-    data.value = result?.[0] || ''
-  })
+  window.supportAPI
+    .shellOpenDialog(
+      toRaw({
+        ...props,
+        properties: [...(props.properties || []), props.directory ? 'openDirectory' : 'openFile']
+      }) as never
+    )
+    .then((result) => {
+      data.value = result?.[0] || ''
+    })
 }
 </script>
 <style scoped lang="less"></style>

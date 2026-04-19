@@ -25,11 +25,7 @@
       <button class="action-btn" title="升级" @click="$emit('upgrade', app)">
         <CloudUploadIcon size="16px" />
       </button>
-      <button
-        class="action-btn action-btn-danger"
-        title="卸载"
-        @click="$emit('uninstall', app)"
-      >
+      <button class="action-btn action-btn-danger" title="卸载" @click="$emit('uninstall', app)">
         <DeleteIcon size="16px" />
       </button>
     </div>
@@ -37,12 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  DeleteIcon,
-  WindowIcon,
-  GridViewIcon,
-  CloudUploadIcon,
-} from 'tdesign-icons-vue-next'
+import { DeleteIcon, WindowIcon, GridViewIcon, CloudUploadIcon } from 'tdesign-icons-vue-next'
 import type { QuickApp } from '@common/types'
 import QuickIcon from '@/desktop/icon/QuickIcon.vue'
 
@@ -62,14 +53,6 @@ const fromLabelMap: Record<string, string> = {
 }
 
 const fromLabel = computed(() => fromLabelMap[props.app.from] || props.app.from)
-
-const iconSrc = computed(() => {
-  if (!props.app.icon) return ''
-  if (props.app.from === 'zip') {
-    return `file://${props.app.root}/${props.app.icon}`
-  }
-  return `file://${props.app.icon}`
-})
 </script>
 
 <style lang="less" scoped>
