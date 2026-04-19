@@ -6,3 +6,6 @@ import './plugin'
 import './support'
 // 快应用事件
 import './quick'
+// 设置事件
+import './setting'
+

@@ -3,7 +3,13 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { APP_NAME, appDirInit } from '$/global/Constant'
-import { desktopManager, pluginManager, quickManager } from '$/global/BeanFactory'
+import {
+  desktopManager,
+  pluginManager,
+  quickManager,
+  setMainWindow,
+  settingManager
+} from '$/global/BeanFactory'
 
 // 导入插件事件
 import '$/module/plugin/PluginEvent'
@@ -46,6 +52,7 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+  setMainWindow(mainWindow)
 }
 
 // This method will be called when Electron has finished
@@ -56,7 +63,12 @@ app.whenReady().then(() => {
     .then(() => logDebug('基础目录初始化成功'))
     .catch((e) => logError('基础目录初始化失败', e))
     .finally(() => {
-      Promise.allSettled([useSql().migrate(), desktopManager.init(), pluginManager.initPlugins()])
+      Promise.allSettled([
+        useSql().migrate(),
+        desktopManager.init(),
+        pluginManager.initPlugins(),
+        settingManager.init()
+      ])
         .then((res) => logDebug('初始化结果：', res))
         .finally(() => {
           quickManager

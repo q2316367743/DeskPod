@@ -1,5 +1,12 @@
 <template>
   <div class="desktop-home">
+    <img
+      v-if="background"
+      :src="background"
+      alt="背景图片"
+      class="w-full h-full t-image--fit-contain"
+    />
+
     <!-- 桌面图标网格 -->
     <DesktopGrid />
 
@@ -14,12 +21,14 @@
 import DesktopGrid from '@/desktop/layout/DesktopGrid.vue'
 import AddNodeModal from '@/components/desktop/AddNodeModal.vue'
 import DockFooter from '@/desktop/layout/DockFooter.vue'
-import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
+import { useDesktopNodeStore, useSettingStore } from '@/store'
 
 type ModalType = 'app' | 'link' | null
 
 const showModal = ref(false)
 const modalType = ref<ModalType>(null)
+
+const background = computed(() => useSettingStore().background)
 
 // 关闭弹窗
 const handleCloseModal = () => {
@@ -29,6 +38,7 @@ const handleCloseModal = () => {
 
 onMounted(() => {
   useDesktopNodeStore().init()
+  useSettingStore().init()
 })
 </script>
 

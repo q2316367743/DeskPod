@@ -1,4 +1,4 @@
-import { DesktopNode, QuickApp, QuickAppCore } from '@common/types'
+import { AiModelSetting, DesktopNode, QuickApp, QuickAppCore, Setting } from '@common/types'
 import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
 
 interface DesktopAPI {
@@ -60,6 +60,15 @@ interface QuickAPI {
   uninstall: (id: string) => Promise<void>
 }
 
+interface SettingAPI {
+  onChange: (callback: () => void) => void
+  all: () => Promise<Setting>
+  set: <K extends keyof Setting>(key: K, value: Setting[K]) => Promise<void>
+  listAiModel: () => Promise<Array<AiModelSetting>>
+  addAiModel: (model: AiModelSetting) => Promise<void>
+  deleteAiModel: (id: string) => Promise<void>
+}
+
 global {
   interface Window {
     // tauri 需要的定义
@@ -72,5 +81,6 @@ global {
     pluginAPI: PluginAPI
     supportAPI: SupportAPI
     quickAPI: QuickAPI
+    settingAPI: SettingAPI
   }
 }

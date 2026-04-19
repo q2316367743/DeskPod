@@ -24,9 +24,23 @@ export const builtinList: Array<DesktopNode> = [
     sortIndex: 0,
     desktopId: 'dock',
     row: 0,
-    column: 0,
+    column: 1,
     meta: {
       builtinId: 'plugin'
+    }
+  },
+  {
+    id: 'setting',
+    type: 'builtin',
+    name: '设置',
+    icon: 'setting',
+    parentId: null,
+    sortIndex: 0,
+    desktopId: 'dock',
+    row: 0,
+    column: 2,
+    meta: {
+      builtinId: 'setting'
     }
   }
 ]
