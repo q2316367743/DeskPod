@@ -13,14 +13,14 @@ import { DesktopNode } from '@common/types'
 import { MessageUtil } from '@/utils'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 
-export const openLinkAppDialog = (desktopId: string, column: number, row: number) => {
+export const openUpdateLinkAppDialog = (node: DesktopNode) => {
   const data = ref({
-    name: '',
-    url: '',
-    icon: '',
-    openWith: 'default' as 'default' | 'inner',
-    width: undefined as number | undefined,
-    height: undefined as number | undefined
+    name: node.name,
+    url: node.meta?.url,
+    icon: node.icon,
+    openWith: node.meta?.openWith || 'default',
+    width: node.meta?.width,
+    height: node.meta?.height
   })
   const fetchingIcon = ref(false)
 
@@ -58,16 +58,10 @@ export const openLinkAppDialog = (desktopId: string, column: number, row: number
     closeOnEscKeydown: false,
     placement: 'center',
     onConfirm: () => {
-      const node: DesktopNode = {
-        id: crypto.randomUUID(),
-        type: 'link',
+      const res: DesktopNode = {
+        ...node,
         name: data.value.name,
         icon: data.value.icon,
-        parentId: null,
-        sortIndex: 0,
-        desktopId: desktopId,
-        row: row,
-        column: column,
         meta: {
           url: data.value.url,
           openWith: data.value.openWith,
@@ -76,7 +70,7 @@ export const openLinkAppDialog = (desktopId: string, column: number, row: number
         }
       }
       window.desktopAPI
-        .updateNode(node)
+        .updateNode(res)
         .then(() => {
           MessageUtil.success('成功添加链接')
           useDesktopNodeStore().init()

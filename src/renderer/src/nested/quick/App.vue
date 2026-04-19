@@ -61,6 +61,7 @@ import QuickAppCard from '@/nested/quick/components/QuickAppCard.vue'
 import InstallDialog from '@/nested/quick/components/InstallDialog.vue'
 import UpgradeDialog from '@/nested/quick/components/UpgradeDialog.vue'
 import Toast from '@/nested/quick/components/Toast.vue'
+import { useColorMode } from '@/hooks'
 
 const installDialogRef = ref<InstanceType<typeof InstallDialog> | null>(null)
 const upgradeDialogRef = ref<InstanceType<typeof UpgradeDialog> | null>(null)
@@ -202,6 +203,8 @@ const doUninstall = async (id: string) => {
     console.error(e)
   }
 }
+
+useColorMode()
 </script>
 
 <style lang="less" scoped>

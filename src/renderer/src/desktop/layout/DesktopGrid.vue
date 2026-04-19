@@ -35,6 +35,7 @@ import WidgetNode from '@/desktop/node/WidgetNode.vue'
 import FolderNode from '@/desktop/node/FolderNode.vue'
 import ItemNode from '@/desktop/node/ItemNode.vue'
 import { handleDesktopNodeCxt } from '@/desktop/layout/func/DesktopNodeCxt'
+import { debounce } from 'es-toolkit'
 
 const GRID_CELL_SIZE = 96
 const gridContainer = ref<HTMLElement | undefined>(undefined)
@@ -132,6 +133,12 @@ const syncGridFromNodes = async () => {
   }
 }
 
+const onResize = debounce(() => {
+  if (grid) {
+    grid.column(Math.floor((window.innerWidth - 56) / GRID_CELL_SIZE), 'none')
+  }
+}, 300)
+
 onMounted(async () => {
   if (!gridStackEl.value) return
 
@@ -166,11 +173,7 @@ onMounted(async () => {
   await nextTick()
   await new Promise((resolve) => setTimeout(resolve, 0))
 
-  window.addEventListener('resize', () => {
-    if (grid) {
-      grid.column(Math.floor((window.innerWidth - 56) / GRID_CELL_SIZE), 'none')
-    }
-  })
+  window.addEventListener('resize', onResize)
 })
 
 onBeforeUnmount(() => {
@@ -178,6 +181,7 @@ onBeforeUnmount(() => {
     grid.destroy()
     grid = undefined
   }
+  window.removeEventListener('resize', onResize)
 })
 
 watch(

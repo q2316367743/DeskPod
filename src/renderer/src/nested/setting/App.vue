@@ -37,7 +37,7 @@
   </t-layout>
 </template>
 <script lang="ts" setup>
-import { useBoolState } from '@/hooks'
+import { useBoolState, useColorMode } from '@/hooks'
 import { ImageIcon, RobotIcon, Setting1Icon, ViewListIcon } from 'tdesign-icons-vue-next'
 import BaseSetting from '@/nested/setting/components/BaseSetting.vue'
 import AiSetting from '@/nested/setting/components/AiSetting.vue'
@@ -45,5 +45,7 @@ import BgSetting from '@/nested/setting/components/BgSetting.vue'
 
 const [collapsed, toggleCollapsed] = useBoolState(false, '/page/setting/collapsed')
 const page = ref('1')
+
+useColorMode()
 </script>
 <style scoped lang="less"></style>

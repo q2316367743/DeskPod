@@ -5,6 +5,41 @@ import { join } from 'node:path'
 import { createPluginWindow } from '$/module/plugin'
 import { pluginManager, quickManager } from '$/global/BeanFactory'
 
+const builtinWindowMap = new Map<string, BrowserWindow>()
+
+const openBuiltinApp = async (node: DesktopNode): Promise<boolean> => {
+  const builtinId = node.meta?.builtinId || ''
+  const builtinWindow = builtinWindowMap.get(builtinId)
+  if (builtinWindow) {
+    builtinWindow.show()
+    builtinWindow.focus()
+    return true
+  }
+
+  const bw = new BrowserWindow({
+    title: node.name,
+    width: node.meta?.width || 800,
+    height: node.meta?.height || 600,
+    show: true,
+    autoHideMenuBar: true,
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false,
+      webSecurity: false
+    }
+  })
+  bw.on('close', () => {
+    builtinWindowMap.delete(builtinId)
+  })
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    await bw.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/${node.meta?.builtinId}.html`)
+  } else {
+    await bw.loadFile(join(__dirname, `../renderer/${node.meta?.builtinId}.html`))
+  }
+  builtinWindowMap.set(builtinId, bw)
+  return true
+}
+
 export async function openApp(node: DesktopNode): Promise<boolean> {
   if (node.type === 'app' && node.meta?.executablePath) {
     await shell.openPath(node.meta.executablePath)
@@ -24,26 +59,7 @@ export async function openApp(node: DesktopNode): Promise<boolean> {
     return true
   }
   if (node.type === 'builtin') {
-    const builtinWindow = new BrowserWindow({
-      title: node.name,
-      width: node.meta?.width || 800,
-      height: node.meta?.height || 600,
-      show: true,
-      autoHideMenuBar: true,
-      webPreferences: {
-        preload: join(__dirname, '../preload/index.js'),
-        sandbox: false,
-        webSecurity: false
-      }
-    })
-    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-      await builtinWindow.loadURL(
-        `${process.env['ELECTRON_RENDERER_URL']}/${node.meta?.builtinId}.html`
-      )
-    } else {
-      await builtinWindow.loadFile(join(__dirname, `../renderer/${node.meta?.builtinId}.html`))
-    }
-    return true
+    return openBuiltinApp(node)
   }
   if (node.type === 'plugin') {
     const pluginId = node.meta!.pluginId!

@@ -73,6 +73,7 @@ import UpgradeDialog from '@/nested/plugin/components/UpgradeDialog.vue'
 import DetailDialog from '@/nested/plugin/components/DetailDialog.vue'
 import Toast from '@/nested/plugin/components/Toast.vue'
 import { MessageUtil } from '@/utils'
+import { useColorMode } from '@/hooks'
 
 interface PluginState {
   plugins: PluginEntityWrap[]
@@ -313,6 +314,8 @@ watch(
     else state.verifyResult = null
   }
 )
+
+useColorMode()
 </script>
 
 <style lang="less" scoped>
