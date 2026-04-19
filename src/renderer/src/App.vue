@@ -15,6 +15,8 @@
 
     <!-- 添加节点弹窗 -->
     <AddNodeModal :visible="showModal" :type="modalType" @close="handleCloseModal" />
+
+    <div class="desktop-bar"></div>
   </div>
 </template>
 
@@ -47,5 +49,14 @@ onMounted(() => {
 .desktop-home {
   min-height: 100vh;
   background: var(--td-bg-color-container);
+}
+.desktop-bar {
+  width: 100vw;
+  height: 32px;
+  z-index: 9999999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-app-region: drag;
 }
 </style>

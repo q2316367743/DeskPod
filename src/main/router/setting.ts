@@ -7,7 +7,7 @@ ipcMain.handle('/main/setting/all', () => {
 
 ipcMain.handle('/main/setting/set', async (_event, key, value) => {
   await settingManager.set(key, value)
-  getMainWindow()?.emit('/event/setting/change', key, value)
+  getMainWindow()?.webContents.send('/event/setting/change', key, value)
 })
 ipcMain.handle('/main/setting/model-list', () => {
   return settingManager.listAiModel()

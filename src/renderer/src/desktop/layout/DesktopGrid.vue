@@ -137,8 +137,8 @@ onMounted(async () => {
 
   grid = GridStack.init(
     {
-      column: Math.floor((window.innerWidth - 32) / GRID_CELL_SIZE),
-      row: Math.floor((window.innerHeight - 66 - 32) / GRID_CELL_SIZE),
+      column: Math.floor((window.innerWidth - 56) / GRID_CELL_SIZE),
+      row: Math.floor((window.innerHeight - 66 - 56) / GRID_CELL_SIZE),
       cellHeight: GRID_CELL_SIZE,
       margin: 0,
       float: true,
@@ -168,7 +168,7 @@ onMounted(async () => {
 
   window.addEventListener('resize', () => {
     if (grid) {
-      grid.column(Math.floor((window.innerWidth - 32) / GRID_CELL_SIZE), 'none')
+      grid.column(Math.floor((window.innerWidth - 56) / GRID_CELL_SIZE), 'none')
     }
   })
 })
@@ -192,7 +192,7 @@ watch(
 
 <style lang="less" scoped>
 .desktop-grid-container {
-  padding: 8px;
+  padding: 32px 8px 8px;
   width: calc(100vw - 16px);
   height: calc(100vh - 82px);
   overflow: auto;
