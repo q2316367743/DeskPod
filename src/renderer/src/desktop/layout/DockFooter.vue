@@ -24,7 +24,6 @@
             </div>
           </div>
         </t-tooltip>
-
       </div>
     </div>
   </div>
@@ -70,7 +69,6 @@ const handleClick = (node: DesktopNode) => {
 }
 
 .dock-container {
-  background: var(--fluent-acrylic-bg);
   backdrop-filter: var(--fluent-acrylic-blur);
   -webkit-backdrop-filter: var(--fluent-acrylic-blur);
   border: 1px solid var(--fluent-border-subtle);

@@ -6,7 +6,13 @@ export const useSettingStore = defineStore('setting', () => {
   const setting = ref<Setting>(defaultSetting())
 
   const background = computed(() => {
-    return isDark.value ? setting.value.backgroundImageDark : setting.value.backgroundImageLight
+    const img = isDark.value
+      ? setting.value.backgroundImageDark
+      : setting.value.backgroundImageLight
+    if (img) {
+      return `file://${img}`
+    }
+    return ''
   })
 
   const init = async () => {

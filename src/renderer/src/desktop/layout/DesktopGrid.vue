@@ -138,6 +138,7 @@ onMounted(async () => {
   grid = GridStack.init(
     {
       column: Math.floor((window.innerWidth - 32) / GRID_CELL_SIZE),
+      row: Math.floor((window.innerHeight - 66 - 32) / GRID_CELL_SIZE),
       cellHeight: GRID_CELL_SIZE,
       margin: 0,
       float: true,

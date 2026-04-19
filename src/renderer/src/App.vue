@@ -4,7 +4,8 @@
       v-if="background"
       :src="background"
       alt="背景图片"
-      class="w-full h-full t-image--fit-contain"
+      class="w-full h-full t-image--fit-contain absolute top-0 left-0 right-0 bottom-0"
+      style="object-fit: cover"
     />
 
     <!-- 桌面图标网格 -->

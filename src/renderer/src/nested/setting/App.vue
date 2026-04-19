@@ -29,7 +29,7 @@
         </template>
       </t-menu>
     </t-aside>
-    <t-content class="h-full">
+    <t-content class="h-full overflow-auto">
       <BaseSetting v-if="page === '1'" />
       <BgSetting v-if="page === '2'" />
       <AiSetting v-if="page === '3'" />
@@ -38,7 +38,7 @@
 </template>
 <script lang="ts" setup>
 import { useBoolState } from '@/hooks'
-import { RobotIcon, Setting1Icon, ViewListIcon } from 'tdesign-icons-vue-next'
+import { ImageIcon, RobotIcon, Setting1Icon, ViewListIcon } from 'tdesign-icons-vue-next'
 import BaseSetting from '@/nested/setting/components/BaseSetting.vue'
 import AiSetting from '@/nested/setting/components/AiSetting.vue'
 import BgSetting from '@/nested/setting/components/BgSetting.vue'

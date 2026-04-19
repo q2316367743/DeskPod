@@ -1,10 +1,76 @@
 <template>
   <div class="p-8px">
-    基础设置
+    <t-card>
+      <t-form label-width="120px" :data="form" colon>
+        <t-form-item label="开机自启" name="autoStart">
+          <t-switch
+            v-model="form.autoStart"
+            @change="handleChange('autoStart', $event as boolean)"
+          />
+        </t-form-item>
+
+        <t-form-item label="运行模式" name="mode">
+          <t-radio-group
+            v-model="form.mode"
+            variant="default-filled"
+            @change="handleChange('mode', $event as string)"
+          >
+            <t-radio-button value="screen">副屏模式</t-radio-button>
+            <t-radio-button value="launch">启动器模式</t-radio-button>
+          </t-radio-group>
+        </t-form-item>
+
+        <t-form-item label="快捷键" name="shortcutKey">
+          <div class="flex items-center gap-8px">
+            <t-input
+              v-model="form.shortcutKey"
+              placeholder="请按快捷键组合"
+              class="w-240px"
+              readonly
+            />
+            <t-tag theme="primary" variant="light">
+              {{ form.shortcutKey || '未设置' }}
+            </t-tag>
+          </div>
+        </t-form-item>
+
+        <t-form-item label="主题" name="theme">
+          <t-select
+            v-model="form.theme"
+            class="w-240px"
+            @change="handleChange('theme', $event as string)"
+          >
+            <t-option value="auto" label="跟随系统" />
+            <t-option value="light" label="浅色" />
+            <t-option value="dark" label="深色" />
+          </t-select>
+        </t-form-item>
+      </t-form>
+    </t-card>
   </div>
 </template>
-<script lang="ts" setup>
-</script>
-<style scoped lang="less">
 
-</style>
+<script lang="ts" setup>
+import { Setting } from '@common/types'
+
+const form = reactive({
+  autoStart: false,
+  mode: 'screen' as Setting['mode'],
+  shortcutKey: '',
+  theme: 'auto' as Setting['theme']
+})
+
+onMounted(async () => {
+  const setting = await window.settingAPI.all()
+  form.autoStart = setting.autoStart
+  form.mode = setting.mode
+  form.shortcutKey = setting.shortcutKey
+  form.theme = setting.theme
+})
+
+const handleChange = async (key: keyof Setting, value: Setting[keyof Setting]) => {
+  await window.settingAPI.set(key, value)
+}
+</script>
+
+<style scoped lang="less"></style>
