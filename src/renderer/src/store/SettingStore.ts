@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { defaultSetting, Setting } from '@common/types'
-import { isDark } from '@/global/Constants'
+import { isDark } from '@/global/BeanFactory'
 
 export const useSettingStore = defineStore('setting', () => {
   const setting = ref<Setting>(defaultSetting())

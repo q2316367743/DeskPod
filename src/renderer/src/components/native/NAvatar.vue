@@ -31,7 +31,7 @@ import { exists, mkdir, writeFile } from '@tauri-apps/plugin-fs'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import { useSnowflake } from '@/utils'
 import type { PropType } from 'vue'
-import { APP_DATA_ASSET_DIR } from '@/global/Constants'
+import { APP_DATA_ASSET_DIR } from '@/global/BeanFactory'
 import { joinPath } from '@/utils/lang/FileUtil'
 
 const modelValue = defineModel({

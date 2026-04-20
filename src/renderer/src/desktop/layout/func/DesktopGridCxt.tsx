@@ -1,5 +1,5 @@
 import Cxt from '@imengyu/vue3-context-menu'
-import { isDark } from '@/global/Constants'
+import { isDark } from '@/global/BeanFactory'
 import { openAddAppDialog } from '@/desktop/add/AddAppDialog'
 import { openLinkAppDialog } from '@/desktop/add/AddLinkDialog'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'

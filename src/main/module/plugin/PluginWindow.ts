@@ -1,82 +1,8 @@
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, WebContentsView } from 'electron'
 import { join } from 'path'
 import { getMainWindow, pluginManager } from '$/global/BeanFactory'
 import icon from '../../../../resources/icon.png?asset'
-import WebContentsView = Electron.WebContentsView
-
-export interface WindowOptions {
-  // 窗口标签，必填
-  label: string
-  // 启动的文件，必填
-  url: string
-
-  icon?: string
-  center?: boolean
-  x?: number
-  y?: number
-  width?: number
-  height?: number
-  minWidth?: number
-  minHeight?: number
-  maxWidth?: number
-  maxHeight?: number
-  // preventOverflow?: boolean | PreventOverflowMargin
-  resizable?: boolean
-  title?: string
-  fullscreen?: boolean
-  focus?: boolean
-  focusable?: boolean
-  transparent?: boolean
-  maximized?: boolean
-  visible?: boolean
-  decorations?: boolean
-  alwaysOnTop?: boolean
-  alwaysOnBottom?: boolean
-  contentProtected?: boolean
-  skipTaskbar?: boolean
-  shadow?: boolean
-  // theme?: Theme
-  // titleBarStyle?: TitleBarStyle
-  // trafficLightPosition?: LogicalPosition
-  hiddenTitle?: boolean
-  tabbingIdentifier?: string
-  maximizable?: boolean
-  minimizable?: boolean
-  closable?: boolean
-  // parent?: Window | WebviewWindow | string
-  visibleOnAllWorkspaces?: boolean
-  // windowEffects?: Effects
-  // backgroundColor?: Color
-  // backgroundThrottling?: BackgroundThrottlingPolicy
-  javascriptDisabled?: boolean
-  allowLinkPreview?: boolean
-  disableInputAccessoryView?: boolean
-  // scrollBarStyle?: ScrollBarStyle
-}
-
-export interface ViewOptions {
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
-enum TauriEvent {
-  WINDOW_RESIZED = 'tauri://resize',
-  WINDOW_MOVED = 'tauri://move',
-  WINDOW_CLOSE_REQUESTED = 'tauri://close-requested',
-  WINDOW_DESTROYED = 'tauri://destroyed',
-  WINDOW_FOCUS = 'tauri://focus',
-  WINDOW_BLUR = 'tauri://blur',
-  WINDOW_SCALE_FACTOR_CHANGED = 'tauri://scale-change',
-  WINDOW_THEME_CHANGED = 'tauri://theme-changed',
-  WINDOW_CREATED = 'tauri://window-created',
-  WEBVIEW_CREATED = 'tauri://webview-created',
-  DRAG_ENTER = 'tauri://drag-enter',
-  DRAG_OVER = 'tauri://drag-over',
-  DRAG_DROP = 'tauri://drag-drop',
-  DRAG_LEAVE = 'tauri://drag-leave'
-}
+import { TauriEvent, ViewOptions, WindowOptions } from '@common/types'
 
 interface PbwBrowserWindow {
   type: 'BrowserWindow'
@@ -132,6 +58,11 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
     if (old.type === 'BrowserWindow') {
       const oldId = old.window.id
       old.window.close()
+      pluginBw.delete(options.label)
+      browserIdMap.delete(oldId)
+    } else if (old.type === 'WebContentsView') {
+      const oldId = old.window.webContents.id
+      old.window.webContents.close()
       pluginBw.delete(options.label)
       browserIdMap.delete(oldId)
     }
@@ -208,6 +139,25 @@ export async function createWebContentView(pluginId: string, label: string, opti
   if (!widget) {
     return Promise.reject(Error('插件中不存在该组件'))
   }
+
+  const pluginBw = pluginBrowserWindowMap.get(pluginId)
+
+  if (pluginBw && pluginBw.has(label)) {
+    // 存在这个窗口了，先关闭
+    const old = pluginBw.get(label)!
+    if (old.type === 'BrowserWindow') {
+      const oldId = old.window.id
+      old.window.close()
+      pluginBw.delete(label)
+      browserIdMap.delete(oldId)
+    } else if (old.type === 'WebContentsView') {
+      const oldId = old.window.webContents.id
+      old.window.webContents.close()
+      pluginBw.delete(label)
+      browserIdMap.delete(oldId)
+    }
+  }
+
   const wcv = new WebContentsView({
     webPreferences: {
       partition: `persist:plugin-${plugin.identifier}`,
@@ -220,7 +170,6 @@ export async function createWebContentView(pluginId: string, label: string, opti
 
   // 保存对象
   browserIdMap.set(wcv.webContents.id, { pluginId: pluginId, label: label })
-  const pluginBw = pluginBrowserWindowMap.get(pluginId)
   if (pluginBw) {
     pluginBw.set(label, { type: 'WebContentsView', window: wcv })
   } else {
@@ -267,7 +216,7 @@ export async function removeWebContentView(pluginId: string, label: string) {
     mainWindow.contentView.removeChildView(value.window)
     value.window.webContents.close() // 重要！必须关闭底层进程
     pluginMap.delete(label)
-  }else if (value.type === 'BrowserWindow') {
+  } else if (value.type === 'BrowserWindow') {
     value.window.close()
     pluginMap.delete(label)
   }

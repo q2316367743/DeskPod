@@ -1,5 +1,5 @@
 import { Store } from '@tauri-apps/plugin-store'
-import { APP_DATA_STORE_PATH } from '@/global/Constants'
+import { APP_DATA_STORE_PATH } from '@/global/BeanFactory'
 import { cloneDeep } from 'es-toolkit'
 import type { UnlistenFn } from '@tauri-apps/api/event'
 

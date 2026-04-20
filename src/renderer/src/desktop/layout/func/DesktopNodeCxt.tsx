@@ -1,5 +1,5 @@
 import Cxt, { type MenuItem } from '@imengyu/vue3-context-menu'
-import { isDark } from '@/global/Constants'
+import { isDark } from '@/global/BeanFactory'
 import { DeleteIcon, EditIcon } from 'tdesign-icons-vue-next'
 import { MessageBoxUtil, MessageUtil } from '@/utils'
 import { DesktopNode } from '@common/types'

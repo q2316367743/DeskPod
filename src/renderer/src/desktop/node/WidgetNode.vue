@@ -1,15 +1,14 @@
 <template>
   <div class="widget-node" :style="{ width, height }">
-    <webview
-      class="widget-node-content"
-      :style="{ width, height }"
-      :src="node.meta?.root"
-      :preload="node.meta?.source === 'plugin' ? preload : undefined"
-    ></webview>
+    <plugin-widget-node v-if="node.meta?.source === 'plugin'" :node="node" />
+    <quick-widget-node v-else-if="node.meta?.source === 'quick'" :node="node" />
   </div>
 </template>
 <script lang="ts" setup>
 import { DesktopNode } from '@common/types'
+import { CELL_SIZE } from '@common/global'
+import PluginWidgetNode from '@/desktop/node/PluginWidgetNode.vue'
+import QuickWidgetNode from '@/desktop/node/QuickWidgetNode.vue'
 
 const props = defineProps({
   node: {
@@ -17,9 +16,8 @@ const props = defineProps({
     required: true
   }
 })
-const width = computed(() => `${(props.node.meta?.width || 1) * 96 - 16}px`)
-const height = computed(() => `${(props.node.meta?.height || 1) * 96 - 16}px`)
-const preload = window.pluginAPI.preload()
+const width = computed(() => `${(props.node.meta?.width || 1) * CELL_SIZE - 16}px`)
+const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 16}px`)
 </script>
 <style scoped lang="less">
 .widget-node {
