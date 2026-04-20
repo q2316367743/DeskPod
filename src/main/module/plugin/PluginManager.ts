@@ -1,10 +1,10 @@
 import { mkdir, readdir, readFile, rm } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
-import { app } from 'electron'
+import { app, session } from 'electron'
 import AdmZip from 'adm-zip'
 import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
-import { pluginVerify } from '$/module/plugin'
+import { getWindowsByPluginId, pluginVerify } from '$/module/plugin'
 import {
   APP_DATA_PLUGIN_DIR,
   appPluginConfigPath,
@@ -13,6 +13,7 @@ import {
 } from '$/global/Constant'
 import { useSnowflake } from '@common/utils'
 import { databaseManager, storeManager } from '$/global/BeanFactory'
+import { logError, logInfo } from '$/lib/log'
 
 /**
  * 插件管理器
@@ -178,12 +179,47 @@ export class PluginManager {
   }
 
   async uninstall(identifier: string) {
-    // 先关闭占用的资源
-    databaseManager.closeAllPlugin(identifier)
-    storeManager.closeAllPlugin(identifier)
     // 获取插件
     const plugin = this.pluginMap.get(identifier)
     if (!plugin) return Promise.reject(new Error('插件不存在'))
+    // 先关闭占用的资源
+    databaseManager.closeAllPlugin(identifier)
+    storeManager.closeAllPlugin(identifier)
+    // 关闭打开的窗口
+    getWindowsByPluginId(identifier).forEach((win) => {
+      if (!win.isDestroyed()) {
+        win.destroy() // 强制关闭窗口，触发内存数据落盘
+      }
+    })
+    const ses = session.fromPartition(`persist:plugin-${identifier}`)
+    // 3. 清除 HTTP 缓存
+    try {
+      await ses.clearCache()
+      logInfo(`[插件 ${identifier}] 缓存已清除`)
+    } catch (e) {
+      logError(`[插件 ${identifier}] 清除缓存失败`, e)
+    }
+
+    // 4. 彻底清除所有存储数据
+    try {
+      await ses.clearStorageData({
+        // 不指定 origin，表示清除该 session 下所有源的数据
+        storages: [
+          'cookies',
+          'filesystem',
+          'indexdb',
+          'localstorage',
+          'shadercache',
+          'websql',
+          'serviceworkers',
+          'cachestorage'
+        ]
+      })
+      logInfo(`[插件 ${identifier}] 存储数据已清除`)
+    } catch (e) {
+      logError(`[插件 ${identifier}] 清除存储数据失败`, e)
+    }
+    // 删除目录
     await rm(plugin.root, { recursive: true, force: true })
     this.pluginMap.delete(identifier)
   }

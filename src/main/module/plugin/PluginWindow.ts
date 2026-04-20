@@ -79,6 +79,10 @@ export function getBrowserWindowByKey(pluginId: string, label: string) {
   return pluginBrowserWindowMap.get(pluginId)?.get(label)
 }
 
+export function getWindowsByPluginId(pluginId: string) {
+  return Array.from(pluginBrowserWindowMap.get(pluginId)?.values() || [])
+}
+
 export function getBrowserWindowKeyById(id: number) {
   return browserIdMap.get(id)
 }
@@ -123,6 +127,7 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
     icon: options.icon ? join(entity.root, entity.icon) : icon,
     show: true,
     webPreferences: {
+      partition: `persist:plugin-${entity.identifier}`,
       preload: join(__dirname, '../preload/plugin.js'),
       contextIsolation: true,
       nodeIntegration: true,

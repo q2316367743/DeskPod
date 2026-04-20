@@ -35,6 +35,7 @@ function createTray() {
     {
       label: '退出',
       click: () => {
+        getMainWindow()?.destroy()
         app.quit()
       }
     }
@@ -127,4 +128,3 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   app.quit()
 })
-
