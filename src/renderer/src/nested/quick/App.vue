@@ -49,15 +49,6 @@
       />
     </t-loading>
 
-    <!-- 安装弹窗 -->
-    <InstallDialog
-      ref="installDialogRef"
-      :visible="installDialogVisible"
-      :installing="installing"
-      @close="closeInstallDialog"
-      @install="doInstall"
-    />
-
     <!-- 升级弹窗 -->
     <UpgradeDialog
       ref="upgradeDialogRef"
@@ -77,13 +68,11 @@
 import { AddIcon, FileZipIcon, Html5Icon } from 'tdesign-icons-vue-next'
 import type { QuickApp, QuickAppCore } from '@common/types'
 import QuickAppCard from '@/nested/quick/components/QuickAppCard.vue'
-import InstallDialog from '@/nested/quick/components/InstallDialog.vue'
 import UpgradeDialog from '@/nested/quick/components/UpgradeDialog.vue'
 import Toast from '@/nested/quick/components/Toast.vue'
 import { useColorMode } from '@/hooks'
 import { openInstallQuickApp } from '@/nested/quick/func/InstallQuickApp'
 
-const installDialogRef = ref<InstanceType<typeof InstallDialog> | null>(null)
 const upgradeDialogRef = ref<InstanceType<typeof UpgradeDialog> | null>(null)
 
 interface State {
@@ -119,9 +108,7 @@ const state = reactive<State>({
 const {
   apps,
   loading,
-  installing,
   upgrading,
-  installDialogVisible,
   upgradeDialogVisible,
   upgradingApp,
   toast
@@ -152,31 +139,6 @@ const showToast = (type: 'success' | 'error' | 'info', message: string) => {
   }, 3000)
 }
 
-// 安装
-const openInstallDialog = () => {
-  state.installDialogVisible = true
-}
-
-const closeInstallDialog = () => {
-  state.installDialogVisible = false
-}
-
-const doInstall = async () => {
-  const formData = installDialogRef.value?.getFormData()
-  if (!formData) return
-  state.installing = true
-  try {
-    await window.quickAPI.install(formData as QuickAppCore)
-    showToast('success', '快应用安装成功')
-    closeInstallDialog()
-    loadApps()
-  } catch (e) {
-    showToast('error', '快应用安装失败')
-    console.error(e)
-  } finally {
-    state.installing = false
-  }
-}
 
 // 升级
 const openUpgradeDialog = (app: QuickApp) => {

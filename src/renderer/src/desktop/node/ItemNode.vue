@@ -1,13 +1,13 @@
 <template>
   <div class="desktop-icon" :title="node.name" @click="handleClick(node)">
     <div class="icon-wrapper">
-      <img
-        v-if="node.icon"
-        :src="node.icon"
-        :alt="node.name"
-        class="icon-image"
-        @error="($event.target as HTMLImageElement).style.display = 'none'"
-      />
+      <t-image v-if="node.icon" :src="node.icon" :alt="node.name" class="icon-image">
+        <template #error>
+          <div class="icon-placeholder">
+            <span class="icon-letter">{{ node.name.charAt(0).toUpperCase() }}</span>
+          </div>
+        </template>
+      </t-image>
       <div v-else class="icon-placeholder">
         <span class="icon-letter">{{ node.name.charAt(0).toUpperCase() }}</span>
       </div>
@@ -55,6 +55,10 @@ const handleClick = (node: DesktopNode) => {
   &:active {
     background: var(--fluent-item-active);
     transform: scale(0.95);
+  }
+
+  :deep(.t-image__wrapper) {
+    background-color: transparent !important;
   }
 }
 
