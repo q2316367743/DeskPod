@@ -1,20 +1,5 @@
-import sqlite3 from 'better-sqlite3'
-import { mkdir } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
-import { dirname } from 'node:path'
 import { defineApi } from '$/global/DefineApi'
-
-/**
- * 数据库缓存
- */
-const map = new Map<string, sqlite3.Database>()
-
-async function createDatabase(path: string): Promise<sqlite3.Database> {
-  if (!existsSync(path)) {
-    await mkdir(dirname(path), { recursive: true })
-  }
-  return new sqlite3(path)
-}
+import { databaseManager } from '$/global/BeanFactory'
 
 interface LoadArgs {
   db: string
@@ -28,43 +13,19 @@ type SelectArgs = ExecuteArgs
 type CloseArgs = LoadArgs
 
 export default [
-  defineApi<LoadArgs>('plugin:sql|load', async (args) => {
+  defineApi<LoadArgs>('plugin:sql|load', async (args, _o, payload) => {
     const { db } = args
-    const path = `${db}`.replace('sqlite:', '')
-    const database = await createDatabase(path)
-    map.set(path, database)
-    return path
+    return databaseManager.load(db, payload.pluginId)
   }),
-  defineApi<ExecuteArgs>('plugin:sql|execute', async (args) => {
+  defineApi<ExecuteArgs>('plugin:sql|execute', async (args, _o, payload) => {
     const { db, query, values } = args
-    const database = map.get(db)
-
-    const statements = `${query.replace(/\$\d+/g, '?')}`
-      .split(';')
-      .map((e) => e.trim())
-      .filter((e) => !!e)
-    console.log('开始执行，发现语句：', statements.length)
-    if (statements.length > 1) {
-      for (const statement of statements) {
-        database?.exec(statement)
-      }
-      return [statements.length, null]
-    }
-    console.log(`开始执行，语句 ${statements[0]}, 条件: ${values ? JSON.stringify(values) : ''}`)
-
-    const update = database?.prepare(statements[0])
-    const info = update?.run(...values)
-    return [info?.changes, info?.lastInsertRowid]
+    return databaseManager.execute(db, query, values, payload.pluginId)
   }),
-  defineApi<SelectArgs>('plugin:sql|select', async (args) => {
+  defineApi<SelectArgs>('plugin:sql|select', async (args, _o, payload) => {
     const { db, query, values } = args
-    const database = map.get(db)
-    const update = database?.prepare(query.replace(/\$\d+/g, '?'))
-    return update?.all(...values)
+    return databaseManager.select(db, query, values, payload.pluginId)
   }),
   defineApi<CloseArgs>('plugin:sql|close', async (args) => {
-    map.get(args.db)?.close()
-    map.delete(args.db)
-    return Promise.resolve()
+    return databaseManager.close(args.db)
   })
 ]

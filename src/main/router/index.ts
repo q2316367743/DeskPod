@@ -9,3 +9,5 @@ import './quick'
 // 设置事件
 import './setting'
 
+// 插件事件
+import '$/module/plugin/PluginEvent'

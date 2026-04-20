@@ -1,5 +1,5 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
+import { join } from 'node:path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { APP_NAME, appDirInit } from '$/global/Constant'
@@ -10,14 +10,10 @@ import {
   setMainWindow,
   settingManager
 } from '$/global/BeanFactory'
-
-// 导入插件事件
-import '$/module/plugin/PluginEvent'
-
-// 导入桌面管理
-import '$/router'
 import { useSql } from '$/lib/sql'
 import { logDebug, logError } from '$/lib/log'
+// 导入事件
+import '$/router'
 
 function createWindow(): void {
   // Create the browser window.

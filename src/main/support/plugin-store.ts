@@ -1,13 +1,10 @@
 import { defineApi } from '$/global/DefineApi'
-import { BaseDirectory, getDirectory } from '$/support/plugin-path'
-import { getBrowserWindowByKey } from '$/module/plugin'
-import { join } from 'node:path'
-import { randomUUID } from 'node:crypto'
-import { readFile, writeFile } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
+import { storeManager } from '$/global/BeanFactory'
+import { StoreOptions } from '$/module/plugin'
 
 interface LoadArgs {
   path: string
+  options?: StoreOptions
 }
 interface SetArgs {
   rid: string
@@ -25,112 +22,75 @@ interface EntryArgs {
 
 type DeleteArgs = GetArgs
 type SaveArgs = EntryArgs
-
-const storeMap = new Map<
-  string,
-  {
-    path: string
-    store: Record<string, unknown>
-  }
->()
+type ClearArgs = EntryArgs
+type ResetArgs = EntryArgs
+type KeysArgs = EntryArgs
+type ReloadArgs = { rid: string; ignoreDefaults?: boolean }
 
 /**
  * 数据存储，比较简单，就是读取 json 文件
  */
 
 export default [
-  defineApi<LoadArgs>("'plugin:store|load'", async (args, _o, payload) => {
+  defineApi<LoadArgs>('plugin:store|load', async (args, _o, payload) => {
+    const { path, options } = args
+    return storeManager.load(path, payload.pluginId, options)
+  }),
+  defineApi<LoadArgs>('plugin:store|get_store', async (args) => {
     const { path } = args
-    const target = join(getDirectory(payload.pluginId, BaseDirectory.AppData), path)
-    // 尝试读取
-    const has = existsSync(target)
-    const key = randomUUID()
-    if (has) {
-      // 读取文件
-      try {
-        const text = await readFile(target, 'utf-8')
-        const store = JSON.parse(text)
-        storeMap.set(key, {
-          path: target,
-          store: store
-        })
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    storeMap.set(key, {
-      path: target,
-      store: {}
-    })
+    return storeManager.getStore(path)
   }),
   defineApi<SetArgs>('plugin:store|set', async (args, _o, payload) => {
     const { rid, key, value } = args
-    const s = storeMap.get(rid)
-    if (s) {
-      s.store[key] = value
-      const bw = getBrowserWindowByKey(payload.pluginId, payload.label)
-      if (bw) {
-        bw.emit('store://change', {
-          payload: {
-            resourceId: rid,
-            key: key,
-            value: value,
-            exists: true
-          }
-        })
-      }
-    }
+    return storeManager.setValue(rid, key, value, payload)
   }),
   defineApi<GetArgs>('plugin:store|get', async (args) => {
     const { rid, key } = args
-    const s = storeMap.get(rid)
-    if (s) {
-      return s[key]
-    }
-    return undefined
+    return storeManager.getValue(rid, key)
   }),
   defineApi<SetArgs>('plugin:store|has', async (args) => {
     const { rid, key } = args
-    const s = storeMap.get(rid)
-    if (s) {
-      return key in s
-    }
-    return false
-  }),
-  defineApi<EntryArgs>('plugin:store|entries', async (args) => {
-    const { rid } = args
-    const s = storeMap.get(rid)
-    if (s) {
-      return Object.entries(s.store)
-    }
-    return []
+    return storeManager.hasKey(rid, key)
   }),
   defineApi<DeleteArgs>('plugin:store|delete', async (args, _o, payload) => {
     const { rid, key } = args
-    const s = storeMap.get(rid)
-    if (s) {
-      delete s.store[key]
-      const bw = getBrowserWindowByKey(payload.pluginId, payload.label)
-      if (bw) {
-        bw.emit('store://change', {
-          payload: {
-            resourceId: args.rid,
-            key: args.key,
-            exists: false
-          }
-        })
-      }
-      return true
-    }
-    return false
+    return storeManager.deleteKey(rid, key, payload)
+  }),
+  defineApi<ClearArgs>('plugin:store|clear', async (args, _o, payload) => {
+    const { rid } = args
+    return storeManager.clear(rid, payload)
+  }),
+  defineApi<ResetArgs>('plugin:store|reset', async (args, _o, payload) => {
+    const { rid } = args
+    return storeManager.reset(rid, payload)
+  }),
+  defineApi<KeysArgs>('plugin:store|keys', async (args) => {
+    const { rid } = args
+    return storeManager.keys(rid)
+  }),
+  defineApi<KeysArgs>('plugin:store|values', async (args) => {
+    const { rid } = args
+    return storeManager.values(rid)
+  }),
+  defineApi<EntryArgs>('plugin:store|entries', async (args) => {
+    const { rid } = args
+    return storeManager.entries(rid)
+  }),
+  defineApi<EntryArgs>('plugin:store|length', async (args) => {
+    const { rid } = args
+    return storeManager.length(rid)
+  }),
+  defineApi<ReloadArgs>('plugin:store|reload', async (args) => {
+    const { rid } = args
+    return storeManager.reload(rid, args)
   }),
   defineApi<SaveArgs>('plugin:store|save', async (args) => {
     const { rid } = args
-    const s = storeMap.get(rid)
-    if (s) {
-      await writeFile(s.path, JSON.stringify(args), 'utf-8')
-      return true
-    }
-    return false
+    return storeManager.save(rid)
+  }),
+  // TODO: 其实不是这里的
+  defineApi<SaveArgs>('plugin:resources|close', async (args) => {
+    const { rid } = args
+    return storeManager.save(rid)
   })
 ]

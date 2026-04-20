@@ -12,6 +12,7 @@ import {
   removePluginDirs
 } from '$/global/Constant'
 import { useSnowflake } from '@common/utils'
+import { databaseManager, storeManager } from '$/global/BeanFactory'
 
 /**
  * 插件管理器
@@ -177,6 +178,9 @@ export class PluginManager {
   }
 
   async uninstall(identifier: string) {
+    // 先关闭占用的资源
+    databaseManager.closeAllPlugin(identifier)
+    storeManager.closeAllPlugin(identifier)
     // 获取插件
     const plugin = this.pluginMap.get(identifier)
     if (!plugin) return Promise.reject(new Error('插件不存在'))

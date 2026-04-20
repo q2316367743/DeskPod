@@ -1,3 +1,5 @@
 export * from './PluginWindow'
 export * from './PluginManager'
 export * from './PluginVerify'
+export * from './component/DatabaseManager'
+export * from './component/StoreManager'
