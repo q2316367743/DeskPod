@@ -1,7 +1,8 @@
 import { BrowserWindow } from 'electron'
 import { join } from 'path'
-import { pluginManager } from '$/global/BeanFactory'
+import { getMainWindow, pluginManager } from '$/global/BeanFactory'
 import icon from '../../../../resources/icon.png?asset'
+import WebContentsView = Electron.WebContentsView
 
 export interface WindowOptions {
   // 窗口标签，必填
@@ -53,6 +54,13 @@ export interface WindowOptions {
   // scrollBarStyle?: ScrollBarStyle
 }
 
+export interface ViewOptions {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
 enum TauriEvent {
   WINDOW_RESIZED = 'tauri://resize',
   WINDOW_MOVED = 'tauri://move',
@@ -70,8 +78,18 @@ enum TauriEvent {
   DRAG_LEAVE = 'tauri://drag-leave'
 }
 
+interface PbwBrowserWindow {
+  type: 'BrowserWindow'
+  window: BrowserWindow
+}
+interface PbwWebContentsView {
+  type: 'WebContentsView'
+  window: WebContentsView
+}
+type PbwValue = PbwBrowserWindow | PbwWebContentsView
+
 // 插件 ID => 窗口 ID => 浏览器
-const pluginBrowserWindowMap = new Map<string, Map<string, BrowserWindow>>()
+const pluginBrowserWindowMap = new Map<string, Map<string, PbwValue>>()
 // 浏览器 ID => 浏览器
 const browserIdMap = new Map<number, { pluginId: string; label: string }>()
 
@@ -111,10 +129,12 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
   if (pluginBw && pluginBw.has(options.label)) {
     // 存在这个窗口了，先关闭
     const old = pluginBw.get(options.label)!
-    const oldId = old.id
-    old.close()
-    pluginBw.delete(options.label)
-    browserIdMap.delete(oldId)
+    if (old.type === 'BrowserWindow') {
+      const oldId = old.window.id
+      old.window.close()
+      pluginBw.delete(options.label)
+      browserIdMap.delete(oldId)
+    }
   }
 
   // 获取插件信息
@@ -137,7 +157,7 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
   bw.once('close', () => {
     bw.emit(TauriEvent.WINDOW_DESTROYED)
     // 被关闭了，则移除
-    browserIdMap.delete(bw.id)
+    browserIdMap.delete(bw.webContents.id)
     pluginBrowserWindowMap.get(pluginId)?.delete(options.label)
   })
   // 系统级事件
@@ -146,13 +166,109 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
   // 保存对象
   browserIdMap.set(bw.id, { pluginId: pluginId, label: options.label })
   if (pluginBw) {
-    pluginBw.set(options.label, bw)
+    pluginBw.set(options.label, { type: 'BrowserWindow', window: bw })
   } else {
-    const temp = new Map<string, BrowserWindow>()
-    temp.set(options.label, bw)
+    const temp = new Map<string, PbwValue>()
+    temp.set(options.label, { type: 'BrowserWindow', window: bw })
     pluginBrowserWindowMap.set(pluginId, temp)
   }
 
   // 加载文件
   await bw.loadFile(join(entity.root, 'runtime', options.url))
+}
+
+function setWindowBounds(bw: BrowserWindow, options: ViewOptions) {
+  bw.setBounds({
+    x: Math.round(options.x),
+    y: Math.round(options.y),
+    width: Math.round(options.width),
+    height: Math.round(options.height)
+  })
+}
+function setViewBounds(wcv: WebContentsView, options: ViewOptions) {
+  wcv.setBounds({
+    x: Math.round(options.x),
+    y: Math.round(options.y),
+    width: Math.round(options.width),
+    height: Math.round(options.height)
+  })
+}
+
+export async function createWebContentView(pluginId: string, label: string, options: ViewOptions) {
+  const mainWindow = getMainWindow()
+  if (!mainWindow) {
+    return Promise.reject(Error('主窗口未找到'))
+  }
+  const plugin = pluginManager.getById(pluginId)
+  if (!plugin) {
+    return Promise.reject(Error('插件未找到'))
+  }
+  const widgets = plugin.weight || []
+  const widget = widgets.find((e) => e.label === label)
+  if (!widget) {
+    return Promise.reject(Error('插件中不存在该组件'))
+  }
+  const wcv = new WebContentsView({
+    webPreferences: {
+      partition: `persist:plugin-${plugin.identifier}`,
+      preload: join(__dirname, '../preload/plugin.js'),
+      contextIsolation: true,
+      nodeIntegration: true,
+      webSecurity: false
+    }
+  })
+
+  // 保存对象
+  browserIdMap.set(wcv.webContents.id, { pluginId: pluginId, label: label })
+  const pluginBw = pluginBrowserWindowMap.get(pluginId)
+  if (pluginBw) {
+    pluginBw.set(label, { type: 'WebContentsView', window: wcv })
+  } else {
+    const temp = new Map<string, PbwValue>()
+    temp.set(label, { type: 'WebContentsView', window: wcv })
+    pluginBrowserWindowMap.set(pluginId, temp)
+  }
+
+  // 加载文件
+  await wcv.webContents.loadFile(join(plugin.root, 'runtime', widget.path))
+  setViewBounds(wcv, options)
+  // 加入到窗口
+  mainWindow.contentView.addChildView(wcv)
+}
+
+export async function moveWebContentView(pluginId: string, label: string, options: ViewOptions) {
+  const value = getBrowserWindowByKey(pluginId, label)
+  if (!value) {
+    return Promise.reject(Error('插件窗口未找到'))
+  }
+  if (value.type === 'WebContentsView') {
+    setViewBounds(value.window, options)
+  } else if (value.type === 'BrowserWindow') {
+    setWindowBounds(value.window, options)
+  } else {
+    return Promise.reject(Error('未知的窗口类型'))
+  }
+}
+
+export async function removeWebContentView(pluginId: string, label: string) {
+  const mainWindow = getMainWindow()
+  if (!mainWindow) {
+    return Promise.reject(Error('主窗口未找到'))
+  }
+  const pluginMap = pluginBrowserWindowMap.get(pluginId)
+  if (!pluginMap) {
+    return Promise.reject(Error('插件未找到'))
+  }
+  const value = pluginMap.get(label)
+  if (!value) {
+    return Promise.reject(Error('插件窗口未找到'))
+  }
+  if (value.type === 'WebContentsView') {
+    mainWindow.contentView.removeChildView(value.window)
+    value.window.webContents.close() // 重要！必须关闭底层进程
+    pluginMap.delete(label)
+  }else if (value.type === 'BrowserWindow') {
+    value.window.close()
+    pluginMap.delete(label)
+  }
 }

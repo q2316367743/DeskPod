@@ -1,6 +1,6 @@
 import { AiModelSetting, DesktopNode, QuickApp, QuickAppCore, Setting } from '@common/types'
 import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
-import { basename, dirname, extname, join, sep } from 'path'
+import { ViewOptions } from '$/module/plugin'
 
 interface DesktopAPI {
   getTree: (desktopId?: string) => Promise<DesktopNode[]>
@@ -13,6 +13,9 @@ interface DesktopAPI {
   openApp: (node: DesktopNode) => Promise<boolean>
   getInstalledApps: () => Promise<Array<{ name: string; path: string; icon?: string }>>
   fetchFavicon: (url: string) => Promise<{ success: boolean; icon: string }>
+  widgetCreate: (pluginId: string, label: string, options: ViewOptions) => Promise<void>
+  widgetMove: (pluginId: string, label: string, options: ViewOptions) => Promise<void>
+  widgetDelete: (pluginId: string, label: string) => Promise<void>
 }
 
 interface PluginAPI {

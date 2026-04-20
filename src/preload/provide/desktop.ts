@@ -1,6 +1,7 @@
 // 桌面管理相关 IPC 调用
 import { ipcRenderer } from 'electron'
 import { DesktopNode } from '@common/types'
+import { ViewOptions } from '$/module/plugin'
 
 export const desktopAPI = {
   // 获取桌面节点树
@@ -51,5 +52,17 @@ export const desktopAPI = {
   // 获取网站图标
   fetchFavicon: (url: string): Promise<{ success: boolean; icon: string }> => {
     return ipcRenderer.invoke('desktop:fetchFavicon', url)
-  }
+  },
+
+  widgetCreate: (pluginId: string, label: string, options: ViewOptions) => {
+    return ipcRenderer.invoke('/desktop/widget/create', pluginId, label, options)
+  },
+
+  widgetMove: (pluginId: string, label: string, options: ViewOptions) => {
+    return ipcRenderer.invoke('/desktop/widget/move', pluginId, label, options)
+  },
+
+  widgetDelete: (pluginId: string, label: string) => {
+    return ipcRenderer.invoke('/desktop/widget/delete', pluginId, label)
+  },
 }

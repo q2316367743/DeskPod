@@ -2,9 +2,14 @@ import { ipcMain } from 'electron'
 import { DesktopNode } from '@common/types'
 import { openApp } from '$/global/OpenApp'
 import { desktopManager } from '$/global/BeanFactory'
+import {
+  createWebContentView,
+  moveWebContentView,
+  removeWebContentView,
+  ViewOptions
+} from '$/module/plugin'
 
 const DEFAULT_DESKTOP_ID = 'desktop-1'
-
 
 // 获取指定桌面的完整树结构
 ipcMain.handle('desktop:getTree', (_event, desktopId: string = DEFAULT_DESKTOP_ID) => {
@@ -55,4 +60,21 @@ ipcMain.handle('desktop:getInstalledApps', () => {
 // 获取网站图标
 ipcMain.handle('desktop:fetchFavicon', async (_event, url: string) => {
   return desktopManager.fetchFavicon(url)
+})
+
+ipcMain.handle(
+  '/desktop/widget/create',
+  async (_event, pluginId: string, label: string, options: ViewOptions) => {
+    return createWebContentView(pluginId, label, options)
+  }
+)
+
+ipcMain.handle(
+  '/desktop/widget/move',
+  async (_event, pluginId: string, label: string, options: ViewOptions) => {
+    return moveWebContentView(pluginId, label, options)
+  }
+)
+ipcMain.handle('/desktop/widget/delete', async (_event, pluginId: string, label) => {
+  return removeWebContentView(pluginId, label)
 })
