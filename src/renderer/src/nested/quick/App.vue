@@ -4,12 +4,31 @@
     <div class="toolbar">
       <h1 class="page-title">快应用管理</h1>
       <div class="toolbar-actions">
-        <t-button theme="primary" @click="openInstallDialog">
-          <template #icon>
-            <AddIcon />
-          </template>
-          安装快应用
-        </t-button>
+        <t-dropdown trigger="click" max-column-width="200px">
+          <t-button theme="primary">
+            <template #icon>
+              <AddIcon />
+            </template>
+            安装快应用
+          </t-button>
+          <t-dropdown-menu>
+            <t-dropdown-item>AI 生成</t-dropdown-item>
+            <t-dropdown-item @click="openInstallQuickApp('html', loadApps)">
+              <template #prefix-icon>
+                <html5-icon />
+              </template>
+              HTML 文件
+            </t-dropdown-item>
+            <t-dropdown-item @click="openInstallQuickApp('zip', loadApps)">
+              <template #prefix-icon>
+                <file-zip-icon />
+              </template>
+              <t-tooltip content="npm run build 后的产物，dist 文件夹内进行压缩">
+                ZIP 文件
+              </t-tooltip>
+            </t-dropdown-item>
+          </t-dropdown-menu>
+        </t-dropdown>
       </div>
     </div>
 
@@ -55,13 +74,14 @@
 </template>
 
 <script lang="ts" setup>
-import { AddIcon } from 'tdesign-icons-vue-next'
+import { AddIcon, FileZipIcon, Html5Icon } from 'tdesign-icons-vue-next'
 import type { QuickApp, QuickAppCore } from '@common/types'
 import QuickAppCard from '@/nested/quick/components/QuickAppCard.vue'
 import InstallDialog from '@/nested/quick/components/InstallDialog.vue'
 import UpgradeDialog from '@/nested/quick/components/UpgradeDialog.vue'
 import Toast from '@/nested/quick/components/Toast.vue'
 import { useColorMode } from '@/hooks'
+import { openInstallQuickApp } from '@/nested/quick/func/InstallQuickApp'
 
 const installDialogRef = ref<InstanceType<typeof InstallDialog> | null>(null)
 const upgradeDialogRef = ref<InstanceType<typeof UpgradeDialog> | null>(null)
