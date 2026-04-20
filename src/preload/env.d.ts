@@ -78,6 +78,13 @@ interface SettingAPI {
   deleteBgImage: (path: string) => Promise<void>
 }
 
+interface LogAPI {
+  info: (...params: Array<unknown>) => void
+  warn: (...params: Array<unknown>) => void
+  error: (...params: Array<unknown>) => void
+  debug: (...params: Array<unknown>) => void
+}
+
 global {
   interface Window {
     // tauri 需要的定义
@@ -91,5 +98,6 @@ global {
     supportAPI: SupportAPI
     quickAPI: QuickAPI
     settingAPI: SettingAPI
+    logAPI: LogAPI
   }
 }

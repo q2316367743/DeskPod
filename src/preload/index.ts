@@ -1,5 +1,5 @@
 import { contextBridge } from 'electron'
-import { desktopAPI, pluginAPI, supportAPI, quickAPI, settingAPI } from '~/provide'
+import { desktopAPI, pluginAPI, supportAPI, quickAPI, settingAPI, logAPI } from '~/provide'
 
 // 暴露到渲染进程
 if (process.contextIsolated) {
@@ -9,6 +9,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('supportAPI', supportAPI)
     contextBridge.exposeInMainWorld('quickAPI', quickAPI)
     contextBridge.exposeInMainWorld('settingAPI', settingAPI)
+    contextBridge.exposeInMainWorld('logAPI', logAPI)
   } catch (error) {
     console.error(error)
   }
@@ -18,6 +19,7 @@ if (process.contextIsolated) {
   window.supportAPI = supportAPI
   window.quickAPI = quickAPI
   window.settingAPI = settingAPI
+  window.logAPI = logAPI
 }
 
 // 重新导出 electronAPI 供其他模块使用

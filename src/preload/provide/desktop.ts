@@ -1,5 +1,5 @@
 // 桌面管理相关 IPC 调用
-import {  ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron'
 import { DesktopNode } from '@common/types'
 
 export const desktopAPI = {
