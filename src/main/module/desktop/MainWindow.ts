@@ -5,7 +5,6 @@ import { getMainWindow, setMainWindow, settingManager } from '$/global/BeanFacto
 import { is } from '@electron-toolkit/utils'
 import icon from '../../../../resources/icon.png?asset'
 
-
 export function handleMainWindow() {
   const mainWindow = getMainWindow()
   if (!mainWindow) return
@@ -17,15 +16,14 @@ export function handleMainWindow() {
       if (display.id === displayId) {
         // 如果找到了
         mainWindow.setBounds(display.bounds)
-        mainWindow.setSimpleFullScreen(true)
+        mainWindow.setFullScreen(true)
         mainWindow.show()
         return
       }
     }
   }
-  mainWindow.setSimpleFullScreen(true)
+  mainWindow.setFullScreen(true)
   mainWindow.show()
-
 }
 
 export function createMainWindow() {
@@ -78,4 +76,3 @@ export function createMainWindow() {
 
   return mainWindow
 }
-
