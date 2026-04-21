@@ -1,9 +1,10 @@
 import { ipcRenderer } from 'electron'
 import { AiModelSetting, Setting } from '@common/types'
+import { SYSTEM_EVENT } from '@common/global'
 
 export const settingAPI = {
   onChange: (callback: () => void) => {
-    ipcRenderer.on('/event/setting/change', callback)
+    ipcRenderer.on(SYSTEM_EVENT.SETTING_CHANGE, callback)
   },
   all: (): Promise<Setting> => {
     return ipcRenderer.invoke('/main/setting/all')

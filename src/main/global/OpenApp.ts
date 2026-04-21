@@ -3,7 +3,8 @@ import { shell, BrowserWindow } from 'electron'
 import { is } from '@electron-toolkit/utils'
 import { join } from 'node:path'
 import { createPluginWindow } from '$/module/plugin'
-import { pluginManager, quickManager } from '$/global/BeanFactory'
+import { pluginManager } from '$/global/BeanFactory'
+import { createQuickWindow } from '$/module/quick'
 
 const builtinWindowMap = new Map<string, BrowserWindow>()
 
@@ -81,22 +82,7 @@ export async function openApp(node: DesktopNode): Promise<boolean> {
     return true
   }
   if (node.type === 'quick') {
-    const quickId = node.meta!.pluginId!
-    const entity = quickManager.getById(quickId)
-    if (!entity) return false
-    const bw = new BrowserWindow({
-      title: node.name,
-      icon: entity.icon ? join(entity.root, entity.icon) : undefined,
-      width: node.meta?.width,
-      height: node.meta?.height,
-      webPreferences: {
-        sandbox: true,
-        webSecurity: false,
-        nodeIntegration: false
-      }
-    })
-    await bw.loadFile(join(entity.root, entity.entry))
-    return true
+    return createQuickWindow(node)
   }
   return false
 }

@@ -11,3 +11,13 @@ export const APP_PASSWORD = 'FmH24q7!*DDUcd'
  * 单元格尺寸
  */
 export const CELL_SIZE = 96
+
+export const SYSTEM_EVENT = {
+  SETTING_CHANGE: '/event/setting/change',
+  DESKTOP_CHANGE: '/event/setting/change'
+}
+
+export const PARTITION = {
+  PLUGIN: (pluginId: string) => `persist:plugin-${pluginId}`,
+  QUICK: (quickId: string) => `persist:quick-${quickId}`
+}

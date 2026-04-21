@@ -4,6 +4,8 @@ import { APP_DATA_DB_DIR } from '$/global/Constant'
 import { existsSync } from 'node:fs'
 import { readFile, writeFile } from 'node:fs/promises'
 import { group } from '@common/utils'
+import { getMainWindow } from '$/global/BeanFactory'
+import { SYSTEM_EVENT } from '@common/global'
 
 interface DesktopItem {
   id: string
@@ -117,5 +119,31 @@ export class DesktopManager {
     } catch {
       return { success: false, icon: '' }
     }
+  }
+
+  async removeNodesByPluginId(pluginId: string) {
+    this.nodes = this.nodes.filter((n) => {
+      if (n.type === 'plugin') {
+        return n.meta?.pluginId !== pluginId
+      } else if (n.type === 'widget' && n.meta?.source === 'plugin') {
+        return n.meta?.pluginId !== pluginId
+      }
+      return true
+    })
+    await this.save()
+    getMainWindow()?.webContents.send(SYSTEM_EVENT.DESKTOP_CHANGE)
+  }
+
+  async removeNodesByQuickId(quickId: string) {
+    this.nodes = this.nodes.filter((n) => {
+      if (n.type === 'quick') {
+        return n.meta?.pluginId !== quickId
+      } else if (n.type === 'widget' && n.meta?.source === 'quick') {
+        return n.meta?.pluginId !== quickId
+      }
+      return true
+    })
+    await this.save()
+    getMainWindow()?.webContents.send(SYSTEM_EVENT.DESKTOP_CHANGE)
   }
 }

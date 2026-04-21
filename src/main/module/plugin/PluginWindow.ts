@@ -3,6 +3,7 @@ import { join } from 'path'
 import { getMainWindow, pluginManager } from '$/global/BeanFactory'
 import icon from '../../../../resources/icon.png?asset'
 import { TauriEvent, ViewOptions, WindowOptions } from '@common/types'
+import { PARTITION } from '@common/global'
 
 interface PbwBrowserWindow {
   type: 'BrowserWindow'
@@ -78,7 +79,7 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
     icon: options.icon ? join(entity.root, entity.icon) : icon,
     show: true,
     webPreferences: {
-      partition: `persist:plugin-${entity.identifier}`,
+      partition: PARTITION.PLUGIN(entity.identifier),
       preload: join(__dirname, '../preload/plugin.js'),
       contextIsolation: true,
       nodeIntegration: true,
@@ -160,7 +161,7 @@ export async function createWebContentView(pluginId: string, label: string, opti
 
   const wcv = new WebContentsView({
     webPreferences: {
-      partition: `persist:plugin-${plugin.identifier}`,
+      partition: PARTITION.PLUGIN(plugin.identifier),
       preload: join(__dirname, '../preload/plugin.js'),
       contextIsolation: true,
       nodeIntegration: true,
@@ -220,4 +221,19 @@ export async function removeWebContentView(pluginId: string, label: string) {
     value.window.close()
     pluginMap.delete(label)
   }
+}
+
+export function closePluginWindow(pluginId: string): void {
+  // 关闭打开的窗口
+  getWindowsByPluginId(pluginId).forEach((win) => {
+    if (win.type === 'BrowserWindow') {
+      if (!win.window.isDestroyed()) {
+        win.window.destroy() // 强制关闭窗口，触发内存数据落盘
+      }
+    } else if (win.type === 'WebContentsView') {
+      if (!win.window.webContents.isDestroyed()) {
+        win.window.webContents.close()
+      }
+    }
+  })
 }

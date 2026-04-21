@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { app, session } from 'electron'
 import AdmZip from 'adm-zip'
 import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
-import { getWindowsByPluginId, pluginVerify } from '$/module/plugin'
+import { closePluginWindow, pluginVerify } from '$/module/plugin'
 import {
   APP_DATA_PLUGIN_DIR,
   appPluginConfigPath,
@@ -12,8 +12,9 @@ import {
   removePluginDirs
 } from '$/global/Constant'
 import { useSnowflake } from '@common/utils'
-import { databaseManager, storeManager } from '$/global/BeanFactory'
+import { databaseManager, desktopManager, storeManager } from '$/global/BeanFactory'
 import { logError, logInfo } from '$/lib/log'
+import { PARTITION } from '@common/global'
 
 /**
  * 插件管理器
@@ -186,12 +187,8 @@ export class PluginManager {
     databaseManager.closeAllPlugin(identifier)
     storeManager.closeAllPlugin(identifier)
     // 关闭打开的窗口
-    getWindowsByPluginId(identifier).forEach((win) => {
-      if (!win.isDestroyed()) {
-        win.destroy() // 强制关闭窗口，触发内存数据落盘
-      }
-    })
-    const ses = session.fromPartition(`persist:plugin-${identifier}`)
+    closePluginWindow(identifier)
+    const ses = session.fromPartition(PARTITION.PLUGIN(identifier))
     // 3. 清除 HTTP 缓存
     try {
       await ses.clearCache()
@@ -222,5 +219,7 @@ export class PluginManager {
     // 删除目录
     await rm(plugin.root, { recursive: true, force: true })
     this.pluginMap.delete(identifier)
+    // 移除桌面图标
+    await desktopManager.removeNodesByPluginId(identifier)
   }
 }

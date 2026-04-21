@@ -6,6 +6,11 @@ import { addQuickApp, listQuickApps, removeQuickApp, updateQuickApp } from '$/se
 import { useSnowflake } from '@common/utils'
 import { createQuickAppDirs, removeQuickAppDirs } from '$/global/Constant'
 import { existsSync } from 'node:fs'
+import { closeQuickWindow } from '$/module/quick/QuickWindow'
+import { desktopManager } from '$/global/BeanFactory'
+import { session } from 'electron'
+import { logError, logInfo } from '$/lib/log'
+import { PARTITION } from '@common/global'
 
 export class QuickManager {
   private readonly map = new Map<string, QuickApp>()
@@ -108,11 +113,45 @@ export class QuickManager {
   async uninstall(id: string) {
     const quickApp = this.map.get(id)
     if (!quickApp) return Promise.reject(new Error(`快应用 ${id} 不存在`))
+    // 关闭全部窗口
+    closeQuickWindow(id)
+
+    const ses = session.fromPartition(PARTITION.QUICK(id))
+    // 3. 清除 HTTP 缓存
+    try {
+      await ses.clearCache()
+      logInfo(`[快应用 ${id}] 缓存已清除`)
+    } catch (e) {
+      logError(`[快应用 ${id}] 清除缓存失败`, e)
+    }
+
+    // 4. 彻底清除所有存储数据
+    try {
+      await ses.clearStorageData({
+        // 不指定 origin，表示清除该 session 下所有源的数据
+        storages: [
+          'cookies',
+          'filesystem',
+          'indexdb',
+          'localstorage',
+          'shadercache',
+          'websql',
+          'serviceworkers',
+          'cachestorage'
+        ]
+      })
+      logInfo(`[快应用 ${id}] 存储数据已清除`)
+    } catch (e) {
+      logError(`[快应用 ${id}] 清除存储数据失败`, e)
+    }
+
     // 删除数据库记录
     await removeQuickApp(id)
     // 删除数据
     await rm(quickApp.root, { recursive: true, force: true })
     // 删除缓存
     this.map.delete(id)
+    // 删除桌面节点
+    await desktopManager.removeNodesByQuickId(id)
   }
 }

@@ -3,6 +3,7 @@ import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
 import { ViewOptions } from '$/module/plugin'
 
 interface DesktopAPI {
+  onChange: (callback: () => void) => void
   getTree: (desktopId?: string) => Promise<DesktopNode[]>
   updateNode: (node: DesktopNode) => Promise<DesktopNode>
   updateNodes: (nodes: DesktopNode[]) => Promise<DesktopNode[]>

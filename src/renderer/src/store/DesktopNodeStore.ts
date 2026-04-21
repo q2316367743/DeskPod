@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { DesktopNode } from '@common/types'
+import { logDebug } from '@/lib/log'
 
 const DEFAULT_DOCK_ID = 'dock'
 
@@ -10,9 +11,12 @@ export const useDesktopNodeStore = defineStore('desktop-node', () => {
   const dockNodes = ref(new Array<DesktopNode>())
 
   const init = async () => {
+    logDebug('初始化节点')
     nodes.value = await window.desktopAPI.getTree(desktopId.value)
     dockNodes.value = await window.desktopAPI.getTree(DEFAULT_DOCK_ID)
   }
+
+  window.desktopAPI.onChange(init);
 
   const move = async (nodeId: string, column: number, row: number) => {
     for (const node of nodes.value) {

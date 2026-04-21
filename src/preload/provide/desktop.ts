@@ -1,9 +1,12 @@
 // 桌面管理相关 IPC 调用
 import { ipcRenderer } from 'electron'
-import { DesktopNode } from '@common/types'
-import { ViewOptions } from '$/module/plugin'
+import { DesktopNode, ViewOptions } from '@common/types'
+import { SYSTEM_EVENT } from '@common/global'
 
 export const desktopAPI = {
+  onChange: (callback: () => void) => {
+    ipcRenderer.on(SYSTEM_EVENT.DESKTOP_CHANGE, callback)
+  },
   // 获取桌面节点树
   getTree: (desktopId?: string): Promise<DesktopNode[]> => {
     return ipcRenderer.invoke('desktop:getTree', desktopId)
@@ -64,5 +67,5 @@ export const desktopAPI = {
 
   widgetDelete: (pluginId: string, label: string) => {
     return ipcRenderer.invoke('/desktop/widget/delete', pluginId, label)
-  },
+  }
 }

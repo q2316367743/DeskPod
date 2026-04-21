@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron'
 import { getMainWindow, settingManager } from '$/global/BeanFactory'
+import { SYSTEM_EVENT } from '@common/global'
 
 ipcMain.handle('/main/setting/all', () => {
   return settingManager.all()
@@ -7,7 +8,7 @@ ipcMain.handle('/main/setting/all', () => {
 
 ipcMain.handle('/main/setting/set', async (_event, key, value) => {
   await settingManager.set(key, value)
-  getMainWindow()?.webContents.send('/event/setting/change', key, value)
+  getMainWindow()?.webContents.send(SYSTEM_EVENT.SETTING_CHANGE, key, value)
 })
 ipcMain.handle('/main/setting/model-list', () => {
   return settingManager.listAiModel()
