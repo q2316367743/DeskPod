@@ -92,7 +92,7 @@ export function createContextMenuByNode(nodeId: string, x: number, y: number) {
           } catch (e) {
             new Notification({
               title: '卸载失败',
-              body: `原因：${e?.message}`
+              body: `原因：${(e as Error)?.message}`
             }).show()
           }
         }

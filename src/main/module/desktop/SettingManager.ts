@@ -4,6 +4,7 @@ import { copyFile, mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/p
 import { extname, join } from 'node:path'
 import { APP_DATA_ASSET_DIR, APP_DATA_DB_DIR } from '$/global/Constant'
 import { useSnowflake } from '@common/utils'
+import { handleMainWindow } from '$/module/desktop/MainWindow'
 
 export class SettingManager {
   private defaultValue = defaultSetting()
@@ -24,6 +25,10 @@ export class SettingManager {
   async set<K extends keyof Setting>(key: K, value: Setting[K]) {
     this.setting[key] = value
     await writeFile(this.path, JSON.stringify(this.setting, null, 2))
+    if (key === 'displayId') {
+      // 处理主窗口
+      handleMainWindow()
+    }
   }
 
   // --------------------------- AI Model ---------------------------

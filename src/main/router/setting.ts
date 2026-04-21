@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron'
+import { ipcMain, screen } from 'electron'
 import { getMainWindow, settingManager } from '$/global/BeanFactory'
 import { SYSTEM_EVENT } from '@common/global'
 
@@ -28,4 +28,30 @@ ipcMain.handle('/main/setting/bg-image-upload', async (_event, theme, path) => {
 })
 ipcMain.handle('/main/setting/bg-image-delete', async (_event, path) => {
   return settingManager.deleteBgImage(path)
+})
+
+ipcMain.handle('/main/setting/get-displays', () => {
+  const displays = screen.getAllDisplays()
+  return displays.map((display) => ({
+    id: display.id,
+    bounds: display.bounds,
+    size: display.size,
+    scaleFactor: display.scaleFactor,
+    label: `${display.bounds.x},${display.bounds.y} (${display.size.width}x${display.size.height})`
+  }))
+})
+
+ipcMain.handle('/main/setting/capture-display', async (_event, displayId: number) => {
+  const displays = screen.getAllDisplays()
+  const target = displays.find((d) => d.id === displayId)
+  if (!target) {
+    throw new Error(`Display ${displayId} not found`)
+  }
+  const screenshot = await getMainWindow()?.webContents.capturePage()
+  if (!screenshot) {
+    return null
+  }
+  const { x, y, width, height } = target.bounds
+  const cropped = screenshot.crop({ x, y, width, height })
+  return cropped.toDataURL()
 })

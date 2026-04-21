@@ -29,5 +29,11 @@ export const settingAPI = {
   },
   deleteBgImage(path: string): Promise<void> {
     return ipcRenderer.invoke('/main/setting/bg-image-delete', path)
+  },
+  getDisplays(): Promise<Array<{ id: number; bounds: Electron.Rectangle; size: Electron.Size; scaleFactor: number; label: string }>> {
+    return ipcRenderer.invoke('/main/setting/get-displays')
+  },
+  captureDisplay(displayId: number): Promise<string | null> {
+    return ipcRenderer.invoke('/main/setting/capture-display', displayId)
   }
 }

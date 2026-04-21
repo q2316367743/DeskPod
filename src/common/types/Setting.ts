@@ -21,6 +21,8 @@ export interface Setting {
   mode: SettingMode
   // 显示界面快捷键
   shortcutKey: string
+  // 显示界面显示器ID
+  displayId: number
   // 主题
   theme: 'auto' | 'dark' | 'light'
   // 背景图片 - 明亮模式
@@ -34,6 +36,7 @@ export interface Setting {
 export function defaultSetting(): Setting {
   return {
     autoStart: false,
+    displayId: 0,
     shortcutKey: 'Command + Space',
     mode: 'screen',
     theme: 'auto',

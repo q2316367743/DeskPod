@@ -88,6 +88,24 @@ interface SettingAPI {
   listBgImage: (theme: 'light' | 'dark') => Promise<Array<string>>
   uploadBgImage: (theme: 'light' | 'dark', path: string) => Promise<void>
   deleteBgImage: (path: string) => Promise<void>
+  getDisplays: () => Promise<
+    Array<{
+      id: number
+      bounds: {
+        x: number
+        y: number
+        width: number
+        height: number
+      }
+      size: {
+        height: number
+        width: number
+      }
+      scaleFactor: number
+      label: string
+    }>
+  >
+  captureDisplay: (displayId: number) => Promise<string | null>
 }
 
 interface LogAPI {

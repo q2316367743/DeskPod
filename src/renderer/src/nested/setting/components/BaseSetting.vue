@@ -20,7 +20,28 @@
           </t-radio-group>
         </t-form-item>
 
-        <t-form-item label="快捷键" name="shortcutKey">
+        <t-form-item v-if="form.mode === 'screen'" label="选择副屏" name="displayId">
+          <div class="display-picker">
+            <t-radio-group
+              v-model="form.displayId"
+              @change="handleDisplayChange"
+            >
+              <div
+                v-for="display in displays"
+                :key="display.id"
+                class="display-option"
+                :class="{ active: form.displayId === String(display.id) }"
+              >
+                <div class="display-info">
+                  <t-radio :value="display.id">屏幕 {{ display.id }}</t-radio>
+                  <span class="display-label">{{ display.label }}</span>
+                </div>
+              </div>
+            </t-radio-group>
+          </div>
+        </t-form-item>
+
+        <t-form-item v-else-if="form.mode === 'launch'" label="快捷键" name="shortcutKey">
           <div class="flex items-center gap-8px">
             <t-input
               v-model="form.shortcutKey"
@@ -53,12 +74,23 @@
 <script lang="ts" setup>
 import { Setting } from '@common/types'
 
-const form = reactive({
+interface DisplayInfo {
+  id: number
+  bounds: undefined
+  size: undefined
+  scaleFactor: number
+  label: string
+}
+
+const form = reactive<Setting>({
   autoStart: false,
-  mode: 'screen' as Setting['mode'],
+  mode: 'screen',
   shortcutKey: '',
-  theme: 'auto' as Setting['theme']
+  theme: 'auto',
+  displayId: 0
 })
+
+const displays = ref<Array<DisplayInfo>>([])
 
 onMounted(async () => {
   const setting = await window.settingAPI.all()
@@ -66,11 +98,83 @@ onMounted(async () => {
   form.mode = setting.mode
   form.shortcutKey = setting.shortcutKey
   form.theme = setting.theme
+  form.displayId = setting.displayId || ''
+
+  await loadDisplays()
 })
+
+const loadDisplays = async () => {
+  displays.value = await window.settingAPI.getDisplays()
+}
 
 const handleChange = async (key: keyof Setting, value: Setting[keyof Setting]) => {
   await window.settingAPI.set(key, value)
 }
+
+const handleDisplayChange = async (value: string | number | boolean) => {
+  form.displayId = Number(value)
+  await window.settingAPI.set('displayId', form.displayId)
+}
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.display-picker {
+  width: 100%;
+}
+
+.display-option {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  margin-right: 16px;
+  vertical-align: top;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.active {
+    border-color: var(--td-brand-color);
+    background: var(--td-brand-color-light);
+  }
+
+  &:hover {
+    border-color: var(--td-brand-color-focus);
+  }
+}
+
+.display-preview {
+  width: 160px;
+  height: 100px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.display-placeholder {
+  color: #999;
+  font-size: 12px;
+}
+
+.display-info {
+  text-align: center;
+
+  .display-label {
+    display: block;
+    font-size: 12px;
+    color: var(--td-text-color-secondary);
+    margin-top: 4px;
+  }
+}
+</style>

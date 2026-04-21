@@ -2,15 +2,7 @@ import { join } from 'node:path'
 import { mkdir, rm } from 'node:fs/promises'
 import { app } from 'electron'
 import s0000 from '../../../resources/migrate/0000.sql?asset'
-
-export const APP_ID = 'xyz.esion.desk-pod'
-export const APP_NAME = 'DeskPod'
-export const APP_DESC = 'DeskPod是一个强大的副屏软件'
-export const APP_AUTHOR = 'Esion'
-export const APP_GITHUB = 'https://github.com/q2316367743/desk-pod'
-export const APP_VERSION = '1.0.0'
-
-export const APP_PASSWORD = 'FmH24q7!*DDUcd'
+import { APP_ID } from '@common/global'
 
 export const APP_DATA_DIR = join(app.getPath('appData'), APP_ID)
 
