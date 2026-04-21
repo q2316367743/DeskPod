@@ -21,7 +21,16 @@ const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 16
 </script>
 <style scoped lang="less">
 .widget-node {
-  padding: 8px;
+  padding: 7px;
+  border: 1px solid transparent;
+  border-radius: var(--td-radius-medium);
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    border-color: var(--td-border-level-1-color);
+    background: var(--fluent-item-hover);
+  }
+
   .widget-node-content {
     border-radius: 8px;
   }

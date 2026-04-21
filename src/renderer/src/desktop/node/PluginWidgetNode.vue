@@ -21,7 +21,7 @@ const height = computed(() => `${heightNum.value}px`)
 
 function getViewOptions(): ViewOptions {
   return {
-    x: props.node.column * (CELL_SIZE + 6),
+    x: props.node.column * (CELL_SIZE + 8),
     y: props.node.row * CELL_SIZE + 40,
     width: widthNum.value,
     height: heightNum.value
