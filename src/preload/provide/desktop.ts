@@ -67,5 +67,18 @@ export const desktopAPI = {
 
   widgetDelete: (pluginId: string, label: string) => {
     return ipcRenderer.invoke('/desktop/widget/delete', pluginId, label)
+  },
+
+  contextmenuCreateDesktop(
+    desktopId: string,
+    x: number,
+    y: number,
+    column: number,
+    row: number
+  ): Promise<void> {
+    return ipcRenderer.invoke('/desktop/contextmenu/create/desktop', desktopId, x, y, column, row)
+  },
+  contextmenuCreateNode(nodeId: string, x: number, y: number): Promise<void> {
+    return ipcRenderer.invoke('/desktop/contextmenu/create/node', nodeId, x, y)
   }
 }

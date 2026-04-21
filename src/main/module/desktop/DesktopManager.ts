@@ -1,11 +1,11 @@
 import { join } from 'node:path'
-import { DesktopNode } from '@common/types'
-import { APP_DATA_DB_DIR } from '$/global/Constant'
 import { existsSync } from 'node:fs'
 import { readFile, writeFile } from 'node:fs/promises'
+import { DesktopNode } from '@common/types'
 import { group } from '@common/utils'
-import { getMainWindow } from '$/global/BeanFactory'
 import { SYSTEM_EVENT } from '@common/global'
+import { APP_DATA_DB_DIR } from '$/global/Constant'
+import { getMainWindow } from '$/global/BeanFactory'
 
 interface DesktopItem {
   id: string
@@ -48,6 +48,7 @@ export class DesktopManager {
     )
     // 更新 map
     this.map = group(this.nodes, 'desktopId')
+    getMainWindow()?.webContents.send(SYSTEM_EVENT.DESKTOP_CHANGE)
   }
 
   list(desktopId: string) {
@@ -131,7 +132,6 @@ export class DesktopManager {
       return true
     })
     await this.save()
-    getMainWindow()?.webContents.send(SYSTEM_EVENT.DESKTOP_CHANGE)
   }
 
   async removeNodesByQuickId(quickId: string) {
@@ -144,6 +144,5 @@ export class DesktopManager {
       return true
     })
     await this.save()
-    getMainWindow()?.webContents.send(SYSTEM_EVENT.DESKTOP_CHANGE)
   }
 }

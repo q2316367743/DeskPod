@@ -8,7 +8,10 @@ import { createQuickWindow } from '$/module/quick'
 
 const builtinWindowMap = new Map<string, BrowserWindow>()
 
-const openBuiltinApp = async (node: DesktopNode): Promise<boolean> => {
+const openBuiltinApp = async (
+  node: DesktopNode,
+  query?: Record<string, string>
+): Promise<boolean> => {
   const builtinId = node.meta?.builtinId || ''
   const builtinWindow = builtinWindowMap.get(builtinId)
   if (builtinWindow) {
@@ -33,15 +36,25 @@ const openBuiltinApp = async (node: DesktopNode): Promise<boolean> => {
     builtinWindowMap.delete(builtinId)
   })
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    await bw.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/${node.meta?.builtinId}.html`)
+    let q = ''
+    if (query) {
+      q =
+        '?' +
+        Object.keys(query)
+          .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`)
+          .join('&')
+    }
+    await bw.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/${builtinId}.html${q}`)
   } else {
-    await bw.loadFile(join(__dirname, `../renderer/${node.meta?.builtinId}.html`))
+    await bw.loadFile(join(__dirname, `../renderer/${builtinId}.html`), {
+      query: query
+    })
   }
   builtinWindowMap.set(builtinId, bw)
   return true
 }
 
-export async function openApp(node: DesktopNode): Promise<boolean> {
+export async function openApp(node: DesktopNode, query?: Record<string, string>): Promise<boolean> {
   if (node.type === 'app' && node.meta?.executablePath) {
     await shell.openPath(node.meta.executablePath)
     return true
@@ -60,7 +73,7 @@ export async function openApp(node: DesktopNode): Promise<boolean> {
     return true
   }
   if (node.type === 'builtin') {
-    return openBuiltinApp(node)
+    return openBuiltinApp(node, query)
   }
   if (node.type === 'plugin') {
     const pluginId = node.meta!.pluginId!

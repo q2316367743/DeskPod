@@ -3,6 +3,7 @@ import { DesktopNode, ViewOptions } from '@common/types'
 import { openApp } from '$/global/OpenApp'
 import { desktopManager } from '$/global/BeanFactory'
 import { createWebContentView, moveWebContentView, removeWebContentView } from '$/module/plugin'
+import { createContextMenuByDesktop, createContextMenuByNode } from '$/module/desktop'
 
 const DEFAULT_DESKTOP_ID = 'desktop-1'
 
@@ -72,4 +73,15 @@ ipcMain.handle(
 )
 ipcMain.handle('/desktop/widget/delete', async (_event, pluginId: string, label) => {
   return removeWebContentView(pluginId, label)
+})
+
+ipcMain.handle(
+  '/desktop/contextmenu/create/desktop',
+  async (_event, desktopId, x, y, column, row) => {
+    createContextMenuByDesktop(desktopId, x, y, column, row)
+  }
+)
+
+ipcMain.handle('/desktop/contextmenu/create/node', async (_event, nodeId, x, y) => {
+  createContextMenuByNode(nodeId, x, y)
 })
