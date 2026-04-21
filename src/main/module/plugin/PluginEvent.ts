@@ -14,6 +14,7 @@ import { ApiFunc } from '$/global/DefineApi'
 import { ipcMain } from 'electron'
 import { pluginManager } from '$/global/BeanFactory'
 import { getBrowserWindowByKey, getBrowserWindowKeyById } from '$/module/plugin/index'
+import { logError } from '$/lib/log'
 
 // 事件处理器
 const invokeHandleMap = new Map<string, ApiFunc<unknown, unknown, unknown>>()
@@ -52,7 +53,8 @@ ipcMain.handle('plugin:cmd', (event, props) => {
       entity: entity
     })
   }
-  return Promise.reject(new Error('Unknown command'))
+  logError('Unknown command', cmd)
+  return Promise.reject(new Error('Unknown command: ' + cmd))
 })
 
 // 接收 app 初始化事件
@@ -95,12 +97,12 @@ ipcMain.on('plugin:event:emit', (event, args) => {
     const appLabel = (entity.main || entity.widgets?.[0])!.label
     const appBw = getBrowserWindowByKey(bwk.pluginId, appLabel)
     if (appBw) {
-      appBw.webContents.send(channel, payload)
+      appBw.window.webContents.send(channel, payload)
     }
   } else if (kind === 'WebviewWindow') {
     const bw = getBrowserWindowByKey(bwk.pluginId, target.label)
     if (bw) {
-      bw.webContents.send(channel, payload)
+      bw.window.webContents.send(channel, payload)
     }
   }
 })

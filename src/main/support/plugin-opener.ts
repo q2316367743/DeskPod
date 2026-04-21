@@ -8,6 +8,11 @@ export default [
     await shell.openExternal(url)
     return Promise.resolve()
   }),
+  defineApi<{ path: string; with?: string }>('plugin:opener|open_path', async (args) => {
+    const { path } = args
+    await shell.openPath(path)
+    return Promise.resolve()
+  }),
   defineApi<{ paths: Array<string> }>('plugin:opener|reveal_item_in_dir', async (args) => {
     const { paths } = args
     for (const path of paths) {
