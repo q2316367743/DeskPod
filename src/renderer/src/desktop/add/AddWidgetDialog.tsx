@@ -54,7 +54,7 @@ export function openAddWidgetDialog(desktopId: string, column: number, row: numb
         ...toRaw(node),
         id: useSnowflake().nextId(),
         column: column,
-        row: row,
+        row: row
       })
       .then(() => {
         MessageUtil.success('成功添加小部件')

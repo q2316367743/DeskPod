@@ -64,10 +64,10 @@
             </div>
           </div>
 
-          <div v-if="plugin.weight && plugin.weight.length > 0" class="detail-section">
+          <div v-if="plugin.widgets && plugin.widgets.length > 0" class="detail-section">
             <h4 class="section-title">小部件</h4>
             <div class="weight-grid">
-              <div v-for="(weight, index) in plugin.weight" :key="index" class="weight-card">
+              <div v-for="(weight, index) in plugin.widgets" :key="index" class="weight-card">
                 <div class="weight-preview">
                   <img v-if="weight.preview" :src="assetSrc(weight.preview)" :alt="weight.title" />
                   <div v-else class="weight-placeholder">

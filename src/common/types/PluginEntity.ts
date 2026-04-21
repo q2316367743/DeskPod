@@ -27,7 +27,7 @@ export interface PluginEntity {
   /**
    * 小部件
    */
-  weight?: Array<{
+  widgets?: Array<{
     label: string
     title: string
     path: string
@@ -85,13 +85,13 @@ export function pluginEntityToWidgetNode(
   plugin: PluginEntityWrap,
   desktopId: string
 ): Array<DesktopNode> {
-  if (!plugin.weight) return []
-  return plugin.weight.flatMap((widget) => {
+  if (!plugin.widgets) return []
+  return plugin.widgets.flatMap((widget) => {
     return widget.layouts.map((layout) => {
       return {
         id: '',
         type: 'widget',
-        name: plugin.productName,
+        name: widget.label,
         icon: `file://${plugin.root}/runtime/${widget.preview}`,
         parentId: null,
         sortIndex: 0,
@@ -99,11 +99,11 @@ export function pluginEntityToWidgetNode(
         row: 0,
         column: 0,
         meta: {
-          pluginId: plugin.identifier + '#' + widget.label,
+          pluginId: plugin.identifier,
           root: `file://${plugin.root}/runtime/${widget.path}`,
           source: 'plugin',
           height: layout.rows,
-          width: layout.cols,
+          width: layout.cols
         }
       } as DesktopNode
     })

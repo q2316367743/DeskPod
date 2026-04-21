@@ -55,9 +55,9 @@
                 <span class="preview-label">主窗口：</span>
                 <span>{{ verifyResult.config.main.title }}</span>
               </div>
-              <div v-if="verifyResult.config.weight?.length" class="preview-item">
+              <div v-if="verifyResult.config.widgets?.length" class="preview-item">
                 <span class="preview-label">小部件：</span>
-                <span>{{ verifyResult.config.weight.length }} 个</span>
+                <span>{{ verifyResult.config.widgets.length }} 个</span>
               </div>
             </div>
           </div>

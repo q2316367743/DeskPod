@@ -92,7 +92,7 @@ ipcMain.on('plugin:event:emit', (event, args) => {
   const { kind } = target
   if (kind === 'App') {
     // 发给主线程
-    const appLabel = (entity.main || entity.weight?.[0])!.label
+    const appLabel = (entity.main || entity.widgets?.[0])!.label
     const appBw = getBrowserWindowByKey(bwk.pluginId, appLabel)
     if (appBw) {
       appBw.webContents.send(channel, payload)

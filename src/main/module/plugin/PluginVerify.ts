@@ -1,5 +1,6 @@
 import Type from 'typebox'
 import { Compile } from 'typebox/compile'
+import { logDebug } from '$/lib/log'
 
 // 定义 PluginEntityCapability 的联合类型校验器
 const PluginEntityCapability = Type.Union([
@@ -31,7 +32,7 @@ const pluginVerifyType = Type.Object({
   ),
 
   // 小部件（可选）
-  weight: Type.Optional(
+  widgets: Type.Optional(
     Type.Array(
       Type.Object({
         label: Type.String(),
@@ -60,7 +61,8 @@ const T = Compile(pluginVerifyType)
 export function pluginVerify(plugin: Record<string, unknown>): boolean {
   // 先校验格式
   const R = T.Check(plugin)
+  logDebug(`格式校验`, R)
   if (!R) return false
   // 在校验，窗口和小部件必须要有一个
-  return Boolean(plugin.main || (plugin.weight && plugin.weight.length > 0))
+  return Boolean(plugin.main || (plugin.widgets && plugin.widgets.length > 0))
 }

@@ -21,8 +21,8 @@ const height = computed(() => `${heightNum.value}px`)
 
 function getViewOptions(): ViewOptions {
   return {
-    x: props.node.column * CELL_SIZE + 8,
-    y: props.node.row * CELL_SIZE + 32,
+    x: props.node.column * (CELL_SIZE + 6),
+    y: props.node.row * CELL_SIZE + 40,
     width: widthNum.value,
     height: heightNum.value
   }
@@ -30,7 +30,7 @@ function getViewOptions(): ViewOptions {
 
 function getViewKey(): { pluginId: string; label: string } {
   const pluginId = props.node.meta?.pluginId || ''
-  const label = props.node.id
+  const label = props.node.name
   return { pluginId, label }
 }
 

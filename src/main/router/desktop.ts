@@ -1,13 +1,8 @@
 import { ipcMain } from 'electron'
-import { DesktopNode } from '@common/types'
+import { DesktopNode, ViewOptions } from '@common/types'
 import { openApp } from '$/global/OpenApp'
 import { desktopManager } from '$/global/BeanFactory'
-import {
-  createWebContentView,
-  moveWebContentView,
-  removeWebContentView,
-  ViewOptions
-} from '$/module/plugin'
+import { createWebContentView, moveWebContentView, removeWebContentView } from '$/module/plugin'
 
 const DEFAULT_DESKTOP_ID = 'desktop-1'
 

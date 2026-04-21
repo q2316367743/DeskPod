@@ -27,9 +27,9 @@
           <WindowIcon size="12px" />
           主窗口
         </span>
-        <span v-if="plugin.weight && plugin.weight.length > 0" class="plugin-capability">
+        <span v-if="plugin.widgets && plugin.widgets.length > 0" class="plugin-capability">
           <GridViewIcon size="12px" />
-          {{ plugin.weight.length }} 个小部件
+          {{ plugin.widgets.length }} 个小部件
         </span>
       </div>
     </div>
