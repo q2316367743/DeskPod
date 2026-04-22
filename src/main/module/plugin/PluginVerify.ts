@@ -17,6 +17,8 @@ const pluginVerifyType = Type.Object({
   productName: Type.String(),
   version: Type.String(),
   icon: Type.String(),
+  // 可选描述
+  description: Type.Optional(Type.String()),
 
   // 启动窗口（可选）
   main: Type.Optional(

@@ -29,7 +29,7 @@ export function openInstallQuickApp(from: QuickAppFrom, onUpdate: () => void) {
 
   const canInstall = computed(() => {
     if (!data.value.name) return false
-    if (data.value.from === 'ai') {
+    if (data.value.from === 'ai' || data.value.from === 'html') {
       return !!data.value.root
     }
     if (data.value.from === 'zip') {
@@ -66,7 +66,7 @@ export function openInstallQuickApp(from: QuickAppFrom, onUpdate: () => void) {
         return
       }
       try {
-        await window.quickAPI.install(data.value)
+        await window.quickAPI.install(toRaw(data.value))
         MessageUtil.success('快应用安装成功')
         dp.destroy?.()
         onUpdate()

@@ -5,6 +5,7 @@ import { pluginManager } from '$/global/BeanFactory'
 import { createQuickWindow } from '$/module/quick'
 import { logError } from '$/lib/log'
 import { openBuiltinApp } from '$/module/desktop'
+import { PARTITION } from '@common/global'
 
 const openLinkApp = async (node: DesktopNode): Promise<boolean> => {
   const url = node.meta?.url
@@ -13,7 +14,12 @@ const openLinkApp = async (node: DesktopNode): Promise<boolean> => {
     const bw = new BrowserWindow({
       title: node.name,
       width: node.meta?.width,
-      height: node.meta?.height
+      height: node.meta?.height,
+      webPreferences: {
+        webSecurity: false,
+        nodeIntegration: false,
+        partition: PARTITION.LINK
+      }
     })
     await bw.loadURL(url)
     return true

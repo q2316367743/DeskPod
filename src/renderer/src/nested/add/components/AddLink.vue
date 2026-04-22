@@ -41,7 +41,7 @@
 </template>
 <script lang="ts" setup>
 import { DesktopNode } from '@common/types'
-import { MessageUtil } from '@/utils'
+import { MessageUtil, useSnowflake } from '@/utils'
 
 const data = ref({
   name: '',
@@ -85,7 +85,7 @@ const fetchFavicon = async () => {
 const handleSubmit = () => {
   const params = new URLSearchParams(location.search)
   const node: DesktopNode = {
-    id: crypto.randomUUID(),
+    id: useSnowflake().nextId(),
     type: 'link',
     name: data.value.name,
     icon: data.value.icon,

@@ -31,21 +31,26 @@ export class QuickManager {
     return this.map.get(id)
   }
 
-  private async handleFile(form: QuickAppCore, data: QuickAppCore) {
-    if (form.icon && existsSync(form.icon)) {
+  private async handleFile(from: QuickAppCore, data: QuickAppCore) {
+    if (from.icon && existsSync(from.icon)) {
       // 存在图标
-      const ibn = basename(form.icon)
-      await copyFile(form.icon, join(data.root, ibn))
+      const ibn = basename(from.icon)
+      await copyFile(from.icon, join(data.root, ibn))
       data.icon = ibn
     }
     // 3. 判断来源
-    if (form.from === 'ai' || form.from === 'html') {
-      // 这个最简单，吧 entry 写入到文件
-      await writeFile(join(data.root, 'index.html'), form.root, 'utf-8')
+    if (from.from === 'ai') {
+      // 这个最简单，把 entry 写入到文件
+      await writeFile(join(data.root, 'index.html'), from.root, 'utf-8')
       data.entry = 'index.html'
-    } else if (form.from === 'zip') {
+    } else if (from.from === 'html') {
+      // 这个也简单，复制过去即可
+      const t = join(data.root, 'index.html')
+      await copyFile(from.root, t)
+      data.entry = 'index.html'
+    } else if (from.from === 'zip') {
       // 先解压
-      const z = new AdmZip(form.root)
+      const z = new AdmZip(from.root)
       z.extractAllTo(data.root, true)
     } else {
       return Promise.reject(new Error('创建快应用失败，不支持的来源'))

@@ -17,6 +17,8 @@
       <add-app v-if="page === '/app'" />
       <add-link v-else-if="page === '/link'" />
       <add-quick-app v-else-if="page === '/quick'" />
+      <add-plugin v-else-if="page === '/plugin'" />
+      <add-widget-quick v-else-if="page === '/widget/quick'" />
     </t-content>
   </t-layout>
 </template>
@@ -24,6 +26,8 @@
 import AddApp from '@/nested/add/components/AddApp.vue'
 import AddLink from '@/nested/add/components/AddLink.vue'
 import AddQuickApp from '@/nested/add/components/AddQuickApp.vue'
+import AddPlugin from '@/nested/add/components/AddPlugin.vue'
+import AddWidgetQuick from '@/nested/add/components/AddWidgetQuick.vue'
 
 const page = ref('/app')
 </script>
