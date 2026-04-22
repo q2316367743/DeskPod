@@ -1,5 +1,6 @@
 import { AiModelSetting, DesktopNode, QuickApp, QuickAppCore, Setting } from '@common/types'
 import { PluginEntityWrap, PluginVerifyResult, ViewOptions } from '@common/types'
+import { FileItemView } from '@common/views'
 
 interface DesktopAPI {
   onChange: (callback: () => void) => void
@@ -61,14 +62,26 @@ interface OpenDialogSyncOptions {
   securityScopedBookmarks?: boolean
 }
 
+
 interface SupportAPI {
-  shellOpenDialog(options: OpenDialogSyncOptions): Promise<Array<string> | undefined>
   isWindows: () => boolean
-  join: (...path: Array<string>) => string
-  basename: (path: string) => string
-  extname: (path: string) => string
-  dirname: (path: string) => string
-  sep: '\\' | '/'
+  path: {
+    join: (...path: Array<string>) => string
+    basename: (path: string) => string
+    extname: (path: string) => string
+    dirname: (path: string) => string
+    sep: '\\' | '/'
+  }
+  fs: {
+    readdir: (path: string) => Promise<Array<FileItemView>>
+  }
+  dialog: {
+    showOpenDialogSync: (options: OpenDialogSyncOptions) => Promise<Array<string> | undefined>
+  }
+  shell: {
+    openExternal: (url: string) => Promise<void>
+    openPath: (path: string) => Promise<string>
+  }
 }
 
 interface QuickAPI {

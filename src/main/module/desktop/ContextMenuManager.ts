@@ -68,7 +68,7 @@ function openFileAdd(desktopId: string, column: number, row: number) {
 
 function openFolderAdd(desktopId: string, column: number, row: number) {
   const path = dialog.showOpenDialogSync({
-    title: '选择文件',
+    title: '选择文件夹',
     buttonLabel: '添加',
     properties: ['openDirectory', 'createDirectory']
   })
@@ -87,6 +87,35 @@ function openFolderAdd(desktopId: string, column: number, row: number) {
     column: column,
     meta: {
       root: target
+    }
+  })
+}
+
+function openFolderWidget(desktopId: string, column: number, row: number) {
+  const path = dialog.showOpenDialogSync({
+    title: '选择文件夹',
+    buttonLabel: '添加',
+    properties: ['openDirectory', 'createDirectory']
+  })
+  if (!path || !path[0]) return
+  const target = path[0]
+  const name = basename(target)
+  desktopManager.updateNode({
+    id: useSnowflake().nextId(),
+    type: 'widget',
+    name: name,
+    icon: '',
+    parentId: null,
+    sortIndex: 0,
+    desktopId: desktopId,
+    row: row,
+    column: column,
+    meta: {
+      root: target,
+      source: 'builtin',
+      builtinId: 'folder',
+      width: 4,
+      height: 6
     }
   })
 }
@@ -113,9 +142,16 @@ export function createContextMenuByDesktop(
     },
     {
       label: '添加分区',
-      click: () => {
-        dialog.showErrorBox('添加分区', '暂未实现')
-      }
+      submenu: [
+        {
+          label: '空分区',
+          click: () => dialog.showErrorBox('添加空分区', '暂未实现')
+        },
+        {
+          label: '文件夹分区',
+          click: () => openFolderWidget(desktopId, column, row)
+        }
+      ]
     }
   ]).popup({
     window: getMainWindow(),

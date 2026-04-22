@@ -124,7 +124,7 @@ const handleSelectImage = async (path: string) => {
 }
 
 const handleUpload = async () => {
-  const result = await window.supportAPI.shellOpenDialog({
+  const result = await window.supportAPI.dialog.showOpenDialogSync({
     title: '选择背景图片',
     filters: [{ name: '图片', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp'] }],
     properties: ['openFile']

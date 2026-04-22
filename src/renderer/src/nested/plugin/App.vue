@@ -174,7 +174,7 @@ const closeInstallDialog = () => {
 }
 
 const selectInstallFile = async () => {
-  const paths = await window.supportAPI.shellOpenDialog({
+  const paths = await window.supportAPI.dialog.showOpenDialogSync({
     title: '请选择安装包',
     properties: ['openFile'],
     buttonLabel: '安装',
@@ -237,7 +237,7 @@ const closeUpgradeDialog = () => {
 }
 
 const selectUpgradeFile = async () => {
-  const paths = await window.supportAPI.shellOpenDialog({
+  const paths = await window.supportAPI.dialog.showOpenDialogSync({
     title: '请选择插件安装包',
     properties: ['openFile'],
     filters: [
