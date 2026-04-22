@@ -56,6 +56,10 @@ export class DesktopManager {
     return this.map.get(desktopId) || []
   }
 
+  getNode(nodeId: string) {
+    return this.nodes.find((e) => e.id === nodeId)
+  }
+
   async updateNode(node: DesktopNode) {
     const index = this.nodes.findIndex((n) => n.id === node.id)
 

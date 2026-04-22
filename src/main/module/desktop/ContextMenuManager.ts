@@ -6,13 +6,7 @@ import { openApp } from '$/global/OpenApp'
 import { getMainWindow } from '$/module/desktop'
 import { useSnowflake } from '@common/utils'
 
-function openAppWrap(
-  name: string,
-  type: string,
-  desktopId: string,
-  column: number,
-  row: number
-) {
+function openAppWrap(name: string, type: string, desktopId: string, column: number, row: number) {
   return openApp(
     {
       type: 'builtin',
@@ -125,34 +119,46 @@ export function createContextMenuByDesktop(
 }
 
 export function createContextMenuByNode(nodeId: string, x: number, y: number) {
-  Menu.buildFromTemplate([
-    {
-      label: '卸载',
-      click: async () => {
-        const r = dialog.showMessageBoxSync({
-          type: 'question',
-          message: '是否确认卸载？',
-          title: '卸载',
-          buttons: ['取消', '确定']
-        })
-        if (r === 1) {
-          // 卸载
-          try {
-            await desktopManager.deleteNode(nodeId)
-            new Notification({
-              title: '卸载成功',
-              body: '卸载成功'
-            }).show()
-          } catch (e) {
-            new Notification({
-              title: '卸载失败',
-              body: `原因：${(e as Error)?.message}`
-            }).show()
-          }
+  const menus: Parameters<typeof Menu.buildFromTemplate>[0] = []
+  const node = desktopManager.getNode(nodeId)
+  if (!node) return
+  if (node.type !== 'widget' && node.type !== 'folder') {
+    menus.push({
+      label: '打开',
+      click: () => {
+        openApp(node)
+      }
+    })
+  }
+
+  menus.push({
+    label: '卸载',
+    click: async () => {
+      const r = dialog.showMessageBoxSync({
+        type: 'question',
+        message: '是否确认卸载？',
+        title: '卸载',
+        buttons: ['取消', '确定']
+      })
+      if (r === 1) {
+        // 卸载
+        try {
+          await desktopManager.deleteNode(nodeId)
+          new Notification({
+            title: '卸载成功',
+            body: '卸载成功'
+          }).show()
+        } catch (e) {
+          new Notification({
+            title: '卸载失败',
+            body: `原因：${(e as Error)?.message}`
+          }).show()
         }
       }
     }
-  ]).popup({
+  })
+
+  Menu.buildFromTemplate(menus).popup({
     window: getMainWindow(),
     x: x,
     y: y
