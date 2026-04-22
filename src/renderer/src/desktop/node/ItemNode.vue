@@ -1,22 +1,14 @@
 <template>
   <div class="desktop-icon" :title="node.name" @click="handleClick(node)">
     <div class="icon-wrapper">
-      <t-image v-if="node.icon" :src="node.icon" :alt="node.name" class="icon-image">
-        <template #error>
-          <div class="icon-placeholder">
-            <span class="icon-letter">{{ node.name.charAt(0).toUpperCase() }}</span>
-          </div>
-        </template>
-      </t-image>
-      <div v-else class="icon-placeholder">
-        <span class="icon-letter">{{ node.name.charAt(0).toUpperCase() }}</span>
-      </div>
+      <item-icon :node />
     </div>
     <span class="icon-name">{{ node.name }}</span>
   </div>
 </template>
 <script lang="ts" setup>
 import { DesktopNode } from '@common/types'
+import ItemIcon from '@/desktop/icon/ItemIcon.vue'
 
 const props = defineProps({
   node: {
@@ -101,7 +93,7 @@ const handleClick = (node: DesktopNode) => {
   text-align: center;
   word-break: break-all;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   max-width: 72px;
