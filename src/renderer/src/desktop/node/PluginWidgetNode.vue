@@ -1,5 +1,10 @@
 <template>
-  <div class="plugin-widget-node" :style="{ width, height }" :title="node.name"></div>
+  <div
+    class="plugin-widget-node"
+    :style="{ width, height }"
+    :title="node.name"
+    @mousedown.stop
+  ></div>
 </template>
 <script lang="ts" setup>
 import { DesktopNode, ViewOptions } from '@common/types'

@@ -93,7 +93,23 @@ export function createContextMenuByDesktop(
       submenu: [
         {
           label: '空分区',
-          click: () => dialog.showErrorBox('添加空分区', '暂未实现')
+          click: () => {
+            desktopManager.updateNode({
+              id: useSnowflake().nextId(),
+              type: 'folder',
+              name: '空分区',
+              icon: 'icon:directory',
+              parentId: null,
+              sortIndex: 0,
+              desktopId: desktopId,
+              row: row,
+              column: column,
+              meta: {
+                width: 4,
+                height: 6
+              }
+            })
+          }
         },
         {
           label: '文件夹分区',

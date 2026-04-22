@@ -1,24 +1,44 @@
 <template>
-  <div class="folder-node">
-    <div class="folder-header" @click="handleFolderClick">
-      <FolderIcon size="24px" class="folder-icon" />
-      <span class="folder-name">{{ items[0]?.name || '文件夹' }}</span>
-      <ArrowRightIcon size="16px" :class="['expand-icon', { expanded: isExpanded }]" />
-    </div>
-
-    <transition name="folder-expand">
-      <div v-if="isExpanded" class="folder-children">
-        <ItemNode v-for="item in items" :key="item.id" :node="item" />
+  <div class="folder-node" :style="{ width, height }">
+    <div class="folder-layout" draggable="false" @mousedown.stop>
+      <div class="folder-header">
+        <div class="folder-title">{{ node.name }}</div>
+        <t-button size="small" variant="outline" theme="primary" shape="square">
+          <template #icon>
+            <more-icon />
+          </template>
+        </t-button>
       </div>
-    </transition>
+      <div ref="gridStackEl" class="folder-content">
+        <div
+          v-for="item in items"
+          :id="`node-${item.id}`"
+          :key="item.id"
+          class="grid-stack-item"
+          :class="`node-type-${item.type}`"
+          :data-node-id="item.id"
+          @contextmenu.stop="handleDesktopNodeCxt($event, item)"
+        >
+          <div class="grid-stack-item-content">
+            <WidgetNode v-if="item.type === 'widget'" :node="item" />
+            <ItemNode v-else :node="item" />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { DesktopNode } from '@common/types'
-import { ArrowRightIcon, FolderIcon } from 'tdesign-icons-vue-next'
+import { DesktopNode, getNodeHeight, getNodeWidth } from '@common/types'
+import { CELL_SIZE } from '@common/global'
+import { MoreIcon } from 'tdesign-icons-vue-next'
+import { GridStack, GridStackWidget } from 'gridstack'
+import { useDesktopNodeStore } from '@/store'
+import { handleDesktopNodeCxt } from '@/desktop/layout/func/DesktopNodeCxt'
+import WidgetNode from '@/desktop/node/WidgetNode.vue'
 import ItemNode from '@/desktop/node/ItemNode.vue'
 
-defineProps({
+const props = defineProps({
   node: {
     type: Object as PropType<DesktopNode>,
     required: true
@@ -33,94 +53,142 @@ defineProps({
   }
 })
 
-const isExpanded = ref(false)
+const gridStackEl = ref<HTMLElement>()
+let grid: GridStack | undefined = undefined
 
-const toggleExpand = (e: MouseEvent) => {
-  e.stopPropagation()
-  isExpanded.value = !isExpanded.value
+const width = computed(() => `${(props.node.meta?.width || 1) * CELL_SIZE - 16}px`)
+const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 16}px`)
+
+const syncGridFromNodes = async () => {
+  if (!grid) return
+  const targetNodes = props.items
+  const targetIds = new Set(targetNodes.map((n) => `node-${n.id}`))
+
+  // 1. Remove nodes that no longer exist
+  const currentNodes = grid.engine.nodes
+  for (const gsNode of currentNodes) {
+    if (!targetIds.has(gsNode.id as string)) {
+      grid?.removeWidget(gsNode.el!, false)
+    }
+  }
+
+  // 2. Update or add nodes
+  for (const item of targetNodes) {
+    const el = document.getElementById(`node-${item.id}`)
+    if (!el) continue
+
+    const gsNode = grid.engine.nodes.find((n) => n.id === `node-${item.id}`)
+    const isWidget = item.type === 'widget' || item.type === 'folder'
+    const options: Partial<GridStackWidget> = {
+      x: item.column,
+      y: item.row,
+      w: getNodeWidth(item),
+      h: getNodeHeight(item),
+      noResize: !isWidget,
+      noMove: false
+    }
+    if (isWidget) {
+      options.minW = 2
+      options.minH = 2
+    }
+
+    if (gsNode) {
+      grid.update(el, options)
+    } else {
+      grid.makeWidget(el, options)
+    }
+  }
 }
 
-const handleFolderClick = (e: MouseEvent) => {
-  e.stopPropagation()
-  toggleExpand(e)
-}
+onMounted(async () => {
+  if (!gridStackEl.value) return
+
+  grid = GridStack.init(
+    {
+      column: props.node.meta?.width || 1,
+      row: props.node.meta?.height || 1,
+      cellHeight: CELL_SIZE,
+      acceptWidgets: true,
+      margin: 0,
+      float: true,
+      animate: false,
+      draggable: { handle: '.grid-stack-item-content' },
+      removable: false,
+      // resizable: { handles: 'se, sw, ne, nw, n, e, s, w' }
+      resizable: { handles: 's, e' }
+    },
+    gridStackEl.value
+  )
+  grid.on('change', (_event, items) => {
+    for (let item of items) {
+      const { el, x, y, w, h } = item
+      if (!el || x === undefined || y === undefined) continue
+      const nodeId = el.dataset['nodeId']
+      useDesktopNodeStore().move(String(nodeId), x, y, w, h)
+    }
+  })
+  grid.on('dropped', (_event, _previousNode, newNode) => {
+    const { el, x, y } = newNode
+    if (!el || x === undefined || y === undefined) return
+    const nodeId = el.dataset['nodeId']
+    useDesktopNodeStore().drop(String(nodeId), props.node.id, x, y)
+  })
+
+  syncGridFromNodes()
+})
+
+onBeforeUnmount(() => {
+  if (grid) {
+    grid.destroy()
+    grid = undefined
+  }
+})
+
+watch(
+  [width, height, () => props.items],
+  async () => {
+    await nextTick()
+    await syncGridFromNodes()
+  },
+  { deep: true }
+)
 </script>
 
 <style lang="less" scoped>
 .folder-node {
-  display: flex;
-  flex-direction: column;
-  width: 80px;
-  height: 80px;
-  padding: 8px;
-}
-
-.folder-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px;
-  border-radius: var(--fluent-radius-card);
-  cursor: pointer;
-  transition: all var(--fluent-transition-fast);
+  padding: 7px;
+  border: 1px solid transparent;
+  border-radius: var(--td-radius-medium);
+  transition: all 0.3s ease-in-out;
 
   &:hover {
+    border-color: var(--td-border-level-1-color);
     background: var(--fluent-item-hover);
   }
-
-  &:active {
-    background: var(--fluent-item-active);
+  .folder-layout {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--fluent-card-bg);
+    border: 1px solid var(--fluent-card-border);
+    border-radius: var(--fluent-radius-card);
+    box-shadow: var(--fluent-card-shadow);
+    backdrop-filter: var(--fluent-acrylic-blur);
+    overflow: hidden;
+    .folder-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--fluent-border-subtle);
+      background: var(--fluent-acrylic-bg);
+      flex-shrink: 0;
+      color: var(--td-text-color-primary);
+    }
+    .folder-content {
+      height: 100%;
+      overflow: auto;
+    }
   }
-}
-
-.folder-icon {
-  color: var(--fluent-accent-color);
-  margin-bottom: 4px;
-}
-
-.folder-name {
-  font-size: 12px;
-  color: var(--td-text-color-primary);
-  text-align: center;
-  word-break: break-all;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  max-width: 72px;
-}
-
-.expand-icon {
-  color: var(--td-text-color-placeholder);
-  transition: transform var(--fluent-transition-fast);
-  margin-top: 2px;
-
-  &.expanded {
-    transform: rotate(90deg);
-  }
-}
-
-.folder-children {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 8px;
-  margin-top: 4px;
-  background: var(--fluent-acrylic-bg);
-  backdrop-filter: var(--fluent-acrylic-blur);
-  border: 1px solid var(--fluent-border-subtle);
-  border-radius: var(--fluent-radius-card);
-  box-shadow: var(--fluent-elevation-1);
-}
-
-.folder-expand-enter-active,
-.folder-expand-leave-active {
-  transition: all var(--fluent-transition-normal);
-}
-
-.folder-expand-enter-from,
-.folder-expand-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
 }
 </style>

@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { DesktopNode } from '@common/types'
+import { DesktopNode, getNodeHeight, getNodeWidth } from '@common/types'
 import { GridStack, GridStackWidget } from 'gridstack'
 import 'gridstack/dist/gridstack.css'
 import 'gridstack/dist/gridstack.min.css'
@@ -36,50 +36,36 @@ import FolderNode from '@/desktop/node/FolderNode.vue'
 import ItemNode from '@/desktop/node/ItemNode.vue'
 import { handleDesktopNodeCxt } from '@/desktop/layout/func/DesktopNodeCxt'
 import { debounce } from 'es-toolkit'
+import { CELL_SIZE } from '@common/global'
 
-const GRID_CELL_SIZE = 96
 const gridContainer = ref<HTMLElement | undefined>(undefined)
 const gridStackEl = ref<HTMLElement | undefined>(undefined)
 let grid: GridStack | undefined = undefined
 const store = useDesktopNodeStore()
 
 const items = computed(() => store.nodes)
-const list = computed(() => items.value.filter((item) => item.parentId === '0' || !item.parentId))
+const list = computed(() => items.value.filter((item) => item.parentId === null))
 const folderMap = computed(() => {
-  const l = items.value.filter((item) => item.parentId !== '0' && item.parentId)
+  const l = items.value.filter((item) => item.parentId !== null)
   const map = new Map<string, Array<DesktopNode>>()
   for (let desktopNode of l) {
     const t = map.get(desktopNode.parentId!)
     if (t) {
       t.push(desktopNode)
     } else {
-      map.set(desktopNode.id, [desktopNode])
+      map.set(desktopNode.parentId!, [desktopNode])
     }
   }
   return map
 })
-
-const getNodeWidth = (node: DesktopNode): number => {
-  if (node.type === 'widget') {
-    return node.meta?.width || 1
-  }
-  return 1
-}
-
-const getNodeHeight = (node: DesktopNode): number => {
-  if (node.type === 'widget') {
-    return node.meta?.height || 1
-  }
-  return 1
-}
 
 const computeColumnRowFromEvent = (e: MouseEvent): { column: number; row: number } => {
   const rect = gridContainer.value?.getBoundingClientRect()
   if (!rect) return { column: 0, row: 0 }
   const x = e.clientX - rect.left
   const y = e.clientY - rect.top
-  const column = Math.floor(x / GRID_CELL_SIZE)
-  const row = Math.floor(y / GRID_CELL_SIZE)
+  const column = Math.floor(x / CELL_SIZE)
+  const row = Math.floor(y / CELL_SIZE)
   return { column: Math.max(0, column), row: Math.max(0, row) }
 }
 
@@ -93,7 +79,6 @@ const handleGridContextmenu = (e: MouseEvent) => {
 
 const syncGridFromNodes = async () => {
   if (!grid) return
-
   const targetNodes = list.value
   const targetIds = new Set(targetNodes.map((n) => `node-${n.id}`))
 
@@ -111,7 +96,7 @@ const syncGridFromNodes = async () => {
     if (!el) continue
 
     const gsNode = grid.engine.nodes.find((n) => n.id === `node-${item.id}`)
-    const isWidget = item.type === 'widget'
+    const isWidget = item.type === 'widget' || item.type === 'folder'
     const options: Partial<GridStackWidget> = {
       x: item.column,
       y: item.row,
@@ -135,7 +120,7 @@ const syncGridFromNodes = async () => {
 
 const onResize = debounce(() => {
   if (grid) {
-    grid.column(Math.floor((window.innerWidth - 56) / GRID_CELL_SIZE), 'none')
+    grid.column(Math.floor((window.innerWidth - 56) / CELL_SIZE), 'none')
   }
 }, 300)
 
@@ -144,34 +129,35 @@ onMounted(async () => {
 
   grid = GridStack.init(
     {
-      column: Math.floor((window.innerWidth - 56) / GRID_CELL_SIZE),
-      row: Math.floor((window.innerHeight - 66 - 56) / GRID_CELL_SIZE),
-      cellHeight: GRID_CELL_SIZE,
+      column: Math.floor((window.innerWidth - 56) / CELL_SIZE),
+      row: Math.floor((window.innerHeight - 66 - 56) / CELL_SIZE),
+      cellHeight: CELL_SIZE,
       margin: 0,
       float: true,
       animate: false,
       draggable: { handle: '.grid-stack-item-content' },
       removable: false,
       // resizable: { handles: 'se, sw, ne, nw, n, e, s, w' }
-      resizable: { handles: 's, e' }
+      resizable: { handles: 's, e' },
+      acceptWidgets: true
     },
     gridStackEl.value
   )
-  grid.on('dragstop', (_event, el) => {
-    const nodeId = el.dataset['nodeId']
-    const column = el.getAttribute('gs-x')
-    const row = el.getAttribute('gs-y')
-    useDesktopNodeStore().move(String(nodeId), Number(column), Number(row))
-  })
-  grid.on('resizestop', (_event, el) => {
-    const nodeId = el.dataset['nodeId']
-    const width = el.getAttribute('gs-w')
-    const height = el.getAttribute('gs-h')
-    useDesktopNodeStore().resize(String(nodeId), Number(width), Number(height))
+  grid.on('change', (_event, items) => {
+    for (let item of items) {
+      const { el, x, y, w, h } = item
+      if (!el || x === undefined || y === undefined) continue
+      const nodeId = el.dataset['nodeId']
+      useDesktopNodeStore().move(String(nodeId), x, y, w, h)
+    }
   })
 
-  await nextTick()
-  await new Promise((resolve) => setTimeout(resolve, 0))
+  grid.on('dropped', (_event, _previousNode, newNode) => {
+    const { el, x, y } = newNode
+    if (!el || x === undefined || y === undefined) return
+    const nodeId = el.dataset['nodeId']
+    useDesktopNodeStore().drop(String(nodeId), null, x, y)
+  })
 
   window.addEventListener('resize', onResize)
 })
@@ -188,7 +174,7 @@ watch(
   () => [items.value.length, items.value.map((n) => `${n.id}-${n.column}-${n.row}`).join(',')],
   async () => {
     await nextTick()
-    syncGridFromNodes()
+    await syncGridFromNodes()
   },
   { deep: true }
 )

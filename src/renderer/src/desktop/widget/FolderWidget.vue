@@ -20,28 +20,19 @@
       <!-- 视图切换 -->
       <div class="view-toggle">
         <t-button
-          theme="default"
-          variant="text"
+          theme="primary"
+          variant="outline"
           size="small"
-          :class="{ active: viewMode === 'icon' }"
-          @click="viewMode = 'icon'"
+          shape="circle"
+          :disabled="pathSegments.length < 2"
         >
-          <app-icon />
-        </t-button>
-        <t-button
-          theme="default"
-          variant="text"
-          size="small"
-          :class="{ active: viewMode === 'table' }"
-          @click="viewMode = 'table'"
-        >
-          <view-list-icon />
+          <home-icon />
         </t-button>
       </div>
     </div>
 
     <!-- 图标模式 -->
-    <div v-if="viewMode === 'icon'" class="icon-view">
+    <div class="icon-view">
       <div
         v-for="item in sortedList"
         :key="item.path"
@@ -59,37 +50,12 @@
     </div>
 
     <!-- 表格模式 -->
-    <div v-else class="table-view">
-      <t-table
-        :data="sortedList"
-        :columns="columns"
-        row-key="path"
-        size="small"
-        hover
-        virtual-scroll
-        :max-height="tableHeight"
-        @row-dblclick="handleTableDblClick"
-      >
-        <template #name="{ row }">
-          <div class="table-name-cell">
-            <FdIcon :icon="getFileIcon(row)" :alt="row.name" :size="20" />
-            <span class="table-name">{{ row.name }}</span>
-          </div>
-        </template>
-        <template #size="{ row }">
-          {{ formatSize(row.size) }}
-        </template>
-        <template #mtime="{ row }">
-          {{ formatDate(row.mtime) }}
-        </template>
-      </t-table>
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { PrimaryTableCol, TableRowData } from 'tdesign-vue-next'
-import { AppIcon, ViewListIcon } from 'tdesign-icons-vue-next'
+import { AppIcon, HomeIcon, ViewListIcon } from 'tdesign-icons-vue-next'
 import { DesktopNode } from '@common/types'
 import { FileItemView } from '@common/views'
 import { CELL_SIZE } from '@common/global'
@@ -118,14 +84,6 @@ const homeText = computed(() => window.supportAPI.path.basename(props.node!.meta
 
 const list = ref<FileItemView[]>([])
 const currentPath = ref('')
-const viewMode = ref<'icon' | 'table'>('icon')
-
-// 表格列配置
-const columns = computed((): PrimaryTableCol[] => [
-  { colKey: 'name', title: '名称', width: 200, fixed: 'left' },
-  { colKey: 'size', title: '大小', width: 90 },
-  { colKey: 'mtime', title: '修改时间', width: 160 }
-])
 
 // 路径分段（面包屑）
 const pathSegments = computed(() => {
@@ -171,16 +129,6 @@ const loadFolder = async (path: string) => {
 
 // 处理图标模式点击
 const handleItemClick = (item: FileItemView) => {
-  if (item.isDirectory) {
-    loadFolder(item.path)
-  } else {
-    window.supportAPI.shell.openPath(item.path)
-  }
-}
-
-// 处理表格模式双击
-const handleTableDblClick = (context: { row: TableRowData }) => {
-  const item = context.row as unknown as FileItemView
   if (item.isDirectory) {
     loadFolder(item.path)
   } else {

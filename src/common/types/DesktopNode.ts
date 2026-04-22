@@ -28,7 +28,7 @@ export interface DesktopNode {
   column: number // 第几列开始
 
   // --- 按需字段 (根据 type 不同而存在) ---
-  meta?: {
+  meta: {
     root?: string // 各类类型的根目录
 
     // type === 'app' 时
@@ -53,4 +53,18 @@ export interface DesktopNode {
     width?: number // 小部件宽 (网格单位，如占 2 格)
     height?: number // 小部件高 (网格单位，如占 1 格)
   }
+}
+
+export const getNodeWidth = (node: DesktopNode): number => {
+  if (node.type === 'widget' || node.type === 'folder') {
+    return node.meta?.width || 1
+  }
+  return 1
+}
+
+export const getNodeHeight = (node: DesktopNode): number => {
+  if (node.type === 'widget' || node.type === 'folder') {
+    return node.meta?.height || 1
+  }
+  return 1
 }
