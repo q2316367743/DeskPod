@@ -1,37 +1,43 @@
 <template>
-  <t-form :data="data">
-    <t-form-item label="名称" label-align="top">
-      <Input v-model="data.name" />
-    </t-form-item>
-    <t-form-item label="网站链接" label-align="top">
-      <Input v-model="data.url" @blur="fetchFavicon" />
-    </t-form-item>
-    <t-form-item label="网站图标" label-align="top" help="输入图标链接或留空自动生成">
-      <Input v-model="data.icon" />
-    </t-form-item>
-    <t-form-item label="打开方式" label-align="top">
-      <t-radio-group v-model="data.openWith">
-        <t-radio value="default">默认浏览器</t-radio>
-        <t-radio value="inner">内置窗口</t-radio>
-      </t-radio-group>
-    </t-form-item>
-    <t-row v-if="data.openWith === 'inner'">
-      <t-col :span="6">
-        <t-form-item label="宽" label-align="top">
-          <t-input-number v-model="data.width" />
+  <div class="m-8px">
+    <t-card size="small">
+      <t-form :data="data">
+        <t-form-item label="名称" label-align="top">
+          <t-input v-model="data.name" />
         </t-form-item>
-      </t-col>
-      <t-col :span="6">
-        <t-form-item label="高" label-align="top">
-          <t-input-number v-model="data.height" />
+        <t-form-item label="网站链接" label-align="top">
+          <t-input v-model="data.url" @blur="fetchFavicon" />
         </t-form-item>
-      </t-col>
-    </t-row>
-    <t-form-item>
-      <t-button theme="default" variant="outline" type="reset">清空</t-button>
-      <t-button theme="primary" type="submit" @click="handleSubmit">保存</t-button>
-    </t-form-item>
-  </t-form>
+        <t-form-item label="网站图标" label-align="top" help="输入图标链接或留空自动生成">
+          <t-input v-model="data.icon" />
+        </t-form-item>
+        <t-form-item label="打开方式" label-align="top">
+          <t-radio-group v-model="data.openWith">
+            <t-radio value="default">默认浏览器</t-radio>
+            <t-radio value="inner">内置窗口</t-radio>
+          </t-radio-group>
+        </t-form-item>
+        <t-row v-if="data.openWith === 'inner'">
+          <t-col :span="6">
+            <t-form-item label="宽" label-align="top">
+              <t-input-number v-model="data.width" />
+            </t-form-item>
+          </t-col>
+          <t-col :span="6">
+            <t-form-item label="高" label-align="top">
+              <t-input-number v-model="data.height" />
+            </t-form-item>
+          </t-col>
+        </t-row>
+        <t-form-item label-align="top">
+          <t-space size="small">
+            <t-button theme="primary" type="submit" @click="handleSubmit">保存</t-button>
+            <t-button theme="default" variant="outline" type="reset">清空</t-button>
+          </t-space>
+        </t-form-item>
+      </t-form>
+    </t-card>
+  </div>
 </template>
 <script lang="ts" setup>
 import { DesktopNode } from '@common/types'

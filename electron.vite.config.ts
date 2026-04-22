@@ -80,7 +80,8 @@ export default defineConfig({
           index: resolve('src/renderer/index.html'),
           plugin: resolve('src/renderer/plugin.html'),
           quick: resolve('src/renderer/quick.html'),
-          setting: resolve('src/renderer/setting.html')
+          setting: resolve('src/renderer/setting.html'),
+          add: resolve('src/renderer/add.html')
         }
       }
     }
