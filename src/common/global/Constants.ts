@@ -19,5 +19,7 @@ export const SYSTEM_EVENT = {
 
 export const PARTITION = {
   PLUGIN: (pluginId: string) => `persist:plugin-${pluginId}`,
-  QUICK: (quickId: string) => `persist:quick-${quickId}`
+  QUICK: (quickId: string) => `persist:quick-${quickId}`,
+  // builtin
+  BUILTIN: 'persist:builtin'
 }

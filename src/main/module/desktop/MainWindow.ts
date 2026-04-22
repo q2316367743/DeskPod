@@ -1,9 +1,13 @@
 import { BrowserWindow, screen, shell } from 'electron'
-import { APP_NAME } from '@common/global'
+import { APP_NAME, PARTITION } from '@common/global'
 import { join } from 'node:path'
-import { getMainWindow, setMainWindow, settingManager } from '$/global/BeanFactory'
+import { settingManager } from '$/global/BeanFactory'
 import { is } from '@electron-toolkit/utils'
 import icon from '../../../../resources/icon.png?asset'
+
+let mainWindow: BrowserWindow | undefined = undefined
+export const setMainWindow = (win: BrowserWindow) => (mainWindow = win)
+export const getMainWindow = () => mainWindow
 
 export function handleMainWindow() {
   const mainWindow = getMainWindow()
@@ -47,7 +51,7 @@ export function createMainWindow() {
       nodeIntegration: true,
       webSecurity: false,
       webviewTag: true,
-      partition: 'partition:main'
+      partition: PARTITION.BUILTIN
     }
   })
   setMainWindow(mainWindow)

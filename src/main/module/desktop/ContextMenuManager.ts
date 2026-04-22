@@ -49,20 +49,8 @@ export function createContextMenuByDesktop(
       click: () => openAppWrap('添加应用', 'app', desktopId, column, row)
     },
     {
-      label: '添加链接',
-      click: () => openAppWrap('添加链接', 'link', desktopId, column, row)
-    },
-    {
-      label: '添加插件',
-      click: () => openAppWrap('添加插件', 'plugin', desktopId, column, row)
-    },
-    {
-      label: '添加快应用',
-      click: () => openAppWrap('添加快应用', 'quick', desktopId, column, row)
-    },
-    {
-      label: '添加小部件',
-      click: () => openAppWrap('添加小部件', 'widget', desktopId, column, row)
+      label: '添加文件夹',
+      click: () => openAppWrap('添加文件夹', 'folder', desktopId, column, row)
     }
   ]).popup({
     window: getMainWindow(),

@@ -1,11 +1,14 @@
 export type DesktopNodeType =
   | 'folder' // 文件夹
-  | 'app' // APP
   | 'link' // 网站链接
   | 'plugin' // 插件
   | 'widget' // 小组件
   | 'builtin' // 内置窗口
   | 'quick' // 快应用，就是只有一个 html 文件的纯 web 应用
+  // --- 本地 ---
+  | 'app' // APP
+  | 'file' // 本地文件
+  | 'directory' // 本地目录
 
 // 统一的节点接口定义 (TypeScript 描述，便于理解结构)
 export interface DesktopNode {
@@ -26,8 +29,9 @@ export interface DesktopNode {
 
   // --- 按需字段 (根据 type 不同而存在) ---
   meta?: {
+    root?: string // 各类类型的根目录
+
     // type === 'app' 时
-    executablePath?: string // 本地软件路径 (如 'C:\...\chrome.exe')
     args?: string[] // 启动参数
 
     // type === 'link' 时
@@ -36,7 +40,6 @@ export interface DesktopNode {
 
     // type === 'plugin' 或 type ===  'widget' && source === 'extension' 或 type === 'quick' 时
     pluginId?: string // 插件的唯一ID (如 'sys-settings')
-    root?: string // 插件的根目录
 
     // type === 'widget' 时
     source?: 'builtin' | 'quick' | 'plugin' // 【新增】区分来源
