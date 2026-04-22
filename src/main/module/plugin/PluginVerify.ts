@@ -66,5 +66,9 @@ export function pluginVerify(plugin: Record<string, unknown>): boolean {
   logDebug(`格式校验`, R)
   if (!R) return false
   // 在校验，窗口和小部件必须要有一个
-  return Boolean(plugin.main || (plugin.widgets && plugin.widgets.length > 0))
+  const w = Boolean(plugin.main || (plugin.widgets && plugin.widgets.length > 0))
+  if (!w) return false
+  // 全部的 label 不能重复
+  const list = [plugin.main?.label, ...(plugin.widgets?.map((w) => w.label) || [])].filter(Boolean);
+  return list.length === new Set(list).size
 }

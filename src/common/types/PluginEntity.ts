@@ -92,7 +92,7 @@ export function pluginEntityToWidgetNode(
       return {
         id: '',
         type: 'widget',
-        name: widget.label,
+        name: widget.title,
         icon: `file://${plugin.root}/runtime/${widget.preview}`,
         parentId: null,
         sortIndex: 0,
@@ -102,6 +102,7 @@ export function pluginEntityToWidgetNode(
         meta: {
           pluginId: plugin.identifier,
           root: `file://${plugin.root}/runtime/${widget.path}`,
+          label: widget.label,
           source: 'plugin',
           height: layout.rows,
           width: layout.cols

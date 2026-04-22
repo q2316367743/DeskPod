@@ -26,7 +26,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { DesktopNode, quickAppToWidgetNode } from '@common/types'
+import { DesktopNode, pluginEntityToWidgetNode } from '@common/types'
 import { useSnowflake } from '@common/utils'
 import { MessageUtil } from '@/utils'
 
@@ -55,10 +55,8 @@ const handleChoose = (node: DesktopNode) => {
 }
 
 onMounted(() => {
-  window.quickAPI.list().then((q) => {
-    nodes.value = q
-      .filter((app) => app.type === 'widget')
-      .map((app) => quickAppToWidgetNode(app, desktopId))
+  window.pluginAPI.list().then((q) => {
+    nodes.value = q.flatMap((app) => pluginEntityToWidgetNode(app, desktopId))
   })
 })
 </script>

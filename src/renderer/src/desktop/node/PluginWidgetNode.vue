@@ -1,5 +1,5 @@
 <template>
-  <div class="plugin-widget-node" :style="{ width, height }"></div>
+  <div class="plugin-widget-node" :style="{ width, height }" :title="node.name"></div>
 </template>
 <script lang="ts" setup>
 import { DesktopNode, ViewOptions } from '@common/types'
@@ -30,7 +30,7 @@ function getViewOptions(): ViewOptions {
 
 function getViewKey(): { pluginId: string; label: string } {
   const pluginId = props.node.meta?.pluginId || ''
-  const label = props.node.name
+  const label = props.node.meta?.label || ''
   return { pluginId, label }
 }
 

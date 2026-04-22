@@ -40,6 +40,7 @@ export interface DesktopNode {
 
     // type === 'plugin' 或 type ===  'widget' && source === 'extension' 或 type === 'quick' 时
     pluginId?: string // 插件的唯一ID (如 'sys-settings')
+    label?: string // 插件的 label
 
     // type === 'widget' 时
     source?: 'builtin' | 'quick' | 'plugin' // 【新增】区分来源

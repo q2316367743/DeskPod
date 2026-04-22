@@ -7,7 +7,7 @@
         <t-menu-item value="/quick">快应用</t-menu-item>
         <t-menu-item value="/plugin">插件</t-menu-item>
         <t-submenu title="小部件" value="/widget">
-          <t-menu-item value="/widget/builtin">内置</t-menu-item>
+          <t-menu-item value="/widget/builtin" disabled>内置</t-menu-item>
           <t-menu-item value="/widget/quick">快应用</t-menu-item>
           <t-menu-item value="/widget/plugin">插件</t-menu-item>
         </t-submenu>
@@ -19,6 +19,7 @@
       <add-quick-app v-else-if="page === '/quick'" />
       <add-plugin v-else-if="page === '/plugin'" />
       <add-widget-quick v-else-if="page === '/widget/quick'" />
+      <add-widget-plugin v-else-if="page === '/widget/plugin'" />
     </t-content>
   </t-layout>
 </template>
@@ -28,6 +29,7 @@ import AddLink from '@/nested/add/components/AddLink.vue'
 import AddQuickApp from '@/nested/add/components/AddQuickApp.vue'
 import AddPlugin from '@/nested/add/components/AddPlugin.vue'
 import AddWidgetQuick from '@/nested/add/components/AddWidgetQuick.vue'
+import AddWidgetPlugin from '@/nested/add/components/AddWidgetPlugin.vue'
 
 const page = ref('/app')
 </script>

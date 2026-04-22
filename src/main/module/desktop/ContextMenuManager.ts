@@ -1,9 +1,11 @@
 import { dialog, Menu, Notification } from 'electron'
+import { basename, extname } from 'node:path'
 import { DesktopNodeType } from '@common/types'
 import { BUILTIN_KEY } from '@common/global'
 import { desktopManager } from '$/global/BeanFactory'
 import { openApp } from '$/global/OpenApp'
 import { getMainWindow } from '$/module/desktop'
+import { useSnowflake } from '@common/utils'
 
 function openAppWrap(
   name: string,
@@ -38,6 +40,57 @@ function openAppWrap(
   )
 }
 
+function openFileAdd(desktopId: string, column: number, row: number) {
+  const path = dialog.showOpenDialogSync({
+    title: '选择文件',
+    buttonLabel: '添加',
+    properties: ['openFile', 'createDirectory']
+  })
+  if (!path || !path[0]) return
+  const target = path[0]
+  const name = basename(target)
+  const ext = extname(target)
+  desktopManager.updateNode({
+    id: useSnowflake().nextId(),
+    type: 'file',
+    name: name,
+    icon: `file:${ext}`,
+    parentId: null,
+    sortIndex: 0,
+    desktopId: desktopId,
+    row: row,
+    column: column,
+    meta: {
+      root: target
+    }
+  })
+}
+
+function openFolderAdd(desktopId: string, column: number, row: number) {
+  const path = dialog.showOpenDialogSync({
+    title: '选择文件',
+    buttonLabel: '添加',
+    properties: ['openDirectory', 'createDirectory']
+  })
+  if (!path || !path[0]) return
+  const target = path[0]
+  const name = basename(target)
+  desktopManager.updateNode({
+    id: useSnowflake().nextId(),
+    type: 'directory',
+    name: name,
+    icon: `file:directory`,
+    parentId: null,
+    sortIndex: 0,
+    desktopId: desktopId,
+    row: row,
+    column: column,
+    meta: {
+      root: target
+    }
+  })
+}
+
 export function createContextMenuByDesktop(
   desktopId: string,
   x: number,
@@ -51,8 +104,18 @@ export function createContextMenuByDesktop(
       click: () => openAppWrap('添加应用', 'app', desktopId, column, row)
     },
     {
+      label: '添加文件',
+      click: () => openFileAdd(desktopId, column, row)
+    },
+    {
       label: '添加文件夹',
-      click: () => openAppWrap('添加文件夹', 'folder', desktopId, column, row)
+      click: () => openFolderAdd(desktopId, column, row)
+    },
+    {
+      label: '添加分区',
+      click: () => {
+        dialog.showErrorBox('添加分区', '暂未实现')
+      }
     }
   ]).popup({
     window: getMainWindow(),
@@ -60,6 +123,7 @@ export function createContextMenuByDesktop(
     y: y
   })
 }
+
 export function createContextMenuByNode(nodeId: string, x: number, y: number) {
   Menu.buildFromTemplate([
     {
