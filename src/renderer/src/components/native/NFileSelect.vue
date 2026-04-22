@@ -61,7 +61,7 @@ const btn = computed(() => {
 
 const handleSelect = () => {
   window.supportAPI
-    .shellOpenDialog(
+    .dialog.showOpenDialogSync(
       toRaw({
         ...props,
         properties: [...(props.properties || []), props.directory ? 'openDirectory' : 'openFile']

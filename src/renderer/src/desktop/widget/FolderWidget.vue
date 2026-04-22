@@ -10,9 +10,9 @@
           :class="{ disabled: index === pathSegments.length - 1 }"
           @click="navigateToSegment(index)"
         >
-          <span v-if="index === 0">
-            <HomeIcon />
-          </span>
+          <div v-if="index === 0" class="flex gap-2px items-center">
+            <div>{{ homeText }}</div>
+          </div>
           <span v-else>{{ segment }}</span>
         </t-breadcrumb-item>
       </t-breadcrumb>
@@ -88,14 +88,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from 'vue'
-import { computed, onMounted, ref } from 'vue'
+import type { PrimaryTableCol, TableRowData } from 'tdesign-vue-next'
+import { AppIcon, ViewListIcon } from 'tdesign-icons-vue-next'
 import { DesktopNode } from '@common/types'
 import { FileItemView } from '@common/views'
 import { CELL_SIZE } from '@common/global'
-import type { PrimaryTableCol, TableRowData } from 'tdesign-vue-next'
 import FdIcon from '@/components/wod/FdIcon.vue'
-import { AppIcon, HomeIcon, ViewListIcon } from 'tdesign-icons-vue-next'
 
 const props = defineProps({
   node: {
@@ -116,6 +114,7 @@ function getFileIcon(item: FileItemView): string {
 const width = computed(() => `${(props.node.meta?.width || 1) * CELL_SIZE - 16}px`)
 const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 16}px`)
 const tableHeight = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 16 - 40}px`)
+const homeText = computed(() => window.supportAPI.path.basename(props.node!.meta!.root!))
 
 const list = ref<FileItemView[]>([])
 const currentPath = ref('')

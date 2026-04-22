@@ -3,7 +3,7 @@ import { platform } from 'node:os'
 import { join, basename, extname, dirname, sep } from 'node:path'
 import { readdir, stat } from 'node:fs/promises'
 import { FileItemView } from '@common/views'
-import { logError } from '$/lib/log'
+import { logAPI } from '~/provide/log'
 
 export const supportAPI = {
   isWindows: () => {
@@ -34,7 +34,7 @@ export const supportAPI = {
             mtime: stats.mtime
           })
         } catch (e) {
-          logError(`处理文件「${p}」报错`, e)
+          logAPI.error(`处理文件「${p}」报错`, e)
         }
       }
       return results

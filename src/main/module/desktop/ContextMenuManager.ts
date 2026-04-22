@@ -1,6 +1,5 @@
 import { dialog, Menu, Notification } from 'electron'
-import { basename, extname } from 'node:path'
-import { DesktopNodeType } from '@common/types'
+import { basename } from 'node:path'
 import { BUILTIN_KEY } from '@common/global'
 import { desktopManager } from '$/global/BeanFactory'
 import { openApp } from '$/global/OpenApp'
@@ -9,7 +8,7 @@ import { useSnowflake } from '@common/utils'
 
 function openAppWrap(
   name: string,
-  type: DesktopNodeType,
+  type: string,
   desktopId: string,
   column: number,
   row: number
@@ -38,57 +37,6 @@ function openAppWrap(
       row: `${row}`
     }
   )
-}
-
-function openFileAdd(desktopId: string, column: number, row: number) {
-  const path = dialog.showOpenDialogSync({
-    title: '选择文件',
-    buttonLabel: '添加',
-    properties: ['openFile', 'createDirectory']
-  })
-  if (!path || !path[0]) return
-  const target = path[0]
-  const name = basename(target)
-  const ext = extname(target)
-  desktopManager.updateNode({
-    id: useSnowflake().nextId(),
-    type: 'file',
-    name: name,
-    icon: `icon:${ext}`,
-    parentId: null,
-    sortIndex: 0,
-    desktopId: desktopId,
-    row: row,
-    column: column,
-    meta: {
-      root: target
-    }
-  })
-}
-
-function openFolderAdd(desktopId: string, column: number, row: number) {
-  const path = dialog.showOpenDialogSync({
-    title: '选择文件夹',
-    buttonLabel: '添加',
-    properties: ['openDirectory', 'createDirectory']
-  })
-  if (!path || !path[0]) return
-  const target = path[0]
-  const name = basename(target)
-  desktopManager.updateNode({
-    id: useSnowflake().nextId(),
-    type: 'directory',
-    name: name,
-    icon: `icon:directory`,
-    parentId: null,
-    sortIndex: 0,
-    desktopId: desktopId,
-    row: row,
-    column: column,
-    meta: {
-      root: target
-    }
-  })
 }
 
 function openFolderWidget(desktopId: string, column: number, row: number) {
@@ -130,15 +78,15 @@ export function createContextMenuByDesktop(
   Menu.buildFromTemplate([
     {
       label: '添加应用',
-      click: () => openAppWrap('添加应用', 'app', desktopId, column, row)
+      click: () => openAppWrap('添加应用', '/link', desktopId, column, row)
     },
     {
       label: '添加文件',
-      click: () => openFileAdd(desktopId, column, row)
+      click: () => openAppWrap('添加文件', '/native/file', desktopId, column, row)
     },
     {
       label: '添加文件夹',
-      click: () => openFolderAdd(desktopId, column, row)
+      click: () => openAppWrap('添加文件夹', '/native/folder', desktopId, column, row)
     },
     {
       label: '添加分区',
