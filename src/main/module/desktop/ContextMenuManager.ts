@@ -2,6 +2,7 @@ import { dialog, Menu, Notification } from 'electron'
 import { desktopManager, getMainWindow } from '$/global/BeanFactory'
 import { openApp } from '$/global/OpenApp'
 import { DesktopNodeType } from '@common/types'
+import { BUILTIN_KEY } from '@common/global'
 
 function openAppWrap(
   name: string,
@@ -22,7 +23,7 @@ function openAppWrap(
       sortIndex: 0,
       parentId: null,
       meta: {
-        builtinId: 'add',
+        builtinId: BUILTIN_KEY.ADD,
         width: 800,
         height: 600
       }

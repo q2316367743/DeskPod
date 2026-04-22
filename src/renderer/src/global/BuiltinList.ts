@@ -1,4 +1,5 @@
 import { DesktopNode } from '@common/types'
+import { BUILTIN_KEY } from '@common/global'
 
 export const builtinList: Array<DesktopNode> = [
   {
@@ -12,7 +13,7 @@ export const builtinList: Array<DesktopNode> = [
     row: 0,
     column: 0,
     meta: {
-      builtinId: 'quick'
+      builtinId: BUILTIN_KEY.QUICK
     }
   },
   {
@@ -26,7 +27,7 @@ export const builtinList: Array<DesktopNode> = [
     row: 0,
     column: 1,
     meta: {
-      builtinId: 'plugin'
+      builtinId: BUILTIN_KEY.PLUGIN
     }
   },
   {
@@ -40,7 +41,7 @@ export const builtinList: Array<DesktopNode> = [
     row: 0,
     column: 2,
     meta: {
-      builtinId: 'setting'
+      builtinId: BUILTIN_KEY.SETTING
     }
   }
 ]

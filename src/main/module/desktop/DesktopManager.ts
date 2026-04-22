@@ -3,9 +3,10 @@ import { existsSync } from 'node:fs'
 import { readFile, writeFile } from 'node:fs/promises'
 import { DesktopNode } from '@common/types'
 import { group } from '@common/utils'
-import { SYSTEM_EVENT } from '@common/global'
+import { BUILTIN_KEY, SYSTEM_EVENT } from '@common/global'
 import { APP_DATA_DB_DIR } from '$/global/Constant'
 import { getMainWindow } from '$/global/BeanFactory'
+import { closeBuiltinWindow } from '$/module/desktop/BuiltinWindow'
 
 interface DesktopItem {
   id: string
@@ -67,6 +68,7 @@ export class DesktopManager {
     }
 
     await this.save()
+    await closeBuiltinWindow(BUILTIN_KEY.ADD)
     return node
   }
 
