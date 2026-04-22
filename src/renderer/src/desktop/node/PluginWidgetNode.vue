@@ -4,6 +4,7 @@
     :style="{ width, height }"
     :title="node.name"
     @mousedown.stop
+    @contextmenu.stop
   ></div>
 </template>
 <script lang="ts" setup>

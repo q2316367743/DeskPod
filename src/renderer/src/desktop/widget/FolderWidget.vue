@@ -25,6 +25,7 @@
           size="small"
           shape="circle"
           :disabled="pathSegments.length < 2"
+          @click="toHome"
         >
           <home-icon />
         </t-button>
@@ -54,8 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { PrimaryTableCol, TableRowData } from 'tdesign-vue-next'
-import { AppIcon, HomeIcon, ViewListIcon } from 'tdesign-icons-vue-next'
+import { HomeIcon } from 'tdesign-icons-vue-next'
 import { DesktopNode } from '@common/types'
 import { FileItemView } from '@common/views'
 import { CELL_SIZE } from '@common/global'
@@ -79,7 +79,6 @@ function getFileIcon(item: FileItemView): string {
 
 const width = computed(() => `${(props.node.meta?.width || 1) * CELL_SIZE - 16}px`)
 const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 16}px`)
-const tableHeight = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 16 - 40}px`)
 const homeText = computed(() => window.supportAPI.path.basename(props.node!.meta!.root!))
 
 const list = ref<FileItemView[]>([])
@@ -136,20 +135,8 @@ const handleItemClick = (item: FileItemView) => {
   }
 }
 
-// 格式化文件大小
-const formatSize = (bytes: number): string => {
-  if (bytes === 0) return '-'
-  const k = 1024
-  const sizes = ['B', 'KB', 'MB', 'GB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i]
-}
-
-// 格式化日期
-const formatDate = (date: Date): string => {
-  const d = new Date(date)
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+const toHome = () => {
+  navigateToSegment(0)
 }
 
 onMounted(async () => {
@@ -271,6 +258,7 @@ onMounted(async () => {
   -webkit-box-orient: vertical;
   overflow: hidden;
   max-width: 68px;
+  user-select: none;
 }
 
 // 表格模式

@@ -1,5 +1,5 @@
 <template>
-  <div class="quick-widget-node" :style="{ width, height }" @mousedown.stop>
+  <div class="quick-widget-node" :style="{ width, height }" @mousedown.stop @contextmenu.stop>
     <webview
       class="widget-node-content"
       :style="{ width, height }"

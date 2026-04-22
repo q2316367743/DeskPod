@@ -1,5 +1,5 @@
 <template>
-  <div class="desktop-icon" :title="node.name" @click="handleClick(node)">
+  <div class="desktop-icon" :title="node.name" @dblclick="handleClick(node)">
     <div class="icon-wrapper">
       <item-icon :node />
     </div>

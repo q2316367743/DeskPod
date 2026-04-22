@@ -1,13 +1,26 @@
 <template>
   <div class="folder-node" :style="{ width, height }">
-    <div class="folder-layout" draggable="false" @mousedown.stop>
+    <div class="folder-layout" draggable="false" @mousedown.stop @contextmenu.stop>
       <div class="folder-header">
-        <div class="folder-title">{{ node.name }}</div>
-        <t-button size="small" variant="outline" theme="primary" shape="square">
-          <template #icon>
-            <more-icon />
-          </template>
-        </t-button>
+        <div class="folder-title">
+          <t-input v-if="rename" v-model="nodeName" autofocus size="small" @blur="handleRename" />
+          <span v-else>{{ node.name }}</span>
+        </div>
+        <t-dropdown trigger="click" placement="bottom-right">
+          <t-button size="small" variant="outline" theme="primary" shape="square">
+            <template #icon>
+              <more-icon />
+            </template>
+          </t-button>
+          <t-dropdown-menu>
+            <t-dropdown-item @click="rename = true">
+              <template #prefix-icon>
+                <edit-icon />
+              </template>
+              重命名
+            </t-dropdown-item>
+          </t-dropdown-menu>
+        </t-dropdown>
       </div>
       <div ref="gridStackEl" class="folder-content">
         <div
@@ -31,7 +44,7 @@
 <script lang="ts" setup>
 import { DesktopNode, getNodeHeight, getNodeWidth } from '@common/types'
 import { CELL_SIZE } from '@common/global'
-import { MoreIcon } from 'tdesign-icons-vue-next'
+import { EditIcon, MoreIcon } from 'tdesign-icons-vue-next'
 import { GridStack, GridStackWidget } from 'gridstack'
 import { useDesktopNodeStore } from '@/store'
 import { handleDesktopNodeCxt } from '@/desktop/layout/func/DesktopNodeCxt'
@@ -56,8 +69,21 @@ const props = defineProps({
 const gridStackEl = ref<HTMLElement>()
 let grid: GridStack | undefined = undefined
 
+const nodeName = ref(props.node.name)
+const rename = ref(false)
+
 const width = computed(() => `${(props.node.meta?.width || 1) * CELL_SIZE - 16}px`)
 const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 16}px`)
+
+const handleRename = () => {
+  if (props.node.name !== nodeName.value) {
+    window.desktopAPI.updateNode({
+      ...toRaw(props.node),
+      name: nodeName.value
+    })
+  }
+  rename.value = false
+}
 
 const syncGridFromNodes = async () => {
   if (!grid) return
