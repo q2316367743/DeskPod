@@ -37,7 +37,7 @@ const openFileApp = async (node: DesktopNode): Promise<boolean> => {
 const openDirectoryApp = async (node: DesktopNode): Promise<boolean> => {
   const root = node.meta?.root
   if (!root) return false
-  shell.showItemInFolder(root)
+  await shell.openPath(root)
   return true
 }
 const openNativeApp = async (node: DesktopNode): Promise<boolean> => {

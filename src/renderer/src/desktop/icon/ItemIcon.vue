@@ -123,6 +123,7 @@ const props = defineProps({
 
 const icon = computed(() => {
   const raw = props.node.icon
+  if (raw.startsWith('file://')) return raw
   if (raw.startsWith('file:')) {
     if (props.node.type === 'directory') {
       return fileIcons['/src/assets/icon/file/wenjianjia.svg'].default
