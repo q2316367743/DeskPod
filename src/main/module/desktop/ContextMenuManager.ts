@@ -1,8 +1,9 @@
 import { dialog, Menu, Notification } from 'electron'
-import { desktopManager, getMainWindow } from '$/global/BeanFactory'
-import { openApp } from '$/global/OpenApp'
 import { DesktopNodeType } from '@common/types'
 import { BUILTIN_KEY } from '@common/global'
+import { desktopManager } from '$/global/BeanFactory'
+import { openApp } from '$/global/OpenApp'
+import { getMainWindow } from '$/module/desktop'
 
 function openAppWrap(
   name: string,

@@ -1,4 +1,4 @@
-import { BrowserWindow, screen, shell } from 'electron'
+import { app, BrowserWindow, Menu, nativeImage, screen, shell, Tray } from 'electron'
 import { APP_NAME, PARTITION } from '@common/global'
 import { join } from 'node:path'
 import { settingManager } from '$/global/BeanFactory'
@@ -79,4 +79,32 @@ export function createMainWindow() {
   })
 
   return mainWindow
+}
+
+export function createTray() {
+  const iconImg = nativeImage.createFromPath(icon)
+  const tray = new Tray(iconImg.resize({ height: 16 }))
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '显示 / 隐藏',
+      click: () => {
+        if (mainWindow?.isVisible()) {
+          mainWindow?.hide()
+        } else {
+          mainWindow?.show()
+          mainWindow?.focus()
+        }
+      }
+    },
+    {
+      label: '退出',
+      click: () => {
+        mainWindow?.destroy()
+        app.quit()
+      }
+    }
+  ])
+  tray.setContextMenu(contextMenu)
+  return tray
 }

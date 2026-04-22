@@ -5,7 +5,7 @@ import { DesktopNode } from '@common/types'
 import { group } from '@common/utils'
 import { BUILTIN_KEY, SYSTEM_EVENT } from '@common/global'
 import { APP_DATA_DB_DIR } from '$/global/Constant'
-import { getMainWindow } from '$/global/BeanFactory'
+import { getMainWindow } from '$/module/desktop'
 import { closeBuiltinWindow } from '$/module/desktop/BuiltinWindow'
 
 interface DesktopItem {

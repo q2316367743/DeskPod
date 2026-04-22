@@ -1,47 +1,17 @@
-import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
 import { appDirInit } from '$/global/Constant'
 import {
   desktopManager,
-  getMainWindow,
   pluginManager,
   quickManager,
   settingManager
 } from '$/global/BeanFactory'
 import { useSql } from '$/lib/sql'
 import { logDebug, logError } from '$/lib/log'
+import { createTray, createMainWindow } from '$/module/desktop'
 // 导入事件
 import '$/router'
-import { createMainWindow } from '$/module/desktop'
-
-function createTray() {
-  const iconImg = nativeImage.createFromPath(icon)
-  const tray = new Tray(iconImg.resize({ height: 16 }))
-
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: '显示 / 隐藏',
-      click: () => {
-        if (getMainWindow()?.isVisible()) {
-          getMainWindow()?.hide()
-        } else {
-          getMainWindow()?.show()
-          getMainWindow()?.focus()
-        }
-      }
-    },
-    {
-      label: '退出',
-      click: () => {
-        getMainWindow()?.destroy()
-        app.quit()
-      }
-    }
-  ])
-  tray.setContextMenu(contextMenu)
-  return tray
-}
 
 app.whenReady().then(() => {
   appDirInit()

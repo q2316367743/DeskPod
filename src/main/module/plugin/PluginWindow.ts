@@ -1,6 +1,7 @@
 import { BrowserWindow, WebContentsView } from 'electron'
 import { join } from 'path'
-import { getMainWindow, pluginManager } from '$/global/BeanFactory'
+import { pluginManager } from '$/global/BeanFactory'
+import { getMainWindow } from '$/module/desktop'
 import icon from '../../../../resources/icon.png?asset'
 import { TauriEvent, ViewOptions, WindowOptions } from '@common/types'
 import { PARTITION } from '@common/global'

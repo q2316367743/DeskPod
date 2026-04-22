@@ -1,5 +1,6 @@
 import { ipcMain, screen } from 'electron'
-import { getMainWindow, settingManager } from '$/global/BeanFactory'
+import { settingManager } from '$/global/BeanFactory'
+import { getMainWindow } from '$/module/desktop'
 import { SYSTEM_EVENT } from '@common/global'
 
 ipcMain.handle('/main/setting/all', () => {

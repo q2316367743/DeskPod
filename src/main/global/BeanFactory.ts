@@ -1,5 +1,4 @@
 // 插件管理器
-import { BrowserWindow } from 'electron'
 import { QuickManager } from '$/module/quick'
 import { DatabaseManager, PluginManager, StoreManager } from '$/module/plugin'
 import { DesktopManager, SettingManager } from '$/module/desktop'
@@ -11,7 +10,3 @@ export const settingManager = new SettingManager()
 
 export const databaseManager = new DatabaseManager()
 export const storeManager = new StoreManager()
-
-let mainWindow: BrowserWindow | undefined = undefined
-export const setMainWindow = (win: BrowserWindow) => (mainWindow = win)
-export const getMainWindow = () => mainWindow
