@@ -3,6 +3,7 @@ import { platform } from 'node:os'
 import { join, basename, extname, dirname, sep } from 'node:path'
 import { readdir, stat } from 'node:fs/promises'
 import { FileItemView } from '@common/views'
+import { logError } from '$/lib/log'
 
 export const supportAPI = {
   isWindows: () => {
@@ -21,16 +22,20 @@ export const supportAPI = {
       const results = new Array<FileItemView>()
       for (const item of list) {
         const p = join(path, item)
-        const stats = await stat(p)
-        results.push({
-          name: item,
-          path: p,
-          isDirectory: stats.isDirectory(),
-          isFile: stats.isFile(),
-          size: stats.size,
-          birthtime: stats.birthtime,
-          mtime: stats.mtime
-        })
+        try {
+          const stats = await stat(p)
+          results.push({
+            name: item,
+            path: p,
+            isDirectory: stats.isDirectory(),
+            isFile: stats.isFile(),
+            size: stats.size,
+            birthtime: stats.birthtime,
+            mtime: stats.mtime
+          })
+        } catch (e) {
+          logError(`处理文件「${p}」报错`, e)
+        }
       }
       return results
     }
