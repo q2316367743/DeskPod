@@ -2,6 +2,7 @@
   <t-layout class="w-100vw h-100vh">
     <t-header>
       <t-head-menu v-model="page" expand-type="popup">
+        <t-menu-item value="/native/app">本地应用</t-menu-item>
         <t-menu-item value="/link">链接</t-menu-item>
         <t-menu-item value="/quick">快应用</t-menu-item>
         <t-menu-item value="/plugin">插件</t-menu-item>
@@ -11,7 +12,6 @@
           <t-menu-item value="/widget/plugin">插件</t-menu-item>
         </t-submenu>
         <t-submenu title="本地" value="/native">
-          <t-menu-item value="/native/app">本地应用</t-menu-item>
           <t-menu-item value="/native/file">文件</t-menu-item>
           <t-menu-item value="/native/folder">文件夹</t-menu-item>
         </t-submenu>
@@ -40,7 +40,7 @@ import AddNativeFile from '@/nested/add/components/AddNativeFile.vue'
 import AddNativeFolder from '@/nested/add/components/AddNativeFolder.vue'
 
 const params = new URLSearchParams(location.search)
-const page = ref(params.get('type') || '/link')
+const page = ref(params.get('type') || '/native/app')
 const hasWidget = ref(!params.get('parentId'))
 </script>
 <style scoped lang="less"></style>

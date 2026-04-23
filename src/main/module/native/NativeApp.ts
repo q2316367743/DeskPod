@@ -56,7 +56,6 @@ export async function listApps() {
     }))
   } else if (p === 'darwin') {
     const apps = (await getMacInstalledApps()) as Array<Record<string, string>>
-    console.log(apps)
     res = apps.map((app) => {
       const appName = app.appName || app.kMDItemDisplayName
       return {

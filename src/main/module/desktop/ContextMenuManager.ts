@@ -71,7 +71,7 @@ export function createContextMenuByDesktop(param: DesktopCreateParam) {
   menus.push(
     {
       label: '添加应用',
-      click: () => openAppWrap('添加应用', '/link', param)
+      click: () => openAppWrap('添加应用', '/native/app', param)
     },
     {
       label: '添加文件',
