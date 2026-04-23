@@ -1,9 +1,10 @@
 <template>
-  <div class="folder-widget" :style="{ width, height }">
+  <div class="folder-widget">
     <!-- 顶部工具栏 -->
     <div class="toolbar">
       <!-- 面包屑导航 -->
       <t-breadcrumb class="breadcrumb">
+        <template #separator>/</template>
         <t-breadcrumb-item
           v-for="(segment, index) in pathSegments"
           :key="index"
@@ -18,7 +19,7 @@
       </t-breadcrumb>
 
       <!-- 视图切换 -->
-      <div class="view-toggle">
+      <div class="flex gap-8px">
         <t-button
           theme="primary"
           variant="outline"
@@ -67,7 +68,6 @@
 import { HomeIcon, RefreshIcon } from 'tdesign-icons-vue-next'
 import { DesktopNode } from '@common/types'
 import { FileItemView } from '@common/views'
-import { CELL_SIZE } from '@common/global'
 import FdIcon from '@/components/wod/FdIcon.vue'
 
 const props = defineProps({
@@ -86,8 +86,6 @@ function getFileIcon(item: FileItemView): string {
   return e
 }
 
-const width = computed(() => `${(props.node.meta?.width || 1) * CELL_SIZE - 16}px`)
-const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 16}px`)
 const homeText = computed(() => window.supportAPI.path.basename(props.node!.meta!.root!))
 
 const list = ref<FileItemView[]>([])
@@ -163,12 +161,8 @@ onMounted(async () => {
 .folder-widget {
   display: flex;
   flex-direction: column;
-  background: var(--fluent-card-bg);
-  border: 1px solid var(--fluent-card-border);
-  border-radius: var(--fluent-radius-card);
-  box-shadow: var(--fluent-card-shadow);
-  backdrop-filter: var(--fluent-acrylic-blur);
   overflow: hidden;
+  height: 100%;
 }
 
 .toolbar {
@@ -177,63 +171,19 @@ onMounted(async () => {
   justify-content: space-between;
   padding: 8px 12px;
   border-bottom: 1px solid var(--fluent-border-subtle);
-  background: var(--fluent-acrylic-bg);
   flex-shrink: 0;
-}
-
-.breadcrumb {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-
-  :deep(.t-breadcrumb-item) {
-    font-size: 13px;
-    cursor: pointer;
-    transition: all var(--fluent-transition-fast);
-
-    &.disabled {
-      cursor: default;
-
-      .t-breadcrumb-item__text {
-        font-weight: 500;
-      }
-    }
-
-    &:not(.disabled):hover {
-      color: var(--fluent-accent-color);
-    }
-  }
-}
-
-.view-toggle {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-
-  .t-button {
-    padding: 4px 8px;
-    border-radius: var(--td-radius-small);
-
-    &.active {
-      background: var(--fluent-item-selected);
-      color: var(--fluent-accent-color);
-    }
-
-    &:hover:not(.active) {
-      background: var(--fluent-item-hover);
-    }
-  }
 }
 
 // 图标模式
 .icon-view {
   flex: 1;
-  overflow-y: auto;
   padding: 8px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
   gap: 4px;
   align-content: start;
+  height: calc(100% - 32px);
+  overflow: auto;
 }
 
 .icon-item {
@@ -274,38 +224,4 @@ onMounted(async () => {
 }
 
 // 表格模式
-.table-view {
-  flex: 1;
-  overflow: hidden;
-  padding: 4px 8px;
-
-  :deep(.t-table) {
-    background: transparent;
-    border: none;
-  }
-
-  :deep(.t-table__header) {
-    background: transparent;
-  }
-
-  :deep(.t-table__row) {
-    cursor: pointer;
-
-    &:hover {
-      background: var(--fluent-item-hover);
-    }
-  }
-}
-
-.table-name-cell {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  .table-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
 </style>

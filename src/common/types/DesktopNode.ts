@@ -44,6 +44,7 @@ export interface DesktopNode {
 
     // type === 'widget' 时
     source?: 'builtin' | 'quick' | 'plugin' // 【新增】区分来源
+    hiddenHeader?: boolean // 隐藏标题
 
     // 当 source === 'builtin' 时使用
     builtinId?: string // 内部标识符，如 'sys-clock', 'sys-cpu'

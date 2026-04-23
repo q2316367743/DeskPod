@@ -1,11 +1,6 @@
 <template>
-  <div class="quick-widget-node" :style="{ width, height }" @mousedown.stop @contextmenu.stop>
-    <webview
-      class="widget-node-content"
-      :style="{ width, height }"
-      :src="node.meta?.root"
-      :web-security="false"
-    ></webview>
+  <div class="w-full h-full" @mousedown.stop @contextmenu.stop>
+    <webview class="w-full h-full" :src="node.meta?.root" :web-security="false"></webview>
   </div>
 </template>
 <script lang="ts" setup>
