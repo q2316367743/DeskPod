@@ -78,6 +78,9 @@ interface SupportAPI {
     openExternal: (url: string) => Promise<void>
     openPath: (path: string) => Promise<string>
   }
+  url: {
+    pathToHref: (path: string) => string
+  }
 }
 
 interface QuickAPI {

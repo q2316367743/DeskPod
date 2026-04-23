@@ -45,6 +45,14 @@ const pluginVerifyType = Type.Object({
             rows: Type.Number(),
             cols: Type.Number()
           })
+        ),
+        menu: Type.Optional(
+          Type.Array(
+            Type.Object({
+              label: Type.String(),
+              value: Type.String()
+            })
+          )
         )
       })
     )

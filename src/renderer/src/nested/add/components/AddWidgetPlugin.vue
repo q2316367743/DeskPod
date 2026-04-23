@@ -26,7 +26,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { DesktopNode, pluginEntityToWidgetNode } from '@common/types'
+import { pluginEntityToWidgetNode } from '../func/PluginFunc'
+import { DesktopNode } from '@common/types'
 import { useSnowflake } from '@common/utils'
 import { MessageUtil } from '@/utils'
 

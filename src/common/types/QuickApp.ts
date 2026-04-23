@@ -1,4 +1,4 @@
-import { BaseEntity, DesktopNode } from '@common/types'
+import { BaseEntity } from '@common/types'
 
 /**
  * - `window`: 独立窗口
@@ -50,45 +50,3 @@ export interface QuickAppCore {
  * 所谓的快应用就是 webapp，纯前端应用
  */
 export interface QuickApp extends BaseEntity, QuickAppCore {}
-
-export function quickAppToDesktopNode(app: QuickApp, desktopId: string): DesktopNode {
-  return {
-    id: '',
-    type: 'quick',
-    name: app.name,
-    icon: app.icon ? `file://${app.root}/${app.icon}` : '',
-    parentId: null,
-    sortIndex: 0,
-    desktopId: desktopId,
-    row: 0,
-    column: 0,
-    meta: {
-      pluginId: app.id,
-      root: app.root,
-      width: app.width,
-      height: app.height
-    }
-  }
-}
-
-
-export function quickAppToWidgetNode(app: QuickApp, desktopId: string): DesktopNode {
-  return {
-    id: '',
-    type: 'widget',
-    name: app.name,
-    icon: app.icon ? `file://${app.root}/${app.icon}` : '',
-    parentId: null,
-    sortIndex: 0,
-    desktopId: desktopId,
-    row: 0,
-    column: 0,
-    meta: {
-      pluginId: app.id,
-      root: `file://${app.root}/${app.entry}`,
-      source: 'quick',
-      width: app.width,
-      height: app.height
-    }
-  }
-}

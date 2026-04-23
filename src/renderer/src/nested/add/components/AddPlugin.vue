@@ -29,9 +29,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import { pluginEntityToDesktopNode, PluginEntityWrap } from '@common/types'
-import { DesktopNode } from '@common/types'
+import { pluginEntityToDesktopNode } from '../func/PluginFunc'
+import { DesktopNode, PluginEntityWrap } from '@common/types'
 import { MessageUtil, useSnowflake } from '@/utils'
 import PluginIcon from '@/desktop/icon/PluginIcon.vue'
 

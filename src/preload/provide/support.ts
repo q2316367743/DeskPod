@@ -2,6 +2,7 @@ import { ipcRenderer } from 'electron'
 import { platform } from 'node:os'
 import { join, basename, extname, dirname, sep } from 'node:path'
 import { readdir, stat } from 'node:fs/promises'
+import { pathToFileURL } from 'node:url'
 import { FileItemView } from '@common/views'
 import { logAPI } from '~/provide/log'
 
@@ -51,6 +52,11 @@ export const supportAPI = {
     },
     openPath: (path: string) => {
       return ipcRenderer.invoke('/main/support/shell/openPath', path)
+    }
+  },
+  url: {
+    pathToHref: (path: string) => {
+      return pathToFileURL(path).href
     }
   }
 }

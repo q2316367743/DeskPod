@@ -3,8 +3,8 @@ import { join } from 'path'
 import { pluginManager } from '$/global/BeanFactory'
 import { getMainWindow } from '$/module/desktop'
 import icon from '../../../../resources/icon.png?asset'
-import { TauriEvent, ViewOptions, WindowOptions } from '@common/types'
-import { PARTITION } from '@common/global'
+import { ViewOptions, WindowOptions } from '@common/types'
+import { PARTITION, TauriEvent } from '@common/global'
 import { logError } from '$/lib/log'
 
 interface PbwBrowserWindow {

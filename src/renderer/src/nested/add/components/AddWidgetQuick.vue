@@ -26,7 +26,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { DesktopNode, quickAppToWidgetNode } from '@common/types'
+import { quickAppToWidgetNode } from '../func/QuickFunc'
+import { DesktopNode } from '@common/types'
 import { useSnowflake } from '@common/utils'
 import { MessageUtil } from '@/utils'
 
