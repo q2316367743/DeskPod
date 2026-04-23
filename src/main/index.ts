@@ -1,12 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { appDirInit } from '$/global/Constant'
-import {
-  desktopManager,
-  pluginManager,
-  quickManager,
-  settingManager
-} from '$/global/BeanFactory'
+import { desktopManager, pluginManager, quickManager, settingManager } from '$/global/BeanFactory'
 import { useSql } from '$/lib/sql'
 import { logDebug, logError } from '$/lib/log'
 import { createTray, createMainWindow } from '$/module/desktop'
@@ -14,6 +9,7 @@ import { createTray, createMainWindow } from '$/module/desktop'
 import '$/router'
 
 app.whenReady().then(() => {
+  // 注册协议
   appDirInit()
     .then(() => logDebug('基础目录初始化成功'))
     .catch((e) => logError('基础目录初始化失败', e))

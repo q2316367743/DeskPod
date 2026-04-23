@@ -6,7 +6,8 @@ export default {
       default: content,
       title,
       closeBtn: true,
-      duration: 3000
+      duration: 3000,
+      placement: 'bottom-right'
     })
   },
   info(content: string | TNode, title?: string): void {
@@ -14,7 +15,8 @@ export default {
       default: content,
       title,
       closeBtn: true,
-      duration: 3000
+      duration: 3000,
+      placement: 'bottom-right'
     })
   },
   warning(content: string | TNode, title?: string): void {
@@ -22,7 +24,8 @@ export default {
       default: content,
       title,
       closeBtn: true,
-      duration: 3000
+      duration: 3000,
+      placement: 'bottom-right'
     })
   },
   error(content: string | TNode, title?: string): void {
@@ -30,7 +33,8 @@ export default {
       default: content,
       title,
       closeBtn: true,
-      duration: 3000
+      duration: 3000,
+      placement: 'bottom-right'
     })
   },
 
@@ -50,6 +54,7 @@ export default {
         title,
         closeBtn: true,
         duration: config.duration,
+        placement: 'bottom-right',
         footer: () => (
           <div>
             <Button
@@ -102,6 +107,7 @@ export default {
         title,
         closeBtn: true,
         duration: duration,
+        placement: 'bottom-right',
         footer: () => (
           <div style={{ textAlign: 'right' }}>
             <Button theme={'primary'} onClick={onConfirm}>

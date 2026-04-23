@@ -80,5 +80,9 @@ export const desktopAPI = {
   },
   contextmenuCreateNode(nodeId: string, x: number, y: number): Promise<void> {
     return ipcRenderer.invoke('/desktop/contextmenu/create/node', nodeId, x, y)
+  },
+
+  nodeAppList(): Promise<Array<unknown>> {
+    return ipcRenderer.invoke('/desktop/node/app/list')
   }
 }

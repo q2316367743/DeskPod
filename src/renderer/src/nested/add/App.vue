@@ -11,7 +11,7 @@
           <t-menu-item value="/widget/plugin">插件</t-menu-item>
         </t-submenu>
         <t-submenu title="本地" value="/native">
-          <t-menu-item value="/native/builtin">本地应用</t-menu-item>
+          <t-menu-item value="/native/app">本地应用</t-menu-item>
           <t-menu-item value="/native/file">文件</t-menu-item>
           <t-menu-item value="/native/folder">文件夹</t-menu-item>
         </t-submenu>
@@ -23,14 +23,14 @@
       <add-plugin v-else-if="page === '/plugin'" />
       <add-widget-quick v-else-if="page === '/widget/quick'" />
       <add-widget-plugin v-else-if="page === '/widget/plugin'" />
-      <add-app v-else-if="page === '/native/app'" />
+      <add-native-app v-else-if="page === '/native/app'" />
       <add-native-file v-else-if="page === '/native/file'" />
       <add-native-folder v-else-if="page === '/native/folder'" />
     </t-content>
   </t-layout>
 </template>
 <script lang="ts" setup>
-import AddApp from '@/nested/add/components/AddApp.vue'
+import AddNativeApp from '@/nested/add/components/AddNativeApp.vue'
 import AddLink from '@/nested/add/components/AddLink.vue'
 import AddQuickApp from '@/nested/add/components/AddQuickApp.vue'
 import AddPlugin from '@/nested/add/components/AddPlugin.vue'

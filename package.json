@@ -40,6 +40,8 @@
     "electron-store": "^11.0.2",
     "electron-updater": "^6.3.9",
     "es-toolkit": "^1.45.1",
+    "file-icon": "^6.0.0",
+    "get-installed-apps": "^1.1.1",
     "gridstack": "^12.6.0",
     "pinia": "^3.0.4",
     "tdesign-icons-vue-next": "^0.4.4",

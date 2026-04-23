@@ -52,6 +52,8 @@ export interface DesktopNode {
     widgetId?: string // 小部件插件ID
     width?: number // 小部件宽 (网格单位，如占 2 格)
     height?: number // 小部件高 (网格单位，如占 1 格)
+    minWidth?: number
+    minHeight?: number
   }
 }
 

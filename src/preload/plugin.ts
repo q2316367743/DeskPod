@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { sep, delimiter } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { randomUUID } from 'node:crypto'
 import {
   EmitArgs,
@@ -79,7 +80,7 @@ const __TAURI_INTERNALS__ = {
     return id
   },
   convertFileSrc(filePath: string) {
-    return `file:///${filePath}`
+    return pathToFileURL(filePath).href
   },
   metadata: {
     currentWindow: {

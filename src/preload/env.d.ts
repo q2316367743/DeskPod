@@ -26,6 +26,8 @@ interface DesktopAPI {
     row: number
   ) => Promise<void>
   contextmenuCreateNode: (nodeId: string, x: number, y: number) => Promise<void>
+
+  nodeAppList: () => Promise<Array<{ id: string; name: string; path: string; icon: string }>>
 }
 
 interface PluginAPI {
@@ -61,7 +63,6 @@ interface OpenDialogSyncOptions {
   message?: string
   securityScopedBookmarks?: boolean
 }
-
 
 interface SupportAPI {
   isWindows: () => boolean

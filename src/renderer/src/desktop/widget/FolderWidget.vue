@@ -29,6 +29,15 @@
         >
           <home-icon />
         </t-button>
+        <t-button
+          theme="primary"
+          variant="outline"
+          size="small"
+          shape="circle"
+          @click="handleRefresh"
+        >
+          <refresh-icon />
+        </t-button>
       </div>
     </div>
 
@@ -55,7 +64,7 @@
 </template>
 
 <script lang="ts" setup>
-import { HomeIcon } from 'tdesign-icons-vue-next'
+import { HomeIcon, RefreshIcon } from 'tdesign-icons-vue-next'
 import { DesktopNode } from '@common/types'
 import { FileItemView } from '@common/views'
 import { CELL_SIZE } from '@common/global'
@@ -138,6 +147,9 @@ const handleItemClick = (item: FileItemView) => {
 const toHome = () => {
   navigateToSegment(0)
 }
+const handleRefresh = () => {
+  navigateToSegment(pathSegments.value.length)
+}
 
 onMounted(async () => {
   const root = props.node.meta?.root
@@ -195,7 +207,7 @@ onMounted(async () => {
 
 .view-toggle {
   display: flex;
-  gap: 2px;
+  gap: 8px;
   flex-shrink: 0;
 
   .t-button {

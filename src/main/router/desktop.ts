@@ -4,6 +4,7 @@ import { openApp } from '$/global/OpenApp'
 import { desktopManager } from '$/global/BeanFactory'
 import { createWebContentView, moveWebContentView, removeWebContentView } from '$/module/plugin'
 import { createContextMenuByDesktop, createContextMenuByNode } from '$/module/desktop'
+import { listApps } from '$/module/native'
 
 const DEFAULT_DESKTOP_ID = 'desktop-1'
 
@@ -84,4 +85,8 @@ ipcMain.handle(
 
 ipcMain.handle('/desktop/contextmenu/create/node', async (_event, nodeId, x, y) => {
   createContextMenuByNode(nodeId, x, y)
+})
+
+ipcMain.handle('/desktop/node/app/list', async () => {
+  return listApps()
 })

@@ -22,6 +22,8 @@ export const openBuiltinApp = async (
     title: node.name,
     width: node.meta?.width || 800,
     height: node.meta?.height || 600,
+    minWidth: node.meta?.minWidth || 800,
+    minHeight: node.meta?.minHeight || 600,
     show: true,
     autoHideMenuBar: true,
     webPreferences: {

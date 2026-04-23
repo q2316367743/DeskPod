@@ -20,8 +20,10 @@ function openAppWrap(name: string, type: string, desktopId: string, column: numb
       parentId: null,
       meta: {
         builtinId: BUILTIN_KEY.ADD,
-        width: 800,
-        height: 600
+        width: 832,
+        height: 616,
+        minWidth: 832,
+        minHeight: 616
       }
     },
     {

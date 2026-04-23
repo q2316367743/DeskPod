@@ -13,6 +13,8 @@ export const APP_DATA_QUICK_DIR = join(APP_DATA_DIR, 'quick')
 
 export const APP_DATA_DB_PATH = (filename: string) => join(APP_DATA_DB_DIR, filename + '.sqlite')
 
+export const APP_DATA_ASSET_ICON_DIR = join(APP_DATA_ASSET_DIR, 'icon')
+
 export const MAIN_MIGRATE_FILES = [
   {
     file: s0000,
