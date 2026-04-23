@@ -49,6 +49,7 @@ const handleAddPlugin = (app: QuickApp) => {
   const params = new URLSearchParams(location.search)
   const node: DesktopNode = {
     ...quickAppToDesktopNode(app, params.get('desktopId') || ''),
+    parentId: params.get('parentId') || null,
     id: useSnowflake().nextId(),
     row: Number(params.get('row')),
     column: Number(params.get('column'))

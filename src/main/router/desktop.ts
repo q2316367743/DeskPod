@@ -76,12 +76,9 @@ ipcMain.handle('/desktop/widget/delete', async (_event, pluginId: string, label)
   return removeWebContentView(pluginId, label)
 })
 
-ipcMain.handle(
-  '/desktop/contextmenu/create/desktop',
-  async (_event, desktopId, x, y, column, row) => {
-    createContextMenuByDesktop(desktopId, x, y, column, row)
-  }
-)
+ipcMain.handle('/desktop/contextmenu/create/desktop', async (_event, param) => {
+  return createContextMenuByDesktop(param)
+})
 
 ipcMain.handle('/desktop/contextmenu/create/node', async (_event, nodeId, x, y) => {
   createContextMenuByNode(nodeId, x, y)

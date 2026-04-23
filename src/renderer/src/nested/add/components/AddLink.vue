@@ -89,7 +89,7 @@ const handleSubmit = () => {
     type: 'link',
     name: data.value.name,
     icon: data.value.icon,
-    parentId: null,
+    parentId: params.get('parentId') || null,
     sortIndex: 0,
     desktopId: params.get('desktopId') || '',
     row: Number(params.get('row')),

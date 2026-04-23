@@ -1,6 +1,7 @@
 import { AiModelSetting, DesktopNode, QuickApp, QuickAppCore, Setting } from '@common/types'
 import { PluginEntityWrap, PluginVerifyResult, ViewOptions } from '@common/types'
 import { FileItemView } from '@common/views'
+import { DesktopCreateParam } from '@common/params'
 
 interface DesktopAPI {
   onChange: (callback: () => void) => void
@@ -18,13 +19,7 @@ interface DesktopAPI {
   widgetMove: (pluginId: string, label: string, options: ViewOptions) => Promise<void>
   widgetDelete: (pluginId: string, label: string) => Promise<void>
 
-  contextmenuCreateDesktop: (
-    desktopId: string,
-    x: number,
-    y: number,
-    column: number,
-    row: number
-  ) => Promise<void>
+  contextmenuCreateDesktop: (param: DesktopCreateParam) => Promise<void>
   contextmenuCreateNode: (nodeId: string, x: number, y: number) => Promise<void>
 
   nodeAppList: () => Promise<Array<{ id: string; name: string; path: string; icon: string }>>

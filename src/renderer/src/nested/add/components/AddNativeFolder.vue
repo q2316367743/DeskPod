@@ -40,7 +40,7 @@ const handleSubmit = () => {
     type: 'directory',
     name: data.value.name,
     icon: 'icon:directory',
-    parentId: null,
+    parentId: params.get('parentId') || null,
     sortIndex: 0,
     desktopId: params.get('desktopId') || '',
     row: Number(params.get('row')),

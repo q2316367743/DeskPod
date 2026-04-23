@@ -2,6 +2,7 @@
 import { ipcRenderer } from 'electron'
 import { DesktopNode, ViewOptions } from '@common/types'
 import { SYSTEM_EVENT } from '@common/global'
+import { DesktopCreateParam } from '@common/params'
 
 export const desktopAPI = {
   onChange: (callback: () => void) => {
@@ -69,14 +70,8 @@ export const desktopAPI = {
     return ipcRenderer.invoke('/desktop/widget/delete', pluginId, label)
   },
 
-  contextmenuCreateDesktop(
-    desktopId: string,
-    x: number,
-    y: number,
-    column: number,
-    row: number
-  ): Promise<void> {
-    return ipcRenderer.invoke('/desktop/contextmenu/create/desktop', desktopId, x, y, column, row)
+  contextmenuCreateDesktop(param: DesktopCreateParam): Promise<void> {
+    return ipcRenderer.invoke('/desktop/contextmenu/create/desktop', param)
   },
   contextmenuCreateNode(nodeId: string, x: number, y: number): Promise<void> {
     return ipcRenderer.invoke('/desktop/contextmenu/create/node', nodeId, x, y)

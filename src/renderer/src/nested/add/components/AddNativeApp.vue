@@ -36,7 +36,7 @@ const handleAddApp = (app: App) => {
     type: 'app',
     name: app.name,
     icon: app.icon,
-    parentId: null,
+    parentId: params.get('parentId') || null,
     sortIndex: 0,
     desktopId: params.get('desktopId') || '',
     row: Number(params.get('row')),

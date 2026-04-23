@@ -60,6 +60,7 @@ const handleAddPlugin = (plugin: PluginEntityWrap) => {
 
   const node: DesktopNode = {
     ...pluginEntityToDesktopNode(plugin, params.get('desktopId') || ''),
+    parentId: params.get('parentId') || null,
     id: useSnowflake().nextId(),
     row: Number(params.get('row')),
     column: Number(params.get('column'))

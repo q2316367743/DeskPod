@@ -31,7 +31,6 @@ import { exists, mkdir, writeFile } from '@tauri-apps/plugin-fs'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import { useSnowflake } from '@/utils'
 import type { PropType } from 'vue'
-import { APP_DATA_ASSET_DIR } from '@/global/BeanFactory'
 import { joinPath } from '@/utils/lang/FileUtil'
 
 const modelValue = defineModel({
@@ -71,7 +70,7 @@ const fileInput = ref<HTMLInputElement | null>(null)
 
 async function uploadAttachment(file: File) {
   const fileName = `${useSnowflake().nextId()}.${file.name.split('.').pop()}`
-  const f = await join(APP_DATA_ASSET_DIR(), props.folder)
+  const f = await join('', props.folder)
   if (!(await exists(f))) {
     await mkdir(f, {
       baseDir: BaseDirectory.AppData,

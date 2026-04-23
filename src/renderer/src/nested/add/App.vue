@@ -17,7 +17,7 @@
         </t-submenu>
       </t-head-menu>
     </t-header>
-    <t-content class="h-full">
+    <t-content class="h-full overflow-y-auto">
       <add-link v-if="page === '/link'" />
       <add-quick-app v-else-if="page === '/quick'" />
       <add-plugin v-else-if="page === '/plugin'" />

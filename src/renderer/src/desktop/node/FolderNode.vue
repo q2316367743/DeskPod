@@ -1,6 +1,6 @@
 <template>
   <div class="folder-node" :style="{ width, height }">
-    <div class="folder-layout" draggable="false" @mousedown.stop @contextmenu.stop>
+    <div class="folder-layout" draggable="false">
       <div class="folder-header">
         <div class="folder-title">
           <t-input v-if="rename" v-model="nodeName" autofocus size="small" @blur="handleRename" />
@@ -22,7 +22,12 @@
           </t-dropdown-menu>
         </t-dropdown>
       </div>
-      <div ref="gridStackEl" class="folder-content">
+      <div
+        ref="gridStackEl"
+        class="folder-content"
+        @mousedown.stop
+        @contextmenu.stop="handleGridContextmenu"
+      >
         <div
           v-for="item in items"
           :id="`node-${item.id}`"
@@ -50,6 +55,7 @@ import { useDesktopNodeStore } from '@/store'
 import { handleDesktopNodeCxt } from '@/desktop/layout/func/DesktopNodeCxt'
 import WidgetNode from '@/desktop/node/WidgetNode.vue'
 import ItemNode from '@/desktop/node/ItemNode.vue'
+import { handleDesktopGridCxt } from '@/desktop/layout/func/DesktopGridCxt'
 
 const props = defineProps({
   node: {
@@ -72,8 +78,8 @@ let grid: GridStack | undefined = undefined
 const nodeName = ref(props.node.name)
 const rename = ref(false)
 
-const width = computed(() => `${(props.node.meta?.width || 1) * CELL_SIZE - 16}px`)
-const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 16}px`)
+const width = computed(() => `${(props.node.meta?.width || 1) * CELL_SIZE}px`)
+const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE}px`)
 
 const handleRename = () => {
   if (props.node.name !== nodeName.value) {
@@ -83,6 +89,21 @@ const handleRename = () => {
     })
   }
   rename.value = false
+}
+
+const computeColumnRowFromEvent = (e: MouseEvent): { column: number; row: number } => {
+  const rect = gridStackEl.value?.getBoundingClientRect()
+  if (!rect) return { column: 0, row: 0 }
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+  const column = Math.floor(x / CELL_SIZE)
+  const row = Math.floor(y / CELL_SIZE)
+  return { column: Math.max(0, column), row: Math.max(0, row) }
+}
+
+const handleGridContextmenu = (e: MouseEvent) => {
+  const { column, row } = computeColumnRowFromEvent(e)
+  handleDesktopGridCxt(e, column, row, props.node.id)
 }
 
 const syncGridFromNodes = async () => {
@@ -182,15 +203,8 @@ watch(
 
 <style lang="less" scoped>
 .folder-node {
-  padding: 7px;
-  border: 1px solid transparent;
-  border-radius: var(--td-radius-medium);
-  transition: all 0.3s ease-in-out;
+  overflow: hidden;
 
-  &:hover {
-    border-color: var(--td-border-level-1-color);
-    background: var(--fluent-item-hover);
-  }
   .folder-layout {
     height: 100%;
     display: flex;

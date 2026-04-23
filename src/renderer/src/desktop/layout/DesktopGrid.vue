@@ -38,8 +38,8 @@ import { handleDesktopNodeCxt } from '@/desktop/layout/func/DesktopNodeCxt'
 import { debounce } from 'es-toolkit'
 import { CELL_SIZE } from '@common/global'
 
-const gridContainer = ref<HTMLElement | undefined>(undefined)
-const gridStackEl = ref<HTMLElement | undefined>(undefined)
+const gridContainer = ref<HTMLElement>()
+const gridStackEl = ref<HTMLElement>()
 let grid: GridStack | undefined = undefined
 const store = useDesktopNodeStore()
 
@@ -74,7 +74,7 @@ const handleGridContextmenu = (e: MouseEvent) => {
     return
   }
   const { column, row } = computeColumnRowFromEvent(e)
-  handleDesktopGridCxt(e, column, row)
+  handleDesktopGridCxt(e, column, row, null)
 }
 
 const syncGridFromNodes = async () => {

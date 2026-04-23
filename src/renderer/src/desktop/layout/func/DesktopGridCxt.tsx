@@ -1,7 +1,19 @@
 import { useDesktopNodeStore } from '@/store'
 
-export function handleDesktopGridCxt(e: MouseEvent, column: number, row: number) {
+export function handleDesktopGridCxt(
+  e: MouseEvent,
+  column: number,
+  row: number,
+  parentId: string | null
+) {
   e.preventDefault()
   e.stopPropagation()
-  window.desktopAPI.contextmenuCreateDesktop(useDesktopNodeStore().desktopId, e.x, e.y, column, row)
+  return window.desktopAPI.contextmenuCreateDesktop({
+    desktopId: useDesktopNodeStore().desktopId,
+    x: e.x,
+    y: e.y,
+    column,
+    row,
+    parentId
+  })
 }

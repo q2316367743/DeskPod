@@ -5,8 +5,9 @@ import { desktopManager } from '$/global/BeanFactory'
 import { openApp } from '$/global/OpenApp'
 import { getMainWindow } from '$/module/desktop'
 import { useSnowflake } from '@common/utils'
+import { DesktopCreateParam } from '@common/params'
 
-function openAppWrap(name: string, type: string, desktopId: string, column: number, row: number) {
+function openAppWrap(name: string, type: string, param: DesktopCreateParam) {
   return openApp(
     {
       type: 'builtin',
@@ -17,7 +18,7 @@ function openAppWrap(name: string, type: string, desktopId: string, column: numb
       name: name,
       icon: '',
       sortIndex: 0,
-      parentId: null,
+      parentId: param.parentId,
       meta: {
         builtinId: BUILTIN_KEY.ADD,
         width: 832,
@@ -28,14 +29,15 @@ function openAppWrap(name: string, type: string, desktopId: string, column: numb
     },
     {
       type: type,
-      desktopId: desktopId,
-      column: `${column}`,
-      row: `${row}`
+      desktopId: param.desktopId,
+      parentId: param.parentId || '',
+      column: `${param.column}`,
+      row: `${param.row}`
     }
   )
 }
 
-function openFolderWidget(desktopId: string, column: number, row: number) {
+function openFolderWidget(param: DesktopCreateParam) {
   const path = dialog.showOpenDialogSync({
     title: '选择文件夹',
     buttonLabel: '添加',
@@ -44,16 +46,16 @@ function openFolderWidget(desktopId: string, column: number, row: number) {
   if (!path || !path[0]) return
   const target = path[0]
   const name = basename(target)
-  desktopManager.updateNode({
+  return desktopManager.updateNode({
     id: useSnowflake().nextId(),
     type: 'widget',
     name: name,
     icon: '',
-    parentId: null,
+    parentId: param.parentId,
     sortIndex: 0,
-    desktopId: desktopId,
-    row: row,
-    column: column,
+    desktopId: param.desktopId,
+    row: param.row,
+    column: param.column,
     meta: {
       root: target,
       source: 'builtin',
@@ -64,25 +66,19 @@ function openFolderWidget(desktopId: string, column: number, row: number) {
   })
 }
 
-export function createContextMenuByDesktop(
-  desktopId: string,
-  x: number,
-  y: number,
-  column: number,
-  row: number
-) {
+export function createContextMenuByDesktop(param: DesktopCreateParam) {
   Menu.buildFromTemplate([
     {
       label: '添加应用',
-      click: () => openAppWrap('添加应用', '/link', desktopId, column, row)
+      click: () => openAppWrap('添加应用', '/link', param)
     },
     {
       label: '添加文件',
-      click: () => openAppWrap('添加文件', '/native/file', desktopId, column, row)
+      click: () => openAppWrap('添加文件', '/native/file', param)
     },
     {
       label: '添加文件夹',
-      click: () => openAppWrap('添加文件夹', '/native/folder', desktopId, column, row)
+      click: () => openAppWrap('添加文件夹', '/native/folder', param)
     },
     {
       label: '添加分区',
@@ -97,9 +93,9 @@ export function createContextMenuByDesktop(
               icon: 'icon:directory',
               parentId: null,
               sortIndex: 0,
-              desktopId: desktopId,
-              row: row,
-              column: column,
+              desktopId: param.desktopId,
+              row: param.row,
+              column: param.column,
               meta: {
                 width: 4,
                 height: 6
@@ -109,14 +105,14 @@ export function createContextMenuByDesktop(
         },
         {
           label: '文件夹分区',
-          click: () => openFolderWidget(desktopId, column, row)
+          click: () => openFolderWidget(param)
         }
       ]
     }
   ]).popup({
     window: getMainWindow(),
-    x: x,
-    y: y
+    x: param.x,
+    y: param.y
   })
 }
 
