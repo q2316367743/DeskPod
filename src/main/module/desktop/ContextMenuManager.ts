@@ -67,7 +67,8 @@ function openFolderWidget(param: DesktopCreateParam) {
 }
 
 export function createContextMenuByDesktop(param: DesktopCreateParam) {
-  Menu.buildFromTemplate([
+  const menus: Parameters<typeof Menu.buildFromTemplate>[0] = []
+  menus.push(
     {
       label: '添加应用',
       click: () => openAppWrap('添加应用', '/link', param)
@@ -79,14 +80,16 @@ export function createContextMenuByDesktop(param: DesktopCreateParam) {
     {
       label: '添加文件夹',
       click: () => openAppWrap('添加文件夹', '/native/folder', param)
-    },
-    {
+    }
+  )
+  if (!param.parentId) {
+    menus.push({
       label: '添加分区',
       submenu: [
         {
           label: '空分区',
           click: () => {
-            desktopManager.updateNode({
+            return desktopManager.updateNode({
               id: useSnowflake().nextId(),
               type: 'folder',
               name: '空分区',
@@ -108,8 +111,9 @@ export function createContextMenuByDesktop(param: DesktopCreateParam) {
           click: () => openFolderWidget(param)
         }
       ]
-    }
-  ]).popup({
+    })
+  }
+  Menu.buildFromTemplate(menus).popup({
     window: getMainWindow(),
     x: param.x,
     y: param.y

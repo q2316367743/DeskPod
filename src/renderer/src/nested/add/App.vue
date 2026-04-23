@@ -5,7 +5,7 @@
         <t-menu-item value="/link">链接</t-menu-item>
         <t-menu-item value="/quick">快应用</t-menu-item>
         <t-menu-item value="/plugin">插件</t-menu-item>
-        <t-submenu title="小部件" value="/widget">
+        <t-submenu v-if="hasWidget" title="小部件" value="/widget">
           <t-menu-item value="/widget/builtin" disabled>内置</t-menu-item>
           <t-menu-item value="/widget/quick">快应用</t-menu-item>
           <t-menu-item value="/widget/plugin">插件</t-menu-item>
@@ -41,5 +41,6 @@ import AddNativeFolder from '@/nested/add/components/AddNativeFolder.vue'
 
 const params = new URLSearchParams(location.search)
 const page = ref(params.get('type') || '/link')
+const hasWidget = ref(!params.get('parentId'))
 </script>
 <style scoped lang="less"></style>
