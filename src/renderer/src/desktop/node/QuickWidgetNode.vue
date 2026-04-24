@@ -27,7 +27,7 @@ defineProps({
     top: -32px;
     left: 0;
     padding: 4px 8px;
-    color: var(--td-text-color-primary);
+    color: white;
     border-right: 1px solid var(--td-border-level-1-color);
     border-bottom: 1px solid var(--td-border-level-1-color);
     border-bottom-right-radius: var(--td-radius-medium);

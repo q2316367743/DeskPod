@@ -1,9 +1,13 @@
 <template>
-  <div class="desktop-icon" :title="node.name" @dblclick="handleClick(node)">
+  <div
+    :class="{ 'desktop-icon': true, dock: dockMode }"
+    :title="node.name"
+    @dblclick="handleClick(node)"
+  >
     <div class="icon-wrapper">
       <item-icon :node />
     </div>
-    <span class="icon-name">{{ node.name }}</span>
+    <span v-if="!dockMode" class="icon-name">{{ node.name }}</span>
   </div>
 </template>
 <script lang="ts" setup>
@@ -39,6 +43,18 @@ const handleClick = (node: DesktopNode) => {
   border-radius: var(--fluent-radius-card);
   cursor: pointer;
   transition: all var(--fluent-transition-fast);
+
+  &.dock {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    .icon-wrapper {
+      margin-bottom: 0;
+    }
+    &:hover {
+      background: transparent;
+    }
+  }
 
   &:hover {
     background: var(--fluent-item-hover);

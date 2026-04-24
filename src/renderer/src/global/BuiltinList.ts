@@ -29,19 +29,20 @@ export const builtinList: Array<DesktopNode> = [
     meta: {
       builtinId: BUILTIN_KEY.PLUGIN
     }
-  },
-  {
-    id: 'setting',
-    type: 'builtin',
-    name: '设置',
-    icon: 'setting',
-    parentId: null,
-    sortIndex: 0,
-    desktopId: 'dock',
-    row: 0,
-    column: 2,
-    meta: {
-      builtinId: BUILTIN_KEY.SETTING
-    }
   }
 ]
+
+export const builtinHomeNode: DesktopNode = {
+  id: 'setting',
+  type: 'builtin',
+  name: '设置',
+  icon: 'setting',
+  parentId: null,
+  sortIndex: 0,
+  desktopId: 'dock',
+  row: 0,
+  column: 2,
+  meta: {
+    builtinId: BUILTIN_KEY.SETTING
+  }
+}

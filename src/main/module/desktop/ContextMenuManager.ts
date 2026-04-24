@@ -82,7 +82,7 @@ export function createContextMenuByDesktop(param: DesktopCreateParam) {
       click: () => openAppWrap('添加文件夹', '/native/folder', param)
     }
   )
-  if (!param.parentId) {
+  if (!param.parentId && param.desktopId !== 'dock') {
     menus.push({
       label: '添加分区',
       submenu: [

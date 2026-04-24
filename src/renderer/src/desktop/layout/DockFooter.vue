@@ -1,18 +1,26 @@
 <template>
   <div class="dock-footer">
     <div class="dock-container">
-      <div class="dock-inner">
+      <div class="dock-inner" @contextmenu.stop="handleDesktopDockCxt($event, 0, 0)">
+        <t-tooltip content="我的">
+          <div class="disabled-btn" @click="handleClick(builtinHomeNode)">
+            <div class="disabled-icon-wrapper">
+              <HomeIcon size="24px" />
+            </div>
+          </div>
+        </t-tooltip>
         <!-- 应用图标 -->
-        <template v-for="item in list" :key="item.id">
-          <FolderNode
-            v-if="item.type === 'folder'"
-            :node="item"
-            :items="folderMap.get(item.id) || []"
-            :dock-mode="true"
-          />
-          <ItemNode v-else :node="item" :dock-mode="true" />
-        </template>
-
+        <t-tooltip v-for="item in list" :key="item.id" :content="item.name">
+          <div class="disabled-btn">
+            <div class="disabled-icon-wrapper">
+              <ItemNode
+                :node="item"
+                :dock-mode="true"
+                @contextmenu.stop="handleDesktopNodeCxt($event, item)"
+              />
+            </div>
+          </div>
+        </t-tooltip>
         <div class="dock-divider"></div>
 
         <t-tooltip v-for="b in builtinList" :key="b.id" :content="b.name">
@@ -38,14 +46,15 @@
 </template>
 
 <script lang="ts" setup>
-import { AppIcon, DeleteIcon, InternetIcon, SettingIcon } from 'tdesign-icons-vue-next'
+import { AppIcon, DeleteIcon, HomeIcon, InternetIcon, SettingIcon } from 'tdesign-icons-vue-next'
 import { DesktopNode } from '@common/types'
-import { builtinList } from '@/global/BuiltinList'
+import { builtinHomeNode, builtinList } from '@/global/BuiltinList'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 import ItemNode from '@/desktop/node/ItemNode.vue'
-import FolderNode from '@/desktop/node/FolderNode.vue'
 import { GridStack } from 'gridstack'
 import { MessageUtil } from '@/utils'
+import { handleDesktopDockCxt } from '@/desktop/layout/func/DesktopGridCxt'
+import { handleDesktopNodeCxt } from '@/desktop/layout/func/DesktopNodeCxt'
 
 // 回收站
 let grid: GridStack | null = null
@@ -53,19 +62,6 @@ const trashRef = ref()
 
 const items = computed(() => useDesktopNodeStore().dockNodes)
 const list = computed(() => items.value.filter((item) => item.parentId === '0' || !item.parentId))
-const folderMap = computed(() => {
-  const l = items.value.filter((item) => item.parentId !== '0' && item.parentId)
-  const map = new Map<string, Array<DesktopNode>>()
-  for (let desktopNode of l) {
-    const t = map.get(desktopNode.parentId!)
-    if (t) {
-      t.push(desktopNode)
-    } else {
-      map.set(desktopNode.id, [desktopNode])
-    }
-  }
-  return map
-})
 
 const handleClick = (node: DesktopNode) => {
   window.desktopAPI.openApp(toRaw(node))
@@ -143,21 +139,21 @@ onMounted(() => {
   &:hover {
     transform: scale(1.1);
   }
-}
 
-.disabled-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--fluent-radius-smooth);
-  background: var(--td-bg-color-component);
-  color: var(--td-text-color-primary);
-}
+  .disabled-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--fluent-radius-smooth);
+    background: var(--td-bg-color-component);
+    color: var(--td-text-color-primary);
+  }
 
-.disabled-label {
-  font-size: 12px;
-  color: var(--td-text-color-disabled);
+  .disabled-label {
+    font-size: 12px;
+    color: var(--td-text-color-disabled);
+  }
 }
 </style>

@@ -17,3 +17,20 @@ export function handleDesktopGridCxt(
     parentId
   })
 }
+
+export function handleDesktopDockCxt(
+  e: MouseEvent,
+  column: number,
+  row: number,
+) {
+  e.preventDefault()
+  e.stopPropagation()
+  return window.desktopAPI.contextmenuCreateDesktop({
+    desktopId: 'dock',
+    x: e.x,
+    y: e.y,
+    column,
+    row,
+    parentId: null
+  })
+}
