@@ -12,7 +12,7 @@
     </div>
 
     <!-- 插件列表 -->
-    <div v-loading="loading" class="plugin-list">
+    <div class="plugin-list">
       <div v-if="plugins.length === 0 && !loading" class="empty-state">
         <div class="empty-icon">📦</div>
         <p class="empty-text">暂无已安装的插件</p>
@@ -73,7 +73,7 @@ import UpgradeDialog from '@/nested/plugin/components/UpgradeDialog.vue'
 import DetailDialog from '@/nested/plugin/components/DetailDialog.vue'
 import Toast from '@/nested/plugin/components/Toast.vue'
 import { MessageUtil } from '@/utils'
-import { useColorMode } from '@/hooks'
+import { useThemeMode } from '@/hooks'
 
 interface PluginState {
   plugins: PluginEntityWrap[]
@@ -315,7 +315,7 @@ watch(
   }
 )
 
-useColorMode()
+useThemeMode()
 </script>
 
 <style lang="less" scoped>

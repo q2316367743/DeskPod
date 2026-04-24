@@ -76,13 +76,6 @@ export function openInstallQuickApp(from: QuickAppFrom, onUpdate: () => void) {
     },
     default: () => (
       <Form data={data.value}>
-        <FormItem label={'来源'} labelAlign={'top'}>
-          <RadioGroup v-model={data.value.from} disabled={true}>
-            <Radio value={'ai'}>AI生成</Radio>
-            <Radio value={'html'}>HTML文件</Radio>
-            <Radio value={'zip'}>ZIP文件</Radio>
-          </RadioGroup>
-        </FormItem>
         <FormItem label={'应用名称'} labelAlign={'top'}>
           <Input v-model={data.value.name} placeholder="请输入应用名称" />
         </FormItem>

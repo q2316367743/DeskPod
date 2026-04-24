@@ -1,6 +1,6 @@
 <template>
-  <t-avatar v-if="app.icon" :image="`file://${app.root}/${app.icon}`" />
-  <t-avatar v-else>
+  <t-avatar v-if="app.icon" :image="`file://${app.root}/${app.icon}`" size="48px" />
+  <t-avatar v-else size="48px">
     {{ app.name.charAt(0).toUpperCase() }}
   </t-avatar>
 </template>

@@ -1,4 +1,4 @@
-import { copyFile, rm, writeFile } from 'node:fs/promises'
+import { copyFile, readFile, rm, writeFile } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 import AdmZip from 'adm-zip'
 import { QuickApp, QuickAppCore } from '@common/types'
@@ -158,5 +158,12 @@ export class QuickManager {
     this.map.delete(id)
     // 删除桌面节点
     await desktopManager.removeNodesByQuickId(id)
+  }
+
+  async getHtml(id: string): Promise<string> {
+    const q = this.map.get(id)
+    if (!q) return Promise.reject(new Error(`快应用 ${id} 不存在`))
+    const path = join(q.root, q.entry)
+    return await readFile(path, 'utf-8')
   }
 }

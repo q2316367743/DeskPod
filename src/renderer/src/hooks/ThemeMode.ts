@@ -12,7 +12,7 @@ function isDarkColors(): boolean {
   return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
 }
 
-export const useColorMode = (): ColorModeResult => {
+export const useThemeMode = (): ColorModeResult => {
   const colorMode = useLocalStorage<ColorModeType>(LocalName.KEY_THEME, 'auto')
   const isDark = ref(isDarkColors())
 

@@ -24,6 +24,7 @@
             </div>
           </div>
         </t-tooltip>
+        <div class="dock-divider"></div>
         <t-tooltip content="回收站">
           <div ref="trashRef" class="disabled-btn">
             <div class="disabled-icon-wrapper">

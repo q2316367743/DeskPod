@@ -15,6 +15,10 @@ export type QuickAppFrom = 'ai' | 'html' | 'zip'
 
 export interface QuickAppCore {
   name: string
+
+  // 描述
+  description?: string
+
   /**
    * 入口文件
    */

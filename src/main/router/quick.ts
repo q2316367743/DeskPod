@@ -17,3 +17,10 @@ ipcMain.handle('/main/quick/upgrade', (_e, id, form) => {
 ipcMain.handle('/main/quick/uninstall', (_e, id) => {
   return quickManager.uninstall(id)
 })
+
+ipcMain.handle('/main/quick/html/get', (_e, id) => {
+  return quickManager.getHtml(id)
+})
+ipcMain.handle('/main/quick/getById', (_e, id) => {
+  return quickManager.getById(id)
+})

@@ -13,5 +13,11 @@ export const quickAPI = {
   },
   uninstall: (id: string) => {
     return ipcRenderer.invoke('/main/quick/uninstall', id)
+  },
+  getHtml: (id: string) => {
+    return ipcRenderer.invoke('/main/quick/html/get', id)
+  },
+  getById: (id: string) => {
+    return ipcRenderer.invoke('/main/quick/getById', id)
   }
 }

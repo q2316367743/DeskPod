@@ -6,6 +6,7 @@ import Components from 'unplugin-vue-components/vite'
 import { TDesignResolver } from '@tdesign-vue-next/auto-import-resolver'
 import UnoCSS from 'unocss/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 
 export default defineConfig({
   main: {
@@ -72,7 +73,12 @@ export default defineConfig({
           })
         ]
       }),
-      UnoCSS()
+      UnoCSS(),
+      typeof monacoEditorPlugin === 'function'
+        ? monacoEditorPlugin({})
+        : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          monacoEditorPlugin.default({})
     ],
     build: {
       rollupOptions: {

@@ -88,6 +88,8 @@ interface QuickAPI {
   install: (form: QuickAppCore) => Promise<void>
   upgrade: (id: string, form: QuickAppCore) => Promise<void>
   uninstall: (id: string) => Promise<void>
+  getHtml: (id: string) => Promise<string>
+  getById: (id: string) => Promise<QuickApp>
 }
 
 interface SettingAPI {
