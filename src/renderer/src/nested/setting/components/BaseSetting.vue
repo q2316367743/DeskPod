@@ -22,15 +22,12 @@
 
         <t-form-item v-if="form.mode === 'screen'" label="选择副屏" name="displayId">
           <div class="display-picker">
-            <t-radio-group
-              v-model="form.displayId"
-              @change="handleDisplayChange"
-            >
+            <t-radio-group v-model="form.displayId" @change="handleDisplayChange">
               <div
                 v-for="display in displays"
                 :key="display.id"
                 class="display-option"
-                :class="{ active: form.displayId === String(display.id) }"
+                :class="{ active: form.displayId === display.id }"
               >
                 <div class="display-info">
                   <t-radio :value="display.id">屏幕 {{ display.id }}</t-radio>
@@ -87,7 +84,10 @@ const form = reactive<Setting>({
   mode: 'screen',
   shortcutKey: '',
   theme: 'auto',
-  displayId: 0
+  displayId: 0,
+  backgroundImageLight: '',
+  backgroundImageDark: '',
+  models: []
 })
 
 const displays = ref<Array<DisplayInfo>>([])
@@ -98,7 +98,7 @@ onMounted(async () => {
   form.mode = setting.mode
   form.shortcutKey = setting.shortcutKey
   form.theme = setting.theme
-  form.displayId = setting.displayId || ''
+  form.displayId = setting.displayId || 0
 
   await loadDisplays()
 })
