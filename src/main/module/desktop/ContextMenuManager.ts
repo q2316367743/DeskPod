@@ -13,6 +13,8 @@ function openAppWrap(name: string, type: string, param: DesktopCreateParam) {
       type: 'builtin',
       id: '0',
       desktopId: '',
+      x: -1,
+      y: -1,
       row: -1,
       column: -1,
       name: name,
@@ -31,8 +33,8 @@ function openAppWrap(name: string, type: string, param: DesktopCreateParam) {
       type: type,
       desktopId: param.desktopId,
       parentId: param.parentId || '',
-      column: `${param.column}`,
-      row: `${param.row}`
+      x: `${param.nodeX}`,
+      y: `${param.nodeY}`
     }
   )
 }
@@ -54,8 +56,10 @@ function openFolderWidget(param: DesktopCreateParam) {
     parentId: param.parentId,
     sortIndex: 0,
     desktopId: param.desktopId,
-    row: param.row,
-    column: param.column,
+    y: param.nodeY,
+    x: param.nodeX,
+    row: 4,
+    column: 5,
     meta: {
       root: target,
       source: 'builtin',
@@ -97,8 +101,10 @@ export function createContextMenuByDesktop(param: DesktopCreateParam) {
               parentId: null,
               sortIndex: 0,
               desktopId: param.desktopId,
-              row: param.row,
-              column: param.column,
+              y: param.nodeY,
+              x: param.nodeX,
+              column: 4,
+              row: 5,
               meta: {
                 width: 4,
                 height: 6

@@ -18,13 +18,13 @@ export const useDesktopNodeStore = defineStore('desktop-node', () => {
 
   window.desktopAPI.onChange(init)
 
-  const move = async (nodeId: string, column: number, row: number, w?: number, h?: number) => {
+  const move = async (nodeId: string, x: number, y: number, w?: number, h?: number) => {
     for (const node of nodes.value) {
       if (node.id === nodeId) {
-        node.column = column
-        node.row = row
-        node.meta.width = w || node.meta.width
-        node.meta.height = h || node.meta.height
+        node.x = x
+        node.y = y
+        node.column = w || node.column
+        node.row = h || node.row
         await window.desktopAPI.updateNode(toRaw(node))
         await init()
         return
@@ -32,15 +32,15 @@ export const useDesktopNodeStore = defineStore('desktop-node', () => {
     }
   }
 
-  const drop = async (nodeId: string, parentId: string | null, column: number, row: number) => {
+  const drop = async (nodeId: string, parentId: string | null, x: number, y: number) => {
     for (const node of nodes.value) {
       if (node.id === nodeId) {
         if (!node.meta) {
           node.meta = {}
         }
         node.parentId = parentId
-        node.column = column
-        node.row = row
+        node.x = x
+        node.y = y
         await window.desktopAPI.updateNode(toRaw(node))
         await init()
         return

@@ -43,8 +43,10 @@ const handleSubmit = () => {
     parentId: params.get('parentId') || null,
     sortIndex: 0,
     desktopId: params.get('desktopId') || '',
-    row: Number(params.get('row')),
-    column: Number(params.get('column')),
+    x: Number(params.get('x')),
+    y: Number(params.get('y')),
+    column: 1,
+    row: 1,
     meta: {
       root: data.value.path
     }

@@ -34,8 +34,6 @@ import { MessageUtil } from '@/utils'
 const params = new URLSearchParams(location.search)
 
 const desktopId = params.get('desktopId') || ''
-const row = Number(params.get('row'))
-const column = Number(params.get('column'))
 
 const nodes = ref(new Array<DesktopNode>())
 
@@ -44,8 +42,8 @@ const handleChoose = (node: DesktopNode) => {
     .updateNode({
       ...toRaw(node),
       id: useSnowflake().nextId(),
-      column: column,
-      row: row
+      x: Number(params.get('x')),
+      y: Number(params.get('column'))
     })
     .then(() => {
       MessageUtil.success('成功添加小部件')

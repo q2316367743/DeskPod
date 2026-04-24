@@ -16,6 +16,8 @@ export async function createQuickWindow(node: DesktopNode): Promise<boolean> {
     icon: entity.icon ? join(entity.root, entity.icon) : undefined,
     width: node.meta?.width,
     height: node.meta?.height,
+    minWidth: node.meta?.minWidth,
+    minHeight: node.meta?.minHeight,
     webPreferences: {
       sandbox: true,
       webSecurity: false,

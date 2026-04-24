@@ -11,8 +11,10 @@ export function quickAppToDesktopNode(app: QuickApp, desktopId: string): Desktop
     parentId: null,
     sortIndex: 0,
     desktopId: desktopId,
-    row: 0,
-    column: 0,
+    x: 0,
+    y: 0,
+    row: 1,
+    column: 1,
     meta: {
       pluginId: app.id,
       root: app.root,
@@ -33,14 +35,14 @@ export function quickAppToWidgetNode(app: QuickApp, desktopId: string): DesktopN
     parentId: null,
     sortIndex: 0,
     desktopId: desktopId,
-    row: 0,
-    column: 0,
+    x: 0,
+    y: 0,
+    row: app.height,
+    column: app.width,
     meta: {
       pluginId: app.id,
       root: `file://${app.root}/${app.entry}`,
-      source: 'quick',
-      width: app.width,
-      height: app.height
+      source: 'quick'
     }
   }
 }

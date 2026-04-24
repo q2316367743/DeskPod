@@ -43,11 +43,11 @@ const props = defineProps({
     required: true
   }
 })
-const width = computed(() => `${(props.node.meta?.width || 1) * CELL_SIZE}px`)
-const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE - 8}px`)
+const width = computed(() => `${(props.node.column || 1) * CELL_SIZE}px`)
+const height = computed(() => `${(props.node.row || 1) * CELL_SIZE - 8}px`)
 const contentStyle = computed(() => ({
   borderRadius: props.node.meta.hiddenHeader ? '8px' : '0',
-  height: `${(props.node.meta?.height || 1) * CELL_SIZE - (props.node.meta.hiddenHeader ? 8 : 43)}px`,
+  height: `${(props.node.row || 1) * CELL_SIZE - (props.node.meta.hiddenHeader ? 8 : 43)}px`,
   overflow: 'hidden'
 }))
 </script>

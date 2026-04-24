@@ -71,10 +71,10 @@ export async function openApp(node: DesktopNode, query?: Record<string, string>)
           label: entity.main!.label,
           url: entity.main!.path,
           icon: entity.icon,
-          width: entity.main?.width,
-          height: entity.main?.height,
-          minHeight: entity.main?.minHeight,
-          minWidth: entity.main?.minWidth
+          width: node.meta?.width,
+          height: node.meta?.height,
+          minHeight: node.meta?.minHeight,
+          minWidth: node.meta?.minWidth
         },
         pluginId
       )

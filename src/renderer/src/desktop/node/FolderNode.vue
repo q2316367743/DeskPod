@@ -47,7 +47,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { DesktopNode, getNodeHeight, getNodeWidth } from '@common/types'
+import { DesktopNode } from '@common/types'
 import { CELL_SIZE } from '@common/global'
 import { EditIcon, MoreIcon } from 'tdesign-icons-vue-next'
 import { GridStack, GridStackWidget } from 'gridstack'
@@ -78,8 +78,8 @@ let grid: GridStack | undefined = undefined
 const nodeName = ref(props.node.name)
 const rename = ref(false)
 
-const width = computed(() => `${(props.node.meta?.width || 1) * CELL_SIZE}px`)
-const height = computed(() => `${(props.node.meta?.height || 1) * CELL_SIZE}px`)
+const width = computed(() => `${(props.node.column || 1) * CELL_SIZE}px`)
+const height = computed(() => `${(props.node.row || 1) * CELL_SIZE}px`)
 
 const handleRename = () => {
   if (props.node.name !== nodeName.value) {
@@ -127,10 +127,10 @@ const syncGridFromNodes = async () => {
     const gsNode = grid.engine.nodes.find((n) => n.id === `node-${item.id}`)
     const isWidget = item.type === 'widget' || item.type === 'folder'
     const options: Partial<GridStackWidget> = {
-      x: item.column,
-      y: item.row,
-      w: getNodeWidth(item),
-      h: getNodeHeight(item),
+      x: item.x,
+      y: item.y,
+      w: item.column,
+      h: item.row,
       noResize: !isWidget,
       noMove: false
     }
@@ -152,8 +152,8 @@ onMounted(async () => {
 
   grid = GridStack.init(
     {
-      column: props.node.meta?.width || 1,
-      row: props.node.meta?.height || 1,
+      column: props.node.column || 1,
+      row: props.node.row || 1,
       cellHeight: CELL_SIZE,
       acceptWidgets: true,
       margin: 0,

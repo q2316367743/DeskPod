@@ -24,8 +24,10 @@ export interface DesktopNode {
   // --- 多桌面支持 ---
   desktopId: string // 属于哪个桌面 (默认为 'desktop-1')
 
-  row: number // 第几行开始
-  column: number // 第几列开始
+  x: number // 距离桌面左边缘的距离
+  y: number // 距离桌面顶部的距离
+  row: number // 占几行
+  column: number // 占几列
 
   // --- 按需字段 (根据 type 不同而存在) ---
   meta: {
@@ -49,25 +51,12 @@ export interface DesktopNode {
     // 当 source === 'builtin' 时使用
     builtinId?: string // 内部标识符，如 'sys-clock', 'sys-cpu'
 
-    // 通用属性
     widgetId?: string // 小部件插件ID
+
+    // 如果打开窗口，通用属性
     width?: number // 小部件宽 (网格单位，如占 2 格)
     height?: number // 小部件高 (网格单位，如占 1 格)
     minWidth?: number
     minHeight?: number
   }
-}
-
-export const getNodeWidth = (node: DesktopNode): number => {
-  if (node.type === 'widget' || node.type === 'folder') {
-    return node.meta?.width || 1
-  }
-  return 1
-}
-
-export const getNodeHeight = (node: DesktopNode): number => {
-  if (node.type === 'widget' || node.type === 'folder') {
-    return node.meta?.height || 1
-  }
-  return 1
 }

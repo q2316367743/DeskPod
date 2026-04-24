@@ -14,11 +14,17 @@ export function pluginEntityToDesktopNode(
     parentId: null,
     sortIndex: 0,
     desktopId: desktopId,
-    row: 0,
-    column: 0,
+    x: 0,
+    y: 0,
+    row: 1,
+    column: 1,
     meta: {
       pluginId: plugin.identifier,
-      root: plugin.root
+      root: plugin.root,
+      width: plugin.main?.width,
+      height: plugin.main?.height,
+      minWidth: plugin.main?.minWidth,
+      minHeight: plugin.main?.minHeight
     }
   }
 }
@@ -40,15 +46,15 @@ export function pluginEntityToWidgetNode(
         parentId: null,
         sortIndex: 0,
         desktopId: desktopId,
-        row: 0,
-        column: 0,
+        x: 0,
+        y: 0,
+        row: layout.rows,
+        column: layout.cols,
         meta: {
           pluginId: plugin.identifier,
           root: `file://${plugin.root}/runtime/${widget.path}`,
           label: widget.label,
-          source: 'plugin',
-          height: layout.rows,
-          width: layout.cols
+          source: 'plugin'
         }
       } as DesktopNode
     })

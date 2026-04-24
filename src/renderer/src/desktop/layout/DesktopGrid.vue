@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { DesktopNode, getNodeHeight, getNodeWidth } from '@common/types'
+import { DesktopNode } from '@common/types'
 import { GridStack, GridStackWidget } from 'gridstack'
 import 'gridstack/dist/gridstack.css'
 import 'gridstack/dist/gridstack.min.css'
@@ -98,10 +98,10 @@ const syncGridFromNodes = async () => {
     const gsNode = grid.engine.nodes.find((n) => n.id === `node-${item.id}`)
     const allowResize = item.type === 'widget' || item.type === 'folder'
     const options: Partial<GridStackWidget> = {
-      x: item.column,
-      y: item.row,
-      w: getNodeWidth(item),
-      h: getNodeHeight(item),
+      x: item.x,
+      y: item.y,
+      w: item.column,
+      h: item.row,
       noResize: !allowResize,
       noMove: false
     }
