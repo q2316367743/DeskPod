@@ -39,7 +39,8 @@ const handleClick = (node: DesktopNode) => {
   justify-content: center;
   width: 80px;
   height: 80px;
-  padding: 8px;
+  padding: 4px;
+  margin: 4px;
   border-radius: var(--fluent-radius-card);
   cursor: pointer;
   transition: all var(--fluent-transition-fast);
