@@ -4,7 +4,8 @@ import { copyFile, mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/p
 import { extname, join } from 'node:path'
 import { APP_DATA_ASSET_DIR, APP_DATA_DB_DIR } from '$/global/Constant'
 import { useSnowflake } from '@common/utils'
-import { handleMainWindow } from '$/module/desktop/MainWindow'
+import { getMainWindow, handleMainWindow } from '$/module/desktop'
+import { SYSTEM_EVENT } from '@common/global'
 
 export class SettingManager {
   private defaultValue = defaultSetting()
@@ -29,6 +30,8 @@ export class SettingManager {
       // 处理主窗口
       handleMainWindow()
     }
+    getMainWindow()?.webContents.send(SYSTEM_EVENT.SETTING_CHANGE, key, value)
+    return true
   }
 
   // --------------------------- AI Model ---------------------------

@@ -22,11 +22,6 @@ export const routes: Array<RouteRecordRaw> = [
     name: '编辑工具',
     path: '/edit/:id',
     component: () => import('@/nested/quick/pages/edit/index.vue')
-  },
-  {
-    name: '聊天工具',
-    path: '/chat',
-    component: () => import('@/nested/quick/pages/chat/index.vue')
   }
 ]
 

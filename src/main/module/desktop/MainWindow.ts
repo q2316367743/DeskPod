@@ -12,9 +12,8 @@ export const getMainWindow = () => mainWindow
 export function handleMainWindow() {
   const mainWindow = getMainWindow()
   if (!mainWindow) return
-  const mode = settingManager.get('mode')
   const displayId = settingManager.get('displayId')
-  if (mode === 'screen' && displayId) {
+  if (displayId) {
     const displays = screen.getAllDisplays()
     for (const display of displays) {
       if (display.id === displayId) {

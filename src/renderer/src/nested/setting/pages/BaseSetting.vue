@@ -9,18 +9,7 @@
           />
         </t-form-item>
 
-        <t-form-item label="运行模式" name="mode">
-          <t-radio-group
-            v-model="form.mode"
-            variant="default-filled"
-            @change="handleChange('mode', $event as string)"
-          >
-            <t-radio-button value="screen">副屏模式</t-radio-button>
-            <t-radio-button value="launch">启动器模式</t-radio-button>
-          </t-radio-group>
-        </t-form-item>
-
-        <t-form-item v-if="form.mode === 'screen'" label="选择副屏" name="displayId">
+        <t-form-item label="选择副屏" name="displayId">
           <div class="display-picker">
             <t-radio-group v-model="form.displayId" @change="handleDisplayChange">
               <div
@@ -35,20 +24,6 @@
                 </div>
               </div>
             </t-radio-group>
-          </div>
-        </t-form-item>
-
-        <t-form-item v-else-if="form.mode === 'launch'" label="快捷键" name="shortcutKey">
-          <div class="flex items-center gap-8px">
-            <t-input
-              v-model="form.shortcutKey"
-              placeholder="请按快捷键组合"
-              class="w-240px"
-              readonly
-            />
-            <t-tag theme="primary" variant="light">
-              {{ form.shortcutKey || '未设置' }}
-            </t-tag>
           </div>
         </t-form-item>
 
@@ -73,16 +48,22 @@ import { Setting } from '@common/types'
 
 interface DisplayInfo {
   id: number
-  bounds: undefined
-  size: undefined
+  bounds: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
+  size: {
+    height: number
+    width: number
+  }
   scaleFactor: number
   label: string
 }
 
 const form = reactive<Setting>({
   autoStart: false,
-  mode: 'screen',
-  shortcutKey: '',
   theme: 'auto',
   displayId: 0,
   backgroundImageLight: '',
@@ -95,8 +76,6 @@ const displays = ref<Array<DisplayInfo>>([])
 onMounted(async () => {
   const setting = await window.settingAPI.all()
   form.autoStart = setting.autoStart
-  form.mode = setting.mode
-  form.shortcutKey = setting.shortcutKey
   form.theme = setting.theme
   form.displayId = setting.displayId || 0
 
