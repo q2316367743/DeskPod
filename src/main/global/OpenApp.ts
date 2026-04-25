@@ -5,6 +5,7 @@ import { pluginManager } from '$/global/BeanFactory'
 import { createQuickWindow } from '$/module/quick'
 import { logError } from '$/lib/log'
 import { openBuiltinApp } from '$/module/desktop'
+import { openCommandApp, openScriptApp } from '$/module/native'
 import { PARTITION } from '@common/global'
 
 const openLinkApp = async (node: DesktopNode): Promise<boolean> => {
@@ -83,6 +84,10 @@ export async function openApp(node: DesktopNode, query?: Record<string, string>)
     case 'widget':
       logError('小部件不支持打开')
       return false
+    case 'command':
+      return openCommandApp(node)
+    case 'script':
+      return openScriptApp(node)
     default:
       logError('Unknown node type: ' + node.type)
       return false

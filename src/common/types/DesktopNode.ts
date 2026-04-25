@@ -9,6 +9,8 @@ export type DesktopNodeType =
   | 'app' // APP
   | 'file' // 本地文件
   | 'directory' // 本地目录
+  | 'command' // 命令
+  | 'script' // 脚本
 
 // 统一的节点接口定义 (TypeScript 描述，便于理解结构)
 export interface DesktopNode {
@@ -38,7 +40,12 @@ export interface DesktopNode {
 
     // type === 'link' 时
     url?: string // 网站地址
-    openWith?: 'default' | 'inner' // 打开方式，默认浏览器还是内置浏览器
+
+    /**
+     * 打开方式，默认浏览器还是内置浏览器
+     * - 当是 link 是：'default' | 'inner'
+     */
+    openWith?: string
 
     // type === 'plugin' 或 type ===  'widget' && source === 'extension' 或 type === 'quick' 时
     pluginId?: string // 插件的唯一ID (如 'sys-settings')
@@ -46,6 +53,7 @@ export interface DesktopNode {
 
     // type === 'widget' 时
     source?: 'builtin' | 'quick' | 'plugin' // 【新增】区分来源
+
     hiddenHeader?: boolean // 隐藏标题
 
     // 当 source === 'builtin' 时使用

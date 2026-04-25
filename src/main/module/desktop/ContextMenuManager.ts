@@ -7,7 +7,7 @@ import { getMainWindow } from '$/module/desktop'
 import { useSnowflake } from '@common/utils'
 import { DesktopCreateParam } from '@common/params'
 
-function openAppWrap(name: string, type: string, param: DesktopCreateParam) {
+function openAppWrap(name: string, type: string, param: Partial<DesktopCreateParam>) {
   return openApp(
     {
       type: 'builtin',
@@ -20,21 +20,24 @@ function openAppWrap(name: string, type: string, param: DesktopCreateParam) {
       name: name,
       icon: '',
       sortIndex: 0,
-      parentId: param.parentId,
+      parentId: param.parentId || null,
       meta: {
         builtinId: BUILTIN_KEY.ADD,
-        width: 832,
-        height: 616,
-        minWidth: 832,
-        minHeight: 616
+        width: 850,
+        height: 620,
+        minWidth: 850,
+        minHeight: 620
       }
     },
     {
       type: type,
-      desktopId: param.desktopId,
+      desktopId: param.desktopId || '',
       parentId: param.parentId || '',
       x: `${param.nodeX}`,
-      y: `${param.nodeY}`
+      y: `${param.nodeY}`,
+      // 为了更新
+      update: param.update ? '1' : '0',
+      nodeId: param.nodeId || ''
     }
   )
 }
@@ -135,6 +138,18 @@ export function createContextMenuByNode(nodeId: string, x: number, y: number) {
       label: '打开',
       click: () => {
         openApp(node)
+      }
+    })
+  }
+  if (node.type === 'link' || node.type === 'command' || node.type === 'script') {
+    // 这三个可以编辑
+    menus.push({
+      label: '编辑',
+      click: () => {
+        let type = '/link'
+        if (node.type === 'command') type = '/native/command'
+        else if (node.type === 'script') type = '/native/script'
+        openAppWrap('添加应用', type, { update: true, nodeId: node.id })
       }
     })
   }

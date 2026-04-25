@@ -14,6 +14,8 @@
         <t-submenu title="本地" value="/native">
           <t-menu-item value="/native/file">文件</t-menu-item>
           <t-menu-item value="/native/folder">文件夹</t-menu-item>
+          <t-menu-item value="/native/command">命令</t-menu-item>
+          <t-menu-item value="/native/script">脚本</t-menu-item>
         </t-submenu>
       </t-head-menu>
     </t-header>

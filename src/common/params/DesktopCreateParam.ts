@@ -5,4 +5,7 @@ export interface DesktopCreateParam {
   nodeX: number
   nodeY: number
   parentId: string | null
+
+  nodeId: string
+  update?: boolean
 }

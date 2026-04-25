@@ -26,6 +26,7 @@ export const openBuiltinApp = async (
     minHeight: node.meta?.minHeight || 600,
     show: true,
     autoHideMenuBar: true,
+    fullscreen: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
