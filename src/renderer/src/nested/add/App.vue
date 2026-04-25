@@ -28,6 +28,8 @@
       <add-native-app v-else-if="page === '/native/app'" />
       <add-native-file v-else-if="page === '/native/file'" />
       <add-native-folder v-else-if="page === '/native/folder'" />
+      <add-native-command v-else-if="page === '/native/command'" />
+      <add-native-script v-else-if="page === '/native/script'" />
     </t-content>
   </t-layout>
 </template>
@@ -40,6 +42,8 @@ import AddWidgetQuick from '@/nested/add/components/AddWidgetQuick.vue'
 import AddWidgetPlugin from '@/nested/add/components/AddWidgetPlugin.vue'
 import AddNativeFile from '@/nested/add/components/AddNativeFile.vue'
 import AddNativeFolder from '@/nested/add/components/AddNativeFolder.vue'
+import AddNativeCommand from '@/nested/add/components/AddNativeCommand.vue'
+import AddNativeScript from '@/nested/add/components/AddNativeScript.vue'
 
 const params = new URLSearchParams(location.search)
 const page = ref(params.get('type') || '/native/app')
