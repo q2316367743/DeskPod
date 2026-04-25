@@ -61,6 +61,8 @@ interface OpenDialogSyncOptions {
 
 interface SupportAPI {
   isWindows: () => boolean
+  isMacOS: () => boolean
+  isLinux: () => boolean
   path: {
     join: (...path: Array<string>) => string
     basename: (path: string) => string

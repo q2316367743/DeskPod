@@ -7,9 +7,9 @@ import { FileItemView } from '@common/views'
 import { logAPI } from '~/provide/log'
 
 export const supportAPI = {
-  isWindows: () => {
-    return platform() === 'win32'
-  },
+  isWindows: () => platform() === 'win32',
+  isMacOS: () => platform() === 'darwin',
+  isLinux: () => platform() === 'linux',
   path: {
     join,
     basename,
