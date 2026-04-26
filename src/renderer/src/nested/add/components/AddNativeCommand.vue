@@ -84,7 +84,7 @@ watch(
     } else if (val === 'sh') {
       data.value.openWith = '/bin/sh'
     } else if (val === 'zsh') {
-      data.value.openWith = '/usr/bin/zsh'
+      data.value.openWith = '/bin/zsh'
     } else if (val === 'bash') {
       data.value.openWith = '/bin/bash'
     } else {
