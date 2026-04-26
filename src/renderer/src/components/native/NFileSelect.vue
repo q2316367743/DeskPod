@@ -64,6 +64,7 @@ const handleSelect = () => {
     .dialog.showOpenDialogSync(
       toRaw({
         ...props,
+        defaultPath: props.defaultPath || data.value,
         properties: [...(props.properties || []), props.directory ? 'openDirectory' : 'openFile']
       }) as never
     )

@@ -41,9 +41,13 @@ export interface DesktopNode {
     // type === 'link' 时
     url?: string // 网站地址
 
+    // type === 'command' 时
+    command?: string // 命令
+
     /**
      * 打开方式，默认浏览器还是内置浏览器
-     * - 当是 link 是：'default' | 'inner'
+     * - 当是 link 时：'default' | 'inner'
+     * - 当 type === 'script' 时，此处代表了执行的程序
      */
     openWith?: string
 
@@ -51,8 +55,12 @@ export interface DesktopNode {
     pluginId?: string // 插件的唯一ID (如 'sys-settings')
     label?: string // 插件的 label
 
-    // type === 'widget' 时
-    source?: 'builtin' | 'quick' | 'plugin' // 【新增】区分来源
+    /**
+     * 来源
+     * - 当 type === 'widget' 时，source 可能的值：'builtin' | 'quick' | 'plugin'
+     * - 当 type === 'script' 时，source 代表了脚本的类型
+     */
+    source?: string
 
     hiddenHeader?: boolean // 隐藏标题
 

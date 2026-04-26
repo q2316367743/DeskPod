@@ -77,16 +77,33 @@ export function createContextMenuByDesktop(param: DesktopCreateParam) {
   const menus: Parameters<typeof Menu.buildFromTemplate>[0] = []
   menus.push(
     {
+      label: '添加链接',
+      click: () => openAppWrap('添加链接', '/link', param)
+    },
+    {
       label: '添加应用',
       click: () => openAppWrap('添加应用', '/native/app', param)
     },
     {
-      label: '添加文件',
-      click: () => openAppWrap('添加文件', '/native/file', param)
-    },
-    {
-      label: '添加文件夹',
-      click: () => openAppWrap('添加文件夹', '/native/folder', param)
+      label: '添加本地功能',
+      submenu: [
+        {
+          label: '添加文件',
+          click: () => openAppWrap('添加文件', '/native/file', param)
+        },
+        {
+          label: '添加文件夹',
+          click: () => openAppWrap('添加文件夹', '/native/folder', param)
+        },
+        {
+          label: '添加命令',
+          click: () => openAppWrap('添加命令', '/native/command', param)
+        },
+        {
+          label: '添加脚本',
+          click: () => openAppWrap('添加脚本', '/native/script', param)
+        }
+      ]
     }
   )
   if (!param.parentId && param.desktopId !== 'dock') {

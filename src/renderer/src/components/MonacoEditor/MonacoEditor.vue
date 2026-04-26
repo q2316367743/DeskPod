@@ -87,14 +87,12 @@ watch(
 .monaco-editor {
   width: 100%;
   height: v-bind(height);
-  overflow: hidden;
   border: 1px solid var(--td-border-level-1-color);
   border-radius: var(--td-radius-medium);
 
   .monaco-editor-container {
     width: 100%;
     height: v-bind(height);
-    overflow: hidden;
   }
 }
 </style>

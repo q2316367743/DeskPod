@@ -2,25 +2,30 @@
   <div class="m-8px">
     <t-card size="small">
       <t-form :data="data">
+        <t-form-item label="命令名称" label-align="top">
+          <t-input v-model="data.name" placeholder="输入命令名称" />
+        </t-form-item>
         <t-form-item label="Shell程序" label-align="top">
-          <t-select v-model="data.openWith" :options="shellOptions" placeholder="选择Shell程序" />
+          <t-select v-model="data.source" :options="sourceOptions" placeholder="选择Shell程序" />
         </t-form-item>
         <t-form-item label="自定义Shell路径" label-align="top">
-          <div class="flex gap-8px">
-            <t-input v-model="data.customShell" placeholder="或输入自定义Shell路径" />
-            <t-button variant="outline" @click="handleSelectShell">选择</t-button>
-          </div>
+          <n-file-select v-model="data.openWith" placeholder="自定义Shell路径" label="选择" />
         </t-form-item>
         <t-form-item label="命令内容" label-align="top">
           <MonacoEditor
             v-model="data.command"
-            language="plaintext"
+            language="sh"
             height="200px"
             placeholder="输入要执行的命令..."
           />
         </t-form-item>
-        <t-form-item label="命令名称" label-align="top">
-          <t-input v-model="data.name" placeholder="输入命令名称" />
+        <t-form-item label="执行目录" label-align="top">
+          <n-file-select
+            v-model="data.root"
+            placeholder="请选择命令执行目录"
+            directory
+            label="选择"
+          />
         </t-form-item>
         <t-form-item label-align="top">
           <t-space size="small">
@@ -35,58 +40,61 @@
 <script lang="ts" setup>
 import { useSnowflake } from '@common/utils'
 import MonacoEditor from '@/components/MonacoEditor/MonacoEditor.vue'
+import { CommonOption } from '@common/types'
 
 const data = ref({
   name: '',
   command: '',
+  source: '',
   openWith: '',
-  customShell: ''
+  root: ''
 })
 
 const isWindows = computed(() => window.supportAPI.isWindows())
 const isMacOS = computed(() => window.supportAPI.isMacOS())
 const isLinux = computed(() => window.supportAPI.isLinux())
 
-const shellOptions = computed(() => {
-  const options: Array<{ label: string; value: string }> = []
+const sourceOptions = computed(() => {
+  const options: Array<CommonOption> = []
   if (isWindows.value) {
-    options.push({ label: 'cmd.exe', value: 'cmd.exe' })
-    options.push({ label: 'PowerShell', value: 'powershell.exe' })
+    options.push({ label: 'cmd', value: 'cmd' })
+    options.push({ label: 'PowerShell', value: 'ps1' })
   } else if (isMacOS.value) {
-    options.push({ label: 'zsh', value: '/bin/zsh' })
-    options.push({ label: 'bash', value: '/bin/bash' })
-    options.push({ label: 'sh', value: '/bin/sh' })
+    options.push({ label: 'zsh', value: 'zsh' })
   } else if (isLinux.value) {
-    options.push({ label: 'bash', value: '/bin/bash' })
-    options.push({ label: 'sh', value: '/bin/sh' })
-    options.push({ label: 'zsh', value: '/usr/bin/zsh' })
+    options.push({ label: 'sh', value: 'sh' })
+    options.push({ label: 'bash', value: 'bash' })
   }
+  // 公共的跨平台脚本
+  options.push({ label: 'nodejs 脚本', value: '}' })
+  options.push({ label: 'python 脚本', value: 'python' })
+  options.push({ label: '自定义', value: 'custom' })
   return options
 })
 
 watch(
-  () => data.value.openWith,
+  () => data.value.source,
   (val) => {
-    if (val) data.value.customShell = val
+    if (val === 'cmd') {
+      data.value.openWith = 'cmd.exe'
+    } else if (val === 'ps1') {
+      data.value.openWith = 'powershell.exe'
+    } else if (val === 'osascript') {
+      data.value.openWith = 'osascript'
+    } else if (val === 'sh') {
+      data.value.openWith = '/bin/sh'
+    } else if (val === 'zsh') {
+      data.value.openWith = '/usr/bin/zsh'
+    } else if (val === 'bash') {
+      data.value.openWith = '/bin/bash'
+    } else {
+      data.value.openWith = ''
+    }
   }
 )
 
-const handleSelectShell = () => {
-  window.supportAPI.dialog
-    .showOpenDialogSync({
-      properties: ['openFile']
-    })
-    .then((result) => {
-      if (result?.[0]) {
-        data.value.customShell = result[0]
-      }
-    })
-}
-
 const handleSubmit = () => {
   const params = new URLSearchParams(location.search)
-  const executor = data.value.customShell || data.value.openWith
-  if (!executor) return
 
   window.desktopAPI.updateNode({
     id: useSnowflake().nextId(),
@@ -101,10 +109,22 @@ const handleSubmit = () => {
     column: 1,
     row: 1,
     meta: {
-      root: data.value.command,
-      openWith: executor
+      root: data.value.root,
+      openWith: data.value.openWith,
+      source: data.value.source,
+      command: data.value.command
     }
   })
 }
+
+onMounted(() => {
+  if (isWindows.value) {
+    data.value.source = 'cmd'
+  } else if (isMacOS.value) {
+    data.value.source = 'zsh'
+  } else if (isLinux.value) {
+    data.value.source = 'sh'
+  }
+})
 </script>
 <style scoped lang="less"></style>
