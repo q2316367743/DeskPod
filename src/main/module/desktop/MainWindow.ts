@@ -100,7 +100,11 @@ export function createTray() {
     {
       label: '退出',
       click: () => {
-        mainWindow?.destroy()
+        // 先关闭全部窗口
+        BrowserWindow.getAllWindows().forEach((window) => {
+          window.destroy()
+        })
+        // 再退出
         app.quit()
       }
     }

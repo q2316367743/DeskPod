@@ -45,4 +45,7 @@ defineProps({
   border-radius: var(--td-radius-medium);
   overflow: hidden;
 }
+:deep(.t-image__wrapper) {
+  background: transparent;
+}
 </style>
