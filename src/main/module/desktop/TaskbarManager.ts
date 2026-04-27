@@ -57,6 +57,7 @@ export class TaskbarManager {
       const o = this.map.get(id)
       if (!o) return
       o.visible = false
+      o.bw.setSkipTaskbar(true)
       this.onChange()
     })
     // 新增事件
