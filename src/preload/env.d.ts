@@ -25,6 +25,21 @@ interface DesktopAPI {
   nodeAppList: () => Promise<Array<{ id: string; name: string; path: string; icon: string }>>
 }
 
+interface TaskbarView {
+  id: string
+  name: string
+  icon: string
+  type: 'link' | 'quick' | 'plugin' | 'builtin'
+  visible: boolean
+}
+
+interface TaskbarAPI {
+  list: () => Promise<Array<TaskbarView>>
+  toggle: (id: string) => Promise<void>
+  close: (id: string) => Promise<void>
+  onChange: (callback: () => void) => () => void
+}
+
 interface PluginAPI {
   list: () => Promise<Array<PluginEntityWrap>>
   verify(path: string): Promise<PluginVerifyResult>
@@ -145,5 +160,6 @@ global {
     quickAPI: QuickAPI
     settingAPI: SettingAPI
     logAPI: LogAPI
+    taskbarAPI: TaskbarAPI
   }
 }

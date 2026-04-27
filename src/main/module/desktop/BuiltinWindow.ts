@@ -3,6 +3,8 @@ import { BrowserWindow } from 'electron'
 import { is } from '@electron-toolkit/utils'
 import { join } from 'node:path'
 import { PARTITION } from '@common/global'
+import ews from 'electron-window-state'
+import { taskbarManager } from '$/global/BeanFactory'
 
 const builtinWindowMap = new Map<string, BrowserWindow>()
 
@@ -18,15 +20,22 @@ export const openBuiltinApp = async (
     return true
   }
 
+  const bwEws = ews({
+    defaultHeight: node.meta.height,
+    defaultWidth: node.meta.width
+  })
   const bw = new BrowserWindow({
     title: node.name,
-    width: node.meta?.width || 800,
-    height: node.meta?.height || 600,
-    minWidth: node.meta?.minWidth || 800,
-    minHeight: node.meta?.minHeight || 600,
+    x: bwEws.x,
+    y: bwEws.y,
+    width: bwEws.width,
+    height: bwEws.height,
+    fullscreen: bwEws.isFullScreen,
+    minWidth: node.meta.minWidth || 800,
+    minHeight: node.meta.minHeight || 600,
+    skipTaskbar: true,
     show: true,
     autoHideMenuBar: true,
-    fullscreen: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
@@ -34,6 +43,8 @@ export const openBuiltinApp = async (
       partition: PARTITION.BUILTIN
     }
   })
+  bwEws.manage(bw)
+  taskbarManager.manage({ bw, icon: node.meta.builtinId || '', name: node.name, type: 'builtin' })
   bw.on('close', () => {
     builtinWindowMap.delete(builtinId)
   })

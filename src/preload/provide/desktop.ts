@@ -7,6 +7,9 @@ import { DesktopCreateParam } from '@common/params'
 export const desktopAPI = {
   onChange: (callback: () => void) => {
     ipcRenderer.on(SYSTEM_EVENT.DESKTOP_CHANGE, callback)
+    return () => {
+      ipcRenderer.off(SYSTEM_EVENT.DESKTOP_CHANGE, callback)
+    }
   },
   // 获取桌面节点树
   getTree: (desktopId?: string): Promise<DesktopNode[]> => {

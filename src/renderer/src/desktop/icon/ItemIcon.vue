@@ -1,25 +1,40 @@
 <template>
-  <div class="item-icon">
-    <fd-icon v-if="node.icon.startsWith('icon:')" :alt="node.name" :icon="node.icon.substring(5)" />
-    <t-image v-else-if="node.icon.startsWith('file:')" :src="node.icon" class="w-48px h-48px">
+  <div class="item-icon" :style="{ width: `${size}px`, height: `${size}px` }">
+    <fd-icon v-if="icon.startsWith('icon:')" :alt="name" :icon="icon.substring(5)" />
+    <t-image
+      v-else-if="icon.startsWith('file:')"
+      :src="icon"
+      :style="{ width: `${size}px`, height: `${size}px` }"
+    >
       <template #error>
-        <t-avatar shape="round" size="48px">{{ node.name.charAt(0).toUpperCase() }}</t-avatar>
+        <t-avatar shape="round" size="48px">{{ name.charAt(0).toUpperCase() }}</t-avatar>
       </template>
     </t-image>
-    <t-image v-else-if="node.icon.startsWith('http')" :src="node.icon" class="w-48px h-48px">
+    <t-image
+      v-else-if="icon.startsWith('http')"
+      :src="icon"
+      :style="{ width: `${size}px`, height: `${size}px` }"
+    >
       <template #error>
-        <t-avatar shape="round" size="48px">{{ node.name.charAt(0).toUpperCase() }}</t-avatar>
+        <t-avatar shape="round" size="48px">{{ name.charAt(0).toUpperCase() }}</t-avatar>
       </template>
     </t-image>
-    <t-avatar v-else shape="round" size="48px">{{ node.name.charAt(0).toUpperCase() }}</t-avatar>
+    <t-avatar v-else shape="round" size="48px">{{ name.charAt(0).toUpperCase() }}</t-avatar>
   </div>
 </template>
 <script lang="ts" setup>
-import { DesktopNode } from '@common/types'
 defineProps({
-  node: {
-    type: Object as PropType<DesktopNode>,
+  icon: {
+    type: String,
+    default: ''
+  },
+  name: {
+    type: String,
     required: true
+  },
+  size: {
+    type: Number,
+    default: 48
   }
 })
 </script>

@@ -12,6 +12,52 @@ export type DesktopNodeType =
   | 'command' // 命令
   | 'script' // 脚本
 
+export interface DesktopNodeMeta {
+  root?: string // 各类类型的根目录
+
+  // type === 'app' 时
+  args?: string[] // 启动参数
+
+  // type === 'link' 时
+  url?: string // 网站地址
+
+  // type === 'command' 时
+  command?: string // 命令
+
+  /**
+   * 打开方式，默认浏览器还是内置浏览器
+   * - 当是 link 时：'default' | 'inner'
+   * - 当 type === 'script' 时，此处代表了执行的程序
+   */
+  openWith?: string
+
+  // type === 'plugin' 或 type ===  'widget' && source === 'extension' 或 type === 'quick' 时
+  pluginId?: string // 插件的唯一ID (如 'sys-settings')
+  label?: string // 插件的 label
+
+  /**
+   * 来源
+   * - 当 type === 'widget' 时，source 可能的值：'builtin' | 'quick' | 'plugin'
+   * - 当 type === 'script' 时，source 代表了脚本的类型
+   */
+  source?: string
+
+  hiddenHeader?: boolean // 隐藏标题
+
+  // 当 source === 'builtin' 时使用
+  builtinId?: string // 内部标识符，如 'sys-clock', 'sys-cpu'
+
+  widgetId?: string // 小部件插件ID
+
+  // 如果打开窗口，通用属性
+  width?: number // 小部件宽 (网格单位，如占 2 格)
+  height?: number // 小部件高 (网格单位，如占 1 格)
+  minWidth?: number
+  minHeight?: number
+  // 标题栏样式
+  titleBarStyle?: 'default' | 'hidden' | 'hiddenInset' | 'customButtonsOnHover'
+}
+
 // 统一的节点接口定义 (TypeScript 描述，便于理解结构)
 export interface DesktopNode {
   id: string // 唯一标识 (uuid)
@@ -32,47 +78,5 @@ export interface DesktopNode {
   column: number // 占几列
 
   // --- 按需字段 (根据 type 不同而存在) ---
-  meta: {
-    root?: string // 各类类型的根目录
-
-    // type === 'app' 时
-    args?: string[] // 启动参数
-
-    // type === 'link' 时
-    url?: string // 网站地址
-
-    // type === 'command' 时
-    command?: string // 命令
-
-    /**
-     * 打开方式，默认浏览器还是内置浏览器
-     * - 当是 link 时：'default' | 'inner'
-     * - 当 type === 'script' 时，此处代表了执行的程序
-     */
-    openWith?: string
-
-    // type === 'plugin' 或 type ===  'widget' && source === 'extension' 或 type === 'quick' 时
-    pluginId?: string // 插件的唯一ID (如 'sys-settings')
-    label?: string // 插件的 label
-
-    /**
-     * 来源
-     * - 当 type === 'widget' 时，source 可能的值：'builtin' | 'quick' | 'plugin'
-     * - 当 type === 'script' 时，source 代表了脚本的类型
-     */
-    source?: string
-
-    hiddenHeader?: boolean // 隐藏标题
-
-    // 当 source === 'builtin' 时使用
-    builtinId?: string // 内部标识符，如 'sys-clock', 'sys-cpu'
-
-    widgetId?: string // 小部件插件ID
-
-    // 如果打开窗口，通用属性
-    width?: number // 小部件宽 (网格单位，如占 2 格)
-    height?: number // 小部件高 (网格单位，如占 1 格)
-    minWidth?: number
-    minHeight?: number
-  }
+  meta: DesktopNodeMeta
 }

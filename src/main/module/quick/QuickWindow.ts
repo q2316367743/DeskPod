@@ -1,7 +1,8 @@
 import { BrowserWindow } from 'electron'
+import ews from 'electron-window-state'
 import { join } from 'node:path'
 import { DesktopNode } from '@common/types'
-import { quickManager } from '$/global/BeanFactory'
+import { quickManager, taskbarManager } from '$/global/BeanFactory'
 import { logError } from '$/lib/log'
 import { PARTITION } from '@common/global'
 
@@ -11,13 +12,21 @@ export async function createQuickWindow(node: DesktopNode): Promise<boolean> {
   const quickId = node.meta!.pluginId!
   const entity = quickManager.getById(quickId)
   if (!entity) return false
+  const bwEws = ews({
+    defaultHeight: node.meta?.height,
+    defaultWidth: node.meta?.width
+  })
   const bw = new BrowserWindow({
     title: node.name,
     icon: entity.icon ? join(entity.root, entity.icon) : undefined,
-    width: node.meta?.width,
-    height: node.meta?.height,
+    x: bwEws.x,
+    y: bwEws.y,
+    width: bwEws.width,
+    height: bwEws.height,
+    fullscreen: bwEws.isFullScreen,
     minWidth: node.meta?.minWidth,
     minHeight: node.meta?.minHeight,
+    skipTaskbar: true,
     webPreferences: {
       sandbox: true,
       webSecurity: false,
@@ -25,6 +34,8 @@ export async function createQuickWindow(node: DesktopNode): Promise<boolean> {
       partition: PARTITION.QUICK(quickId)
     }
   })
+  bwEws.manage(bw)
+  taskbarManager.manage({ bw, type: 'quick', icon: node.icon, name: node.name })
   await bw.loadFile(join(entity.root, entity.entry))
   const map = quickMap.get(quickId)
   if (map) {

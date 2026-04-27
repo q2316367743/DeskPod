@@ -41,6 +41,7 @@ export function createMainWindow() {
     minWidth: 900,
     minHeight: 670,
     show: false,
+    skipTaskbar: true,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     titleBarStyle: 'hidden',

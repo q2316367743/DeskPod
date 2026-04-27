@@ -1,5 +1,5 @@
 import { contextBridge } from 'electron'
-import { desktopAPI, pluginAPI, supportAPI, quickAPI, settingAPI, logAPI } from '~/provide'
+import { desktopAPI, pluginAPI, supportAPI, quickAPI, settingAPI, logAPI, taskbarAPI } from '~/provide'
 
 // 暴露到渲染进程
 if (process.contextIsolated) {
@@ -10,6 +10,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('quickAPI', quickAPI)
     contextBridge.exposeInMainWorld('settingAPI', settingAPI)
     contextBridge.exposeInMainWorld('logAPI', logAPI)
+    contextBridge.exposeInMainWorld('taskbarAPI', taskbarAPI)
   } catch (error) {
     console.error(error)
   }
@@ -20,6 +21,7 @@ if (process.contextIsolated) {
   window.quickAPI = quickAPI
   window.settingAPI = settingAPI
   window.logAPI = logAPI
+  window.taskbarAPI = taskbarAPI
 }
 
 // 重新导出 electronAPI 供其他模块使用

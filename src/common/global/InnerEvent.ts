@@ -19,5 +19,7 @@ export enum TauriEvent {
 
 export enum DeskPodEvent {
   // 小部件菜单点击
-  WIDGET_MENU_CLICK = 'desktop://widget/menu/click'
+  WIDGET_MENU_CLICK = 'desktop://widget/menu/click',
+  // 任务栏变化
+  TASKBAR_CHANGED = 'desktop://taskbar/changed'
 }

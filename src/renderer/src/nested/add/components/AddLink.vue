@@ -17,7 +17,7 @@
             <t-radio value="inner">内置窗口</t-radio>
           </t-radio-group>
         </t-form-item>
-        <t-row v-if="data.openWith === 'inner'">
+        <t-row v-if="data.openWith === 'inner'" :gutter="[16, 16]">
           <t-col :span="6">
             <t-form-item label="宽" label-align="top">
               <t-input-number v-model="data.width" />
@@ -28,28 +28,48 @@
               <t-input-number v-model="data.height" />
             </t-form-item>
           </t-col>
+          <t-col :span="6">
+            <t-form-item label="最小宽" label-align="top">
+              <t-input-number v-model="data.minWidth" />
+            </t-form-item>
+          </t-col>
+          <t-col :span="6">
+            <t-form-item label="最小高" label-align="top">
+              <t-input-number v-model="data.minHeight" />
+            </t-form-item>
+          </t-col>
+          <t-col :span="12">
+            <t-form-item label="窗口样式" label-align="top">
+              <t-select v-model="data.titleBarStyle">
+                <t-option value="default" label="默认" />
+                <t-option value="hidden" label="隐藏" />
+                <t-option value="hiddenInset" label="隐藏凹口" />
+                <t-option value="customButtonsOnHover" label="自定义按钮" />
+              </t-select>
+            </t-form-item>
+          </t-col>
         </t-row>
-        <t-form-item label-align="top">
-          <t-space size="small">
-            <t-button theme="primary" type="submit" @click="handleSubmit">保存</t-button>
-            <t-button theme="default" variant="outline" type="reset">清空</t-button>
-          </t-space>
-        </t-form-item>
+        <div class="mt-16px">
+          <t-form-item label-align="top">
+            <t-space size="small">
+              <t-button theme="primary" type="submit" @click="handleSubmit">保存</t-button>
+              <t-button theme="default" variant="outline" type="reset">清空</t-button>
+            </t-space>
+          </t-form-item>
+        </div>
       </t-form>
     </t-card>
   </div>
 </template>
 <script lang="ts" setup>
-import { DesktopNode } from '@common/types'
+import { DesktopNode, DesktopNodeMeta } from '@common/types'
 import { MessageUtil, useSnowflake } from '@/utils'
 
-const data = ref({
+const data = ref<DesktopNodeMeta & { name: string; url: string; icon: string }>({
   name: '',
   url: '',
   icon: '',
-  openWith: 'default' as 'default' | 'inner',
-  width: undefined as number | undefined,
-  height: undefined as number | undefined
+  openWith: 'default' as 'default' | 'inner'
 })
 const fetchingIcon = ref(false)
 
@@ -100,7 +120,10 @@ const handleSubmit = () => {
       url: data.value.url,
       openWith: data.value.openWith,
       width: data.value.width,
-      height: data.value.height
+      height: data.value.height,
+      minHeight: data.value.minHeight,
+      minWidth: data.value.minWidth,
+      titleBarStyle: data.value.titleBarStyle
     }
   }
   window.desktopAPI

@@ -1,11 +1,12 @@
 import { BrowserWindow, WebContentsView } from 'electron'
 import { join } from 'path'
-import { pluginManager } from '$/global/BeanFactory'
+import { pluginManager, taskbarManager } from '$/global/BeanFactory'
 import { getMainWindow } from '$/module/desktop'
 import icon from '../../../../resources/icon.png?asset'
 import { ViewOptions, WindowOptions } from '@common/types'
 import { PARTITION, TauriEvent } from '@common/global'
 import { logError } from '$/lib/log'
+import ews from 'electron-window-state'
 
 interface PbwBrowserWindow {
   type: 'BrowserWindow'
@@ -92,10 +93,21 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
   if (!entity) return Promise.reject(Error('插件未找到'))
 
   // 创建窗口
+  const bwEws = ews({
+    defaultHeight: options.height,
+    defaultWidth: options.width
+  })
+  const iconPath = options.icon ? join(entity.root, entity.icon) : icon
   const bw = new BrowserWindow({
     ...options,
-    icon: options.icon ? join(entity.root, entity.icon) : icon,
+    icon: iconPath,
     show: true,
+    x: bwEws.x,
+    y: bwEws.y,
+    width: bwEws.width,
+    height: bwEws.height,
+    fullscreen: bwEws.isFullScreen,
+    skipTaskbar: true,
     webPreferences: {
       partition: PARTITION.PLUGIN(entity.identifier),
       preload: join(__dirname, '../preload/plugin.js'),
@@ -104,6 +116,8 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
       webSecurity: false
     }
   })
+  bwEws.manage(bw)
+  taskbarManager.manage({ bw, type: 'plugin', icon: iconPath, name: options.title! })
   bw.once('close', () => {
     bw.emit(TauriEvent.WINDOW_DESTROYED)
     // 被关闭了，则移除

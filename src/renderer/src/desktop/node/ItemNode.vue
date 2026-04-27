@@ -5,7 +5,7 @@
     @dblclick="handleClick(node)"
   >
     <div class="icon-wrapper">
-      <item-icon :node />
+      <item-icon :icon="node.icon" :name="node.name" />
     </div>
     <span v-if="!dockMode" class="icon-name">{{ node.name }}</span>
   </div>
