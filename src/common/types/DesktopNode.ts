@@ -42,8 +42,6 @@ export interface DesktopNodeMeta {
    */
   source?: string
 
-  hiddenHeader?: boolean // 隐藏标题
-
   // 当 source === 'builtin' 时使用
   builtinId?: string // 内部标识符，如 'sys-clock', 'sys-cpu'
 

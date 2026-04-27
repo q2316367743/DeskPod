@@ -1,5 +1,5 @@
 <template>
-  <div class="builtin-widget-node h-full w-full" @mousedown.stop @contextmenu.stop>
+  <div class="builtin-widget-node h-full w-full overflow-hidden">
     <FolderWidget v-if="node.meta?.builtinId === 'folder'" :node="node" />
   </div>
 </template>

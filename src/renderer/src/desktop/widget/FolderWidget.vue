@@ -3,33 +3,10 @@
     <!-- 顶部工具栏 -->
     <div class="toolbar">
       <!-- 面包屑导航 -->
-      <t-breadcrumb class="breadcrumb">
-        <template #separator>/</template>
-        <t-breadcrumb-item
-          v-for="(segment, index) in pathSegments"
-          :key="index"
-          :class="{ disabled: index === pathSegments.length - 1 }"
-          @click="navigateToSegment(index)"
-        >
-          <div v-if="index === 0" class="flex gap-2px items-center">
-            <div>{{ homeText }}</div>
-          </div>
-          <span v-else>{{ segment }}</span>
-        </t-breadcrumb-item>
-      </t-breadcrumb>
+      <div>{{ homeText }}</div>
 
       <!-- 视图切换 -->
       <div class="flex gap-8px">
-        <t-button
-          theme="primary"
-          variant="outline"
-          size="small"
-          shape="circle"
-          :disabled="pathSegments.length < 2"
-          @click="toHome"
-        >
-          <home-icon />
-        </t-button>
         <t-button
           theme="primary"
           variant="outline"
@@ -43,7 +20,7 @@
     </div>
 
     <!-- 图标模式 -->
-    <div class="icon-view">
+    <div class="icon-view" @mousedown.stop @contextmenu.stop>
       <div
         v-for="item in sortedList"
         :key="item.path"
@@ -65,10 +42,11 @@
 </template>
 
 <script lang="ts" setup>
-import { HomeIcon, RefreshIcon } from 'tdesign-icons-vue-next'
+import { RefreshIcon } from 'tdesign-icons-vue-next'
 import { DesktopNode } from '@common/types'
 import { FileItemView } from '@common/views'
 import FdIcon from '@/components/wod/FdIcon.vue'
+import { MessageUtil } from '@/utils'
 
 const props = defineProps({
   node: {
@@ -91,13 +69,6 @@ const homeText = computed(() => window.supportAPI.path.basename(props.node!.meta
 const list = ref<FileItemView[]>([])
 const currentPath = ref('')
 
-// 路径分段（面包屑）
-const pathSegments = computed(() => {
-  if (!currentPath.value) return []
-  const subpath = currentPath.value.replace(props.node!.meta!.root!, '')
-  return subpath.split(window.supportAPI.path.sep)
-})
-
 // 排序：文件夹在前，然后按名称排序
 const sortedList = computed(() => {
   return [...list.value].sort((a, b) => {
@@ -106,21 +77,6 @@ const sortedList = computed(() => {
     return a.name.localeCompare(b.name)
   })
 })
-
-// 导航到面包屑的某一段
-const navigateToSegment = (index: number) => {
-  if (index === 0) {
-    // 点击 root，导航到根目录
-    loadFolder(props.node!.meta!.root!)
-  } else {
-    loadFolder(
-      window.supportAPI.path.join(
-        props.node!.meta!.root!,
-        ...pathSegments.value.slice(0, index + 1)
-      )
-    )
-  }
-}
 
 // 加载文件夹
 const loadFolder = async (path: string) => {
@@ -135,18 +91,15 @@ const loadFolder = async (path: string) => {
 
 // 处理图标模式点击
 const handleItemClick = (item: FileItemView) => {
-  if (item.isDirectory) {
-    loadFolder(item.path)
-  } else {
-    window.supportAPI.shell.openPath(item.path)
-  }
+  window.supportAPI.shell.openPath(item.path)
 }
 
-const toHome = () => {
-  navigateToSegment(0)
-}
-const handleRefresh = () => {
-  navigateToSegment(pathSegments.value.length)
+const handleRefresh = async () => {
+  const root = props.node.meta?.root
+  if (root) {
+    await loadFolder(root)
+    MessageUtil.success('刷新成功')
+  }
 }
 
 onMounted(async () => {
@@ -172,6 +125,7 @@ onMounted(async () => {
   padding: 8px 12px;
   border-bottom: 1px solid var(--fluent-border-subtle);
   flex-shrink: 0;
+  background: var(--fluent-acrylic-bg);
 }
 
 // 图标模式
