@@ -92,7 +92,9 @@ const extToIcon: Record<string, string> = {
   harmony: 'a-ToonBoomHarmony.svg',
   har: 'a-ToonBoomHarmony.svg',
   uasset: 'a-UnrealEngine.svg',
-  uproject: 'a-UnrealEngine.svg'
+  uproject: 'a-UnrealEngine.svg',
+  terminal: 'terminal.svg',
+  script: 'script.svg',
 }
 
 function resolveFileIcon(ext: string): string {

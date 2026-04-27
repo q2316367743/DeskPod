@@ -19,14 +19,10 @@ const getExecutor = (node: DesktopNode) => {
   }
 }
 
-const openInTerminal = (
-  executor: string,
-  args: string[],
-  cwd?: string
-) => {
+const openInTerminal = (executor: string, args: string[], cwd?: string) => {
   const currentPlatform = platform()
   if (currentPlatform === 'darwin') {
-    const fullCommand = `cd "${cwd || '~'}" && ${executor} ${args.map(a => `'${a}'`).join(' ')}`
+    const fullCommand = `cd "${cwd || '~'}" && ${executor} ${args.map((a) => `'${a}'`).join(' ')}`
     const script = `tell application "Terminal" to do script "${fullCommand.replace(/"/g, '\\"')}"`
     spawn('osascript', ['-e', script], { detached: true, stdio: 'ignore' })
   } else if (currentPlatform === 'win32') {
@@ -93,7 +89,7 @@ const getScriptExtension = (source: string): string => {
 }
 
 export const openScriptApp = async (node: DesktopNode): Promise<boolean> => {
-  const scriptContent = node.meta?.root
+  const scriptContent = node.meta?.command
   if (!scriptContent) return false
   const executor = getExecutor(node)
   const source = node.meta?.source || ''

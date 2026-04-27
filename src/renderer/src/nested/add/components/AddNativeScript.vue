@@ -9,15 +9,18 @@
           <t-select v-model="data.source" :options="sourceOptions" placeholder="选择脚本类型" />
         </t-form-item>
         <t-form-item label="Shell路径" label-align="top">
-          <n-file-select v-model="data.openWith" placeholder="或输入自定义Shell路径" label="选择" />
+          <n-file-select v-model="data.openWith" placeholder="输入自定义Shell路径" label="选择" />
         </t-form-item>
         <t-form-item label="脚本内容" label-align="top">
           <MonacoEditor
-            v-model="data.root"
+            v-model="data.command"
             :language="language"
             height="200px"
             placeholder="输入要执行的命令..."
           />
+        </t-form-item>
+        <t-form-item label="脚本执行路径" label-align="top">
+          <n-file-select v-model="data.root" placeholder="输入脚本执行路径" label="选择" />
         </t-form-item>
         <t-form-item label-align="top">
           <t-space size="small">
@@ -37,6 +40,7 @@ import { CommonOption } from '@common/types'
 const data = ref({
   name: '',
   source: '',
+  command: '',
   root: '',
   openWith: ''
 })
@@ -108,8 +112,8 @@ const handleSubmit = () => {
   window.desktopAPI.updateNode({
     id: useSnowflake().nextId(),
     type: 'command',
-    name: data.value.name || '本地命令',
-    icon: 'icon:terminal',
+    name: data.value.name || '本地脚本',
+    icon: 'icon:script',
     parentId: params.get('parentId') || null,
     sortIndex: 0,
     desktopId: params.get('desktopId') || '',
@@ -119,11 +123,13 @@ const handleSubmit = () => {
     row: 1,
     meta: {
       // 脚本内容
-      root: data.value.root,
+      command: data.value.command,
       // 是哪个程序打开的
       openWith: data.value.openWith,
       // 作用：判断文本编辑器的语法高亮
-      source: data.value.source
+      source: data.value.source,
+      // 在哪里执行
+      root: data.value.root
     }
   })
 }
