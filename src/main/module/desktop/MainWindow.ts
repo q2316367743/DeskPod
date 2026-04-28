@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { settingManager } from '$/global/BeanFactory'
 import { is } from '@electron-toolkit/utils'
 import icon from '../../../../resources/icon.png?asset'
+import { logDebug } from '$/lib/log'
 
 let mainWindow: BrowserWindow | undefined = undefined
 export const setMainWindow = (win: BrowserWindow) => (mainWindow = win)
@@ -17,11 +18,10 @@ export function handleMainWindow() {
     const displays = screen.getAllDisplays()
     for (const display of displays) {
       if (display.id === displayId) {
+        logDebug(`使用屏幕：${display.id}`, display.bounds)
         // 如果找到了
         mainWindow.setBounds(display.bounds)
-        mainWindow.setFullScreen(true)
-        mainWindow.show()
-        return
+        break
       }
     }
   }
@@ -56,9 +56,9 @@ export function createMainWindow() {
   })
   setMainWindow(mainWindow)
 
-  mainWindow.on('ready-to-show', () => {
-    handleMainWindow()
-  })
+  // mainWindow.on('ready-to-show', () => {
+  handleMainWindow()
+  // })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
