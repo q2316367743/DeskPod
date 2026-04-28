@@ -1,6 +1,7 @@
 import { PluginEntity } from '@common/types'
 
 export interface ApiPayload {
+  // 插件的
   pluginId: string
   // 插件的窗口标签
   label: string

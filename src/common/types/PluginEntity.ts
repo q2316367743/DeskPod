@@ -53,7 +53,7 @@ export interface PluginEntity {
 }
 
 export interface PluginEntityWrap extends PluginEntity {
-  // 插件根路径
+  // 运行时目录
   root: string
 }
 

@@ -75,7 +75,9 @@ defineEmits<{
 
 const iconSrc = computed(() => {
   if (!props.plugin.icon) return ''
-  return `file://${props.plugin.root}/runtime/${props.plugin.icon}`
+  return window.supportAPI.url.pathToHref(
+    window.supportAPI.path.join(props.plugin.root, props.plugin.icon)
+  )
 })
 </script>
 

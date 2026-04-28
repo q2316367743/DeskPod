@@ -8,8 +8,9 @@ import { closePluginWindow, pluginVerify } from '$/module/plugin'
 import {
   APP_DATA_PLUGIN_DIR,
   appPluginConfigPath,
-  createPluginDirs,
-  removePluginDirs
+  createPluginDataDirs,
+  createPluginRuntimeDirs,
+  removePluginDataDirs
 } from '$/global/Constant'
 import { useSnowflake } from '@common/utils'
 import { databaseManager, desktopManager, storeManager } from '$/global/BeanFactory'
@@ -42,6 +43,7 @@ export class PluginManager {
             // 验证通过，返回
             return {
               ...pc,
+              // 运行时目录
               root: join(APP_DATA_PLUGIN_DIR, pluginId)
             } as PluginEntityWrap
           }
@@ -110,25 +112,30 @@ export class PluginManager {
   async install(path: string): Promise<void> {
     // 1. 创建插件 ID
     const id = useSnowflake().nextId()
-    // 创建插件相关目录
-    const runtime = await createPluginDirs(id)
+    // 创建插件运行时目录
+    const runtime = await createPluginRuntimeDirs(id)
     // 解压到运行目录
     const zip = new AdmZip(path)
     zip.extractAllTo(runtime, true)
+    let identifier = ''
     try {
       // 2. 寻找并读取配置文件 (假设叫 plugin.json)
       const configPath = join(runtime, 'plugin.json')
-      if (!existsSync(configPath)) throw new Error('缺少 plugin.json')
+      if (!existsSync(configPath)) return Promise.reject(new Error('缺少 plugin.json'))
 
       const configJsonStr = await readFile(configPath, 'utf-8')
       const configJson = JSON.parse(configJsonStr)
 
       // 3. TypeBox 校验
-      if (!pluginVerify(configJson)) throw new Error('plugin.json 格式校验失败')
+      if (!pluginVerify(configJson)) return Promise.reject(new Error('plugin.json 格式校验失败'))
 
       // 4. 判断插件是否已经存在了
       if (this.pluginMap.has(configJson.identifier))
-        throw new Error('插件 identifier 已存在，无法安装')
+        return Promise.reject(new Error('插件 identifier 已存在，无法安装'))
+
+      // 创建插件数据目录
+      await createPluginDataDirs(configJson.identifier)
+      identifier = configJson.identifier
 
       // 没有问题，加入当前插件列表
       this.pluginMap.set(configJson.identifier, {
@@ -137,7 +144,8 @@ export class PluginManager {
       })
     } catch (e) {
       // 发生异常，删除插件目录
-      removePluginDirs(id)
+      await rm(runtime, { recursive: true, force: true })
+      if (identifier) await removePluginDataDirs(identifier)
       return Promise.reject(e)
     }
   }
@@ -153,7 +161,7 @@ export class PluginManager {
     // 如果不存在，则进行安装
     if (!plugin) return this.install(path)
     // 获取运行时目录
-    const runtime = join(plugin.root, 'runtime')
+    const runtime = plugin.root
     // 删除旧的运行目录，并创建新的
     await rm(runtime, { recursive: true, force: true })
     await mkdir(runtime)
@@ -163,23 +171,23 @@ export class PluginManager {
     try {
       // 2. 寻找并读取配置文件 (假设叫 plugin.json)
       const configPath = join(runtime, 'plugin.json')
-      if (!existsSync(configPath)) throw new Error('缺少 plugin.json')
+      if (!existsSync(configPath)) return Promise.reject(new Error('缺少 plugin.json'))
 
       const configJsonStr = await readFile(configPath, 'utf-8')
       const configJson = JSON.parse(configJsonStr)
 
       // 3. TypeBox 校验
-      if (!pluginVerify(configJson)) throw new Error('plugin.json 格式校验失败')
+      if (!pluginVerify(configJson)) return Promise.reject(new Error('plugin.json 格式校验失败'))
 
       // 没有问题，更新当前插件列表
-      this.pluginMap.set(configJson.identifier, configJson)
+      this.pluginMap.set(configJson.identifier, { ...plugin, ...configJson })
     } catch (e) {
       // 发生异常
       return Promise.reject(e)
     }
   }
 
-  async uninstall(identifier: string) {
+  async uninstall(identifier: string, removeData: boolean) {
     // 获取插件
     const plugin = this.pluginMap.get(identifier)
     if (!plugin) return Promise.reject(new Error('插件不存在'))
@@ -216,8 +224,10 @@ export class PluginManager {
     } catch (e) {
       logError(`[插件 ${identifier}] 清除存储数据失败`, e)
     }
-    // 删除目录
+    // 删除运行时目录
     await rm(plugin.root, { recursive: true, force: true })
+    // 删除插件数据目录
+    if (removeData) await removePluginDataDirs(identifier)
     this.pluginMap.delete(identifier)
     // 移除桌面图标
     await desktopManager.removeNodesByPluginId(identifier)

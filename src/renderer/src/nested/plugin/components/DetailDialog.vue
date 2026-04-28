@@ -55,7 +55,7 @@
                 <span class="info-label">窗口标识</span>
                 <span class="info-value">{{ plugin.main.label }}</span>
               </div>
-              <div class="info-item" v-if="plugin.main.width || plugin.main.height">
+              <div v-if="plugin.main.width || plugin.main.height" class="info-item">
                 <span class="info-label">窗口尺寸</span>
                 <span class="info-value">
                   {{ plugin.main.width || '自适应' }} × {{ plugin.main.height || '自适应' }}
@@ -121,7 +121,7 @@ defineEmits<{
 const iconSrc = computed(() => {
   const plugin = unref(props.plugin)
   if (!plugin?.icon) return ''
-  return `file://${plugin.root}/runtime/${plugin.icon}`
+  return window.supportAPI.url.pathToHref(window.supportAPI.path.join(plugin.root, plugin.icon))
 })
 
 const assetSrc = (assetPath: string) => {

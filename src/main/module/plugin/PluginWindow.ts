@@ -138,7 +138,7 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
   }
 
   // 加载文件
-  await bw.loadFile(join(entity.root, 'runtime', options.url))
+  await bw.loadFile(join(entity.root, options.url))
 }
 
 function setWindowBounds(bw: BrowserWindow, options: ViewOptions) {
@@ -200,7 +200,7 @@ export async function createWebContentView(pluginId: string, label: string, opti
   }
 
   // 加载文件
-  await wcv.webContents.loadFile(join(plugin.root, 'runtime', widget.path))
+  await wcv.webContents.loadFile(join(plugin.root, widget.path))
   setViewBounds(wcv, options)
   // 加入到窗口
   mainWindow.contentView.addChildView(wcv)

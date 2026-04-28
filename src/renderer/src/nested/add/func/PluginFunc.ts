@@ -8,9 +8,7 @@ export function pluginEntityToDesktopNode(
     id: '',
     type: 'plugin',
     name: plugin.productName,
-    icon: window.supportAPI.url.pathToHref(
-      window.supportAPI.path.join(plugin.root, 'runtime', plugin.icon)
-    ),
+    icon: window.supportAPI.url.pathToHref(window.supportAPI.path.join(plugin.root, plugin.icon)),
     parentId: null,
     sortIndex: 0,
     desktopId: desktopId,
@@ -41,7 +39,7 @@ export function pluginEntityToWidgetNode(
         type: 'widget',
         name: widget.title,
         icon: window.supportAPI.url.pathToHref(
-          window.supportAPI.path.join(plugin.root, 'runtime', widget.preview)
+          window.supportAPI.path.join(plugin.root, widget.preview)
         ),
         parentId: null,
         sortIndex: 0,
@@ -52,7 +50,9 @@ export function pluginEntityToWidgetNode(
         column: layout.cols,
         meta: {
           pluginId: plugin.identifier,
-          root: `file://${plugin.root}/runtime/${widget.path}`,
+          root: window.supportAPI.url.pathToHref(
+            window.supportAPI.path.join(plugin.root, widget.path)
+          ),
           label: widget.label,
           source: 'plugin'
         }

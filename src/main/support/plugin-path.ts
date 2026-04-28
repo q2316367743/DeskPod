@@ -2,6 +2,7 @@ import { join, basename, extname, isAbsolute, normalize, resolve } from 'node:pa
 import { app } from 'electron'
 import { defineApi } from '$/global/DefineApi'
 import { pluginManager } from '$/global/BeanFactory'
+import { getPluginDataDir } from '$/global/Constant'
 
 export enum BaseDirectory {
   /**
@@ -102,8 +103,9 @@ export enum BaseDirectory {
  * 获取目录
  */
 export const getDirectory = (pluginId: string, directory: BaseDirectory) => {
-  const entity = pluginManager.getById(pluginId);
+  const entity = pluginManager.getById(pluginId)
   if (!entity) throw new Error(`pluginId ${pluginId} not found`)
+  const dataDir = getPluginDataDir(pluginId)
   switch (directory) {
     case BaseDirectory.Audio:
       return app.getPath('music')
@@ -118,23 +120,21 @@ export const getDirectory = (pluginId: string, directory: BaseDirectory) => {
     case BaseDirectory.Temp:
       return app.getPath('temp')
     case BaseDirectory.Resource:
-      return join(entity.root, 'resource')
+      return join(dataDir, 'resource')
     case BaseDirectory.AppConfig:
-      return join(entity.root, 'config')
+      return join(dataDir, 'config')
     case BaseDirectory.AppData:
-      return join(entity.root, 'data')
+      return join(dataDir, 'data')
     case BaseDirectory.AppLocalData:
-      return join(entity.root, 'localData')
+      return join(dataDir, 'localData')
     case BaseDirectory.AppCache:
-      return join(entity.root, 'cache')
+      return join(dataDir, 'cache')
     case BaseDirectory.AppLog:
-      return join(entity.root, 'log')
+      return join(dataDir, 'log')
     case BaseDirectory.Runtime:
-      return join(entity.root, 'runtime')
+      return entity.root
     case BaseDirectory.Desktop:
       return app.getPath('desktop')
-    // case 20:
-    //   return app.getPath('font')
     case BaseDirectory.Home:
       return app.getPath('home')
     default:

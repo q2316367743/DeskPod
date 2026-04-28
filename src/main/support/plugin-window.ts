@@ -1,6 +1,6 @@
 import { defineApi } from '$/global/DefineApi'
-import { createPluginWindow, WindowOptions } from '$/module/plugin'
-
+import { createPluginWindow } from '$/module/plugin'
+import { WindowOptions } from '@common/types'
 
 interface BaseArgs {
   options: WindowOptions
@@ -16,7 +16,7 @@ export default [
   //   const bw = new BrowserWindow(options)
   //   // 加载文件
   //   await bw.loadFile(
-  //     join(app.getPath('appData'), 'plugins', payload.pluginId, 'runtime', options.url)
+  //     join(app.getPath('appData'), 'plugins', payload.pluginId, options.url)
   //   )
   //   browserWindowMap.set(`${payload.pluginId}|${options.label}`, bw)
   // }),
