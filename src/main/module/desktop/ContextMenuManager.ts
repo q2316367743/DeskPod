@@ -172,25 +172,25 @@ export function createContextMenuByNode(nodeId: string, x: number, y: number) {
   }
 
   menus.push({
-    label: '卸载',
+    label: '删除',
     click: async () => {
       const r = dialog.showMessageBoxSync({
         type: 'question',
-        message: '是否确认卸载？',
-        title: '卸载',
+        message: '是否确认删除？',
+        title: '删除',
         buttons: ['取消', '确定']
       })
       if (r === 1) {
-        // 卸载
+        // 删除
         try {
           await desktopManager.deleteNode(nodeId)
           new Notification({
-            title: '卸载成功',
-            body: '卸载成功'
+            title: '删除成功',
+            body: '删除成功'
           }).show()
         } catch (e) {
           new Notification({
-            title: '卸载失败',
+            title: '删除失败',
             body: `原因：${(e as Error)?.message}`
           }).show()
         }

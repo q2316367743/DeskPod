@@ -13,6 +13,13 @@ export const APP_DATA_PLUGIN_DIR = join(APP_DATA_DIR, 'plugins')
 export const APP_DATA_PLUGIN_DATA_DIR = join(APP_DATA_DIR, 'plugin_data')
 export const APP_DATA_QUICK_DIR = join(APP_DATA_DIR, 'quick')
 
+export const APP_DATA_DB_STATE_PATH = join(APP_DATA_DB_DIR, 'state')
+export const APP_DATA_DB_BUILTIN_PATH = join(APP_DATA_DB_STATE_PATH, 'builtin')
+export const APP_DATA_DB_STATE_LINK_PATH = join(APP_DATA_DB_STATE_PATH, 'link')
+export const APP_DATA_DB_STATE_QUICK_PATH = join(APP_DATA_DB_STATE_PATH, 'quick')
+export const APP_DATA_DB_STATE_PLUGIN_PATH = join(APP_DATA_DB_STATE_PATH, 'plugin')
+
+
 export const APP_DATA_DB_PATH = (filename: string) => join(APP_DATA_DB_DIR, filename + '.sqlite')
 
 export const APP_DATA_ASSET_ICON_DIR = join(APP_DATA_ASSET_DIR, 'icon')

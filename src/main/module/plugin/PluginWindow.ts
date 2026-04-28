@@ -3,10 +3,11 @@ import { join } from 'path'
 import { pluginManager, taskbarManager } from '$/global/BeanFactory'
 import { getMainWindow } from '$/module/desktop'
 import icon from '../../../../resources/icon.png?asset'
-import { ViewOptions, WindowOptions } from '@common/types'
+import { ViewOptions, WindowOptions } from '@common/params'
 import { PARTITION, TauriEvent } from '@common/global'
 import { logError } from '$/lib/log'
 import ews from 'electron-window-state'
+import { APP_DATA_DB_STATE_PLUGIN_PATH } from '$/global/Constant'
 
 interface PbwBrowserWindow {
   type: 'BrowserWindow'
@@ -95,7 +96,9 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
   // 创建窗口
   const bwEws = ews({
     defaultHeight: options.height,
-    defaultWidth: options.width
+    defaultWidth: options.width,
+    path: APP_DATA_DB_STATE_PLUGIN_PATH,
+    file: `${entity.identifier}-${options.label}.json`
   })
   const iconPath = options.icon ? join(entity.root, entity.icon) : icon
   const bw = new BrowserWindow({

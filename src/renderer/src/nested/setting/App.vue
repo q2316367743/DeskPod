@@ -1,7 +1,7 @@
 <template>
   <t-layout class="h-100vh w-100vw">
     <t-aside :width="collapsed ? '64px' : '232px'">
-      <t-menu class="h-full" :collapsed>
+      <t-menu default-value="1" class="h-full" :collapsed>
         <t-menu-item value="1" to="/base">
           <template #icon>
             <setting1-icon />

@@ -4,6 +4,7 @@ import { is } from '@electron-toolkit/utils'
 import { join } from 'node:path'
 import { PARTITION } from '@common/global'
 import ews from 'electron-window-state'
+import { APP_DATA_DB_BUILTIN_PATH } from '$/global/Constant'
 
 const builtinWindowMap = new Map<string, BrowserWindow>()
 
@@ -21,7 +22,9 @@ export const openBuiltinApp = async (
 
   const bwEws = ews({
     defaultHeight: node.meta.height,
-    defaultWidth: node.meta.width
+    defaultWidth: node.meta.width,
+    path: APP_DATA_DB_BUILTIN_PATH,
+    file: `${node.name}.json`
   })
   const bw = new BrowserWindow({
     title: node.name,

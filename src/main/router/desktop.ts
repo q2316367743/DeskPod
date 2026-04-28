@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron'
-import { DesktopNode, ViewOptions } from '@common/types'
+import { DesktopNode } from '@common/types'
+import { ViewOptions } from '@common/params'
 import { openApp } from '$/global/OpenApp'
 import { desktopManager } from '$/global/BeanFactory'
 import { createWebContentView, moveWebContentView, removeWebContentView } from '$/module/plugin'

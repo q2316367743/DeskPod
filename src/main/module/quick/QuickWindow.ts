@@ -5,6 +5,7 @@ import { DesktopNode } from '@common/types'
 import { quickManager, taskbarManager } from '$/global/BeanFactory'
 import { logError } from '$/lib/log'
 import { PARTITION } from '@common/global'
+import { APP_DATA_DB_STATE_QUICK_PATH } from '$/global/Constant'
 
 const quickMap = new Map<string, Map<number, BrowserWindow>>()
 
@@ -14,7 +15,9 @@ export async function createQuickWindow(node: DesktopNode): Promise<boolean> {
   if (!entity) return false
   const bwEws = ews({
     defaultHeight: node.meta?.height,
-    defaultWidth: node.meta?.width
+    defaultWidth: node.meta?.width,
+    path: APP_DATA_DB_STATE_QUICK_PATH,
+    file: `${quickId}.json`
   })
   const bw = new BrowserWindow({
     title: node.name,

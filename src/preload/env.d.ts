@@ -1,7 +1,14 @@
-import { AiModelSetting, DesktopNode, QuickApp, QuickAppCore, Setting } from '@common/types'
-import { PluginEntityWrap, PluginVerifyResult, ViewOptions } from '@common/types'
+import {
+  AiModelSetting,
+  DesktopNode,
+  PluginEntityWrap,
+  PluginVerifyResult,
+  QuickApp,
+  QuickAppCore,
+  Setting
+} from '@common/types'
 import { FileItemView } from '@common/views'
-import { DesktopCreateParam } from '@common/params'
+import { DesktopCreateParam, ViewOptions } from '@common/params'
 
 interface DesktopAPI {
   onChange: (callback: () => void) => void

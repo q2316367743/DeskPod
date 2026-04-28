@@ -13,6 +13,24 @@ export interface PluginEntity {
   description: string
   // 图片，是个相对目录，相对插件根目录
   icon: string
+  // 开发者
+  author?: string
+  // 官网
+  homepage?: string
+
+  // 开发者模式
+  develop?: {
+    // 主窗口开发者模式下的路径
+    main: string
+    // 小部件开发者模式下的路径, label => url
+    widgets: Record<string, string>
+  }
+
+  // 后台 js，自启动会自动维护，否则会第一次启动时加载
+  background?: string
+  // 运行的平台
+  platform: Array<'win32' | 'darwin' | 'linux'>
+
   // 启动窗口，只能一个
   main?: {
     label: string

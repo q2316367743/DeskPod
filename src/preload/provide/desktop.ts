@@ -1,8 +1,8 @@
 // 桌面管理相关 IPC 调用
 import { ipcRenderer } from 'electron'
-import { DesktopNode, ViewOptions } from '@common/types'
+import { DesktopNode } from '@common/types'
 import { SYSTEM_EVENT } from '@common/global'
-import { DesktopCreateParam } from '@common/params'
+import { DesktopCreateParam, ViewOptions } from '@common/params'
 
 export const desktopAPI = {
   onChange: (callback: () => void) => {

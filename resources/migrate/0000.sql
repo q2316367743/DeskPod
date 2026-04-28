@@ -12,3 +12,13 @@ CREATE TABLE quick_app
   width      INTEGER          DEFAULT 1,        -- 宽度，独立窗口 px，小部件列数
   height     INTEGER          DEFAULT 1         -- 高度，独立窗口 px，小部件行数1
 );
+
+CREATE TABLE plugin_develop
+(
+  id         TEXT PRIMARY KEY,
+  created_at INTEGER NOT NULL DEFAULT 0,
+  updated_at INTEGER NOT NULL DEFAULT 0,
+
+  name       TEXT    NOT NULL DEFAULT '',
+  path       TEXT    NOT NULL DEFAULT ''
+);

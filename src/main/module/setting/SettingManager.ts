@@ -1,11 +1,11 @@
-import { AiModelSetting, defaultSetting, Setting } from '@common/types'
 import { existsSync } from 'node:fs'
 import { copyFile, mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises'
 import { extname, join } from 'node:path'
 import { APP_DATA_ASSET_DIR, APP_DATA_DB_DIR } from '$/global/Constant'
-import { useSnowflake } from '@common/utils'
 import { getMainWindow, handleMainWindow } from '$/module/desktop'
+import { useSnowflake } from '@common/utils'
 import { SYSTEM_EVENT } from '@common/global'
+import { AiModelSetting, defaultSetting, Setting } from '@common/types'
 
 export class SettingManager {
   private defaultValue = defaultSetting()

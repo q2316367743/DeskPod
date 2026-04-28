@@ -8,7 +8,8 @@
   ></div>
 </template>
 <script lang="ts" setup>
-import { DesktopNode, ViewOptions } from '@common/types'
+import { DesktopNode } from '@common/types'
+import { ViewOptions } from '@common/params'
 import { CELL_SIZE } from '@common/global'
 
 const props = defineProps({

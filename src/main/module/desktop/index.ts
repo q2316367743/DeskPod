@@ -1,6 +1,6 @@
 export * from './DesktopManager'
-export * from './SettingManager'
 export * from './ContextMenuManager'
 export * from './MainWindow'
 export * from './BuiltinWindow'
 export * from './TaskbarManager'
+export * from './LinkManger'

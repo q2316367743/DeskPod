@@ -19,6 +19,19 @@ const pluginVerifyType = Type.Object({
   icon: Type.String(),
   // 可选描述
   description: Type.Optional(Type.String()),
+  author: Type.Optional(Type.String()),
+  homepage: Type.Optional(Type.String()),
+
+  // 开发者模式
+  develop: Type.Optional(
+    Type.Object({
+      main: Type.Optional(Type.String()),
+      widgets: Type.Optional(Type.Record(Type.String(), Type.String()))
+    })
+  ),
+
+  background: Type.Optional(Type.String()),
+  platform: Type.Array(Type.Enum(['win32', 'darwin', 'linux'])),
 
   // 启动窗口（可选）
   main: Type.Optional(
@@ -77,6 +90,6 @@ export function pluginVerify(plugin: Record<string, unknown>): boolean {
   const w = Boolean(plugin.main || (plugin.widgets && plugin.widgets.length > 0))
   if (!w) return false
   // 全部的 label 不能重复
-  const list = [plugin.main?.label, ...(plugin.widgets?.map((w) => w.label) || [])].filter(Boolean);
+  const list = [plugin.main?.label, ...(plugin.widgets?.map((w) => w.label) || [])].filter(Boolean)
   return list.length === new Set(list).size
 }

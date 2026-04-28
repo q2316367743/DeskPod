@@ -1,6 +1,6 @@
 import { defineApi } from '$/global/DefineApi'
 import { createPluginWindow } from '$/module/plugin'
-import { WindowOptions } from '@common/types'
+import { WindowOptions } from '@common/params'
 
 interface BaseArgs {
   options: WindowOptions

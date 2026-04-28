@@ -7,7 +7,7 @@ import { QueryChain } from '$/util/file/QueryWrapper'
 import { generatePlaceholders } from '@common/utils'
 import { BaseMapper, type TableLike } from '$/util/file'
 
-type TableName = 'quick_app'
+type TableName = 'quick_app' | 'plugin_develop'
 
 export interface QueryResult {
   rowsAffected: number
@@ -68,7 +68,6 @@ export class SqlBase<N extends string> {
   mapper<T extends TableLike>(tableName: N) {
     return new BaseMapper<T, N>(tableName, this)
   }
-
 }
 
 export class SqlWrapper<N extends string> extends SqlBase<N> {

@@ -5,7 +5,7 @@ import { DesktopNode } from '@common/types'
 import { group } from '@common/utils'
 import { BUILTIN_KEY, SYSTEM_EVENT } from '@common/global'
 import { APP_DATA_DB_DIR } from '$/global/Constant'
-import { getMainWindow, closeBuiltinWindow } from '$/module/desktop'
+import { getMainWindow, closeBuiltinWindow, deleteLinkApp } from '$/module/desktop'
 
 interface DesktopItem {
   id: string
@@ -92,8 +92,12 @@ export class DesktopManager {
   async deleteNode(nodeId: string) {
     const index = this.nodes.findIndex((n) => n.id === nodeId)
     if (index >= 0) {
+      const node = this.nodes[index]
       this.nodes.splice(index, 1)
       await this.save()
+      if (node.type === 'link') {
+        deleteLinkApp(node)
+      }
     }
   }
 

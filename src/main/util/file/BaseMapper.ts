@@ -1,7 +1,7 @@
 import { logDebug } from '$/lib/log'
 import { generatePlaceholders, useSnowflake } from '@common/utils'
 import { SqlBase } from '$/lib/sql'
-import { BaseEntity } from '@common/types'
+import { BaseEntity } from '@common/entity'
 
 export interface TableLike extends BaseEntity {}
 

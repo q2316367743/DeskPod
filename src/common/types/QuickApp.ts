@@ -1,4 +1,4 @@
-import { BaseEntity } from '@common/types'
+import { BaseEntity } from '@common/entity'
 
 /**
  * - `window`: 独立窗口
