@@ -44,6 +44,9 @@ export interface QuickAppCore {
    * 高度，独立窗口 px，小部件行数1
    */
   height: number
+  min_width: number
+  min_height: number
+
   /**
    * 根目录，安装后才有
    */

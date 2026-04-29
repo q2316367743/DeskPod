@@ -54,6 +54,8 @@ export interface PluginEntity {
     layouts: Array<{
       rows: number
       cols: number
+      minRows: number
+      minCols: number
     }>
     // 可能存在的菜单，会触发 DeskPodEvent.WIDGET_MENU_CLICK 事件
     menu?: Array<{

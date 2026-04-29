@@ -39,6 +39,9 @@ export function quickAppToWidgetNode(app: QuickApp, desktopId: string): DesktopN
     y: 0,
     row: app.height,
     column: app.width,
+    resizeable: true,
+    minCol: app.min_width,
+    minRow: app.min_height,
     meta: {
       pluginId: app.id,
       root: `file://${app.root}/${app.entry}`,

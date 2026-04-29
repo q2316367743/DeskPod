@@ -96,7 +96,7 @@ const syncGridFromNodes = async () => {
     if (!el) continue
 
     const gsNode = grid.engine.nodes.find((n) => n.id === `node-${item.id}`)
-    const allowResize = item.type === 'widget' || item.type === 'folder'
+    const allowResize = !!item.resizeable
     const options: Partial<GridStackWidget> = {
       x: item.x,
       y: item.y,
@@ -106,8 +106,8 @@ const syncGridFromNodes = async () => {
       noMove: false
     }
     if (allowResize) {
-      options.minW = item.meta.minHeight || 2
-      options.minH = item.meta.minHeight || 2
+      options.minW = item.minCol || 2
+      options.minH = item.minRow || 2
     }
 
     if (gsNode) {

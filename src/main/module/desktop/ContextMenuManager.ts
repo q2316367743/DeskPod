@@ -63,6 +63,7 @@ function openFolderWidget(param: DesktopCreateParam) {
     x: param.nodeX,
     row: 4,
     column: 5,
+    resizeable: true,
     meta: {
       root: target,
       source: 'builtin',

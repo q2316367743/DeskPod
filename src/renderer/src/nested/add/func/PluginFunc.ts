@@ -48,6 +48,9 @@ export function pluginEntityToWidgetNode(
         y: 0,
         row: layout.rows,
         column: layout.cols,
+        minCol: layout.minCols,
+        minRow: layout.minRows,
+        resizeable: true,
         meta: {
           pluginId: plugin.identifier,
           root: window.supportAPI.url.pathToHref(

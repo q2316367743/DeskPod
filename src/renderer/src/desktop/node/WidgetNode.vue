@@ -1,8 +1,8 @@
 <template>
   <div class="widget-node" :style="{ width, height }" :class="{ 'widget-node': true }">
     <div class="h-full w-full">
-      <builtin-widget-node v-if="node.meta?.source === 'builtin'" :node="node" />
-      <plugin-widget-node v-if="node.meta?.source === 'plugin'" :node="node" />
+      <widget-builtin-node v-if="node.meta?.source === 'builtin'" :node="node" />
+      <widget-plugin-node v-if="node.meta?.source === 'plugin'" :node="node" />
       <quick-widget-node v-else-if="node.meta?.source === 'quick'" :node="node" />
     </div>
   </div>
@@ -10,9 +10,9 @@
 <script lang="ts" setup>
 import { DesktopNode } from '@common/types'
 import { CELL_SIZE } from '@common/global'
-import PluginWidgetNode from '@/desktop/node/PluginWidgetNode.vue'
+import WidgetPluginNode from './WidgetPluginNode.vue'
 import QuickWidgetNode from '@/desktop/node/QuickWidgetNode.vue'
-import BuiltinWidgetNode from '@/desktop/node/BuiltinWidgetNode.vue'
+import WidgetBuiltinNode from './WidgetBuiltinNode.vue'
 
 const props = defineProps({
   node: {
