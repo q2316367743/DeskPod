@@ -74,6 +74,9 @@ export interface DesktopNode {
   y: number // 距离桌面顶部的距离
   row: number // 占几行
   column: number // 占几列
+  resizeable?: boolean // 是否支持调整大小，默认不支持
+  minRow?: number // 最小占几行，默认 2
+  minCol?: number // 最小占几列，默认 2
 
   // --- 按需字段 (根据 type 不同而存在) ---
   meta: DesktopNodeMeta
