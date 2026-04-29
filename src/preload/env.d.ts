@@ -13,6 +13,7 @@ import { DesktopCreateParam, ViewOptions } from '@common/params'
 interface DesktopAPI {
   onChange: (callback: () => void) => void
   getTree: (desktopId?: string) => Promise<DesktopNode[]>
+  getNode: (id: string) => Promise<DesktopNode | undefined>
   updateNode: (node: DesktopNode) => Promise<DesktopNode>
   updateNodes: (nodes: DesktopNode[]) => Promise<DesktopNode[]>
   deleteNode: (nodeId: string) => Promise<string[]>

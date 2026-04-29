@@ -60,6 +60,10 @@ ipcMain.handle('desktop:fetchFavicon', async (_event, url: string) => {
   return desktopManager.fetchFavicon(url)
 })
 
+ipcMain.handle('/desktop/node/get', async (_event, id: string) => {
+  return desktopManager.getNode(id)
+})
+
 ipcMain.handle(
   '/desktop/widget/create',
   async (_event, pluginId: string, label: string, options: ViewOptions) => {

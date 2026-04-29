@@ -33,8 +33,8 @@ function openAppWrap(name: string, type: string, param: Partial<DesktopCreatePar
       type: type,
       desktopId: param.desktopId || '',
       parentId: param.parentId || '',
-      x: `${param.nodeX}`,
-      y: `${param.nodeY}`,
+      x: `${param.nodeX || ''}`,
+      y: `${param.nodeY || ''}`,
       // 为了更新
       update: param.update ? '1' : '0',
       nodeId: param.nodeId || ''
@@ -167,7 +167,7 @@ export function createContextMenuByNode(nodeId: string, x: number, y: number) {
         let type = '/link'
         if (node.type === 'command') type = '/native/command'
         else if (node.type === 'script') type = '/native/script'
-        openAppWrap('添加应用', type, { update: true, nodeId: node.id })
+        openAppWrap('编辑应用', type, { update: true, nodeId: node.id })
       }
     })
   }

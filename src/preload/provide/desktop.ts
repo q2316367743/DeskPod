@@ -16,6 +16,10 @@ export const desktopAPI = {
     return ipcRenderer.invoke('desktop:getTree', desktopId)
   },
 
+  getNode: (id: string): Promise<DesktopNode | undefined> => {
+    return ipcRenderer.invoke('/desktop/node/get', id)
+  },
+
   // 新增/更新节点
   updateNode: (node: DesktopNode): Promise<DesktopNode> => {
     return ipcRenderer.invoke('desktop:updateNode', node)

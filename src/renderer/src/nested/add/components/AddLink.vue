@@ -52,7 +52,9 @@
         <div class="mt-16px">
           <t-form-item label-align="top">
             <t-space size="small">
-              <t-button theme="primary" type="submit" @click="handleSubmit">保存</t-button>
+              <t-button theme="primary" type="submit" @click="handleSubmit">{{
+                isUpdate ? '保存' : '添加'
+              }}</t-button>
               <t-button theme="default" variant="outline" type="reset">清空</t-button>
             </t-space>
           </t-form-item>
@@ -65,7 +67,14 @@
 import { DesktopNode, DesktopNodeMeta } from '@common/types'
 import { MessageUtil, useSnowflake } from '@/utils'
 
-const data = ref<DesktopNodeMeta & { name: string; url: string; icon: string }>({
+const params = new URLSearchParams(location.search)
+const isUpdate = params.get('update') === '1'
+
+if (isUpdate) {
+  document.title = '更新链接'
+}
+const old = ref<DesktopNode>()
+const data = ref<DesktopNodeMeta & { name: string; icon: string }>({
   name: '',
   url: '',
   icon: '',
@@ -107,17 +116,19 @@ const fetchFavicon = async () => {
 }
 
 const handleSubmit = () => {
-  const params = new URLSearchParams(location.search)
+  let id: string
+  if (isUpdate) {
+    id = params.get('nodeId') || ''
+  } else {
+    id = useSnowflake().nextId()
+  }
   const node: DesktopNode = {
-    id: useSnowflake().nextId(),
+    ...((old.value || {}) as DesktopNode),
+    id: id,
     type: 'link',
     name: data.value.name,
     icon: data.value.icon,
-    parentId: params.get('parentId') || null,
     sortIndex: 0,
-    desktopId: params.get('desktopId') || '',
-    x: Number(params.get('x')),
-    y: Number(params.get('y')),
     column: 1,
     row: 1,
     meta: {
@@ -130,6 +141,15 @@ const handleSubmit = () => {
       titleBarStyle: data.value.titleBarStyle
     }
   }
+
+  const parentId = params.get('parentId')
+  const desktopId = params.get('desktopId')
+  const x = params.get('x')
+  const y = params.get('y')
+  if (parentId) node.parentId = parentId
+  if (desktopId) node.desktopId = desktopId
+  if (x) node.x = Number(x)
+  if (y) node.y = Number(y)
   window.desktopAPI
     .updateNode(node)
     .then(() => {
@@ -139,5 +159,20 @@ const handleSubmit = () => {
       MessageUtil.error('添加失败', e)
     })
 }
+
+onMounted(() => {
+  if (isUpdate) {
+    // 获取
+    window.desktopAPI.getNode(params.get('nodeId') || '').then((res) => {
+      if (!res) return
+      old.value = res
+      data.value = {
+        ...res.meta,
+        name: res.name,
+        icon: res.icon
+      }
+    })
+  }
+})
 </script>
 <style scoped lang="less"></style>

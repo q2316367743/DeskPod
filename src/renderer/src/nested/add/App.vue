@@ -1,6 +1,6 @@
 <template>
   <t-layout class="w-100vw h-100vh">
-    <t-header>
+    <t-header v-if="showHeader">
       <t-head-menu v-model="page" expand-type="popup">
         <t-menu-item value="/native/app">本地应用</t-menu-item>
         <t-menu-item value="/link">链接</t-menu-item>
@@ -47,6 +47,7 @@ import AddNativeScript from '@/nested/add/components/AddNativeScript.vue'
 
 const params = new URLSearchParams(location.search)
 const page = ref(params.get('type') || '/native/app')
+const showHeader = params.get('update') === '0'
 const hasWidget = ref(!params.get('parentId'))
 </script>
 <style scoped lang="less"></style>
