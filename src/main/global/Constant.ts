@@ -10,15 +10,16 @@ export const APP_DATA_DIR = join(app.getPath('appData'), APP_ID)
 export const APP_DATA_ASSET_DIR = join(APP_DATA_DIR, 'asset')
 export const APP_DATA_DB_DIR = join(APP_DATA_DIR, 'db')
 export const APP_DATA_PLUGIN_DIR = join(APP_DATA_DIR, 'plugins')
-export const APP_DATA_PLUGIN_DATA_DIR = join(APP_DATA_DIR, 'plugin_data')
 export const APP_DATA_QUICK_DIR = join(APP_DATA_DIR, 'quick')
+
+export const APP_DATA_PLUGIN_DATA_DIR = join(APP_DATA_DIR, 'plugin_data')
+export const APP_DATA_PLUGIN_LOG_DIR = join(APP_DATA_DIR, 'plugin_log')
 
 export const APP_DATA_DB_STATE_PATH = join(APP_DATA_DB_DIR, 'state')
 export const APP_DATA_DB_BUILTIN_PATH = join(APP_DATA_DB_STATE_PATH, 'builtin')
 export const APP_DATA_DB_STATE_LINK_PATH = join(APP_DATA_DB_STATE_PATH, 'link')
 export const APP_DATA_DB_STATE_QUICK_PATH = join(APP_DATA_DB_STATE_PATH, 'quick')
 export const APP_DATA_DB_STATE_PLUGIN_PATH = join(APP_DATA_DB_STATE_PATH, 'plugin')
-
 
 export const APP_DATA_DB_PATH = (filename: string) => join(APP_DATA_DB_DIR, filename + '.sqlite')
 
@@ -36,8 +37,8 @@ export const appDirInit = async () => {
     mkdir(APP_DATA_ASSET_DIR, { recursive: true }),
     mkdir(APP_DATA_DB_DIR, { recursive: true }),
     mkdir(APP_DATA_QUICK_DIR, { recursive: true }),
-    mkdir(APP_DATA_PLUGIN_DIR, { recursive: true }),
-    mkdir(APP_DATA_PLUGIN_DATA_DIR, { recursive: true })
+    mkdir(APP_DATA_PLUGIN_DATA_DIR, { recursive: true }),
+    mkdir(APP_DATA_PLUGIN_LOG_DIR, { recursive: true })
   ])
 }
 
@@ -58,6 +59,7 @@ const mkdirIfNotExists = async (path: string): Promise<void> => {
   await mkdir(path, { recursive: true })
 }
 export const getPluginDataDir = (identifier: string) => join(APP_DATA_PLUGIN_DATA_DIR, identifier)
+export const getPluginLogDir = (identifier: string) => join(APP_DATA_PLUGIN_LOG_DIR, identifier)
 export const createPluginDataDirs = async (identifier: string) => {
   const baseDir = getPluginDataDir(identifier)
   await Promise.all([
@@ -65,8 +67,9 @@ export const createPluginDataDirs = async (identifier: string) => {
     mkdirIfNotExists(join(baseDir, 'config')),
     mkdirIfNotExists(join(baseDir, 'data')),
     mkdirIfNotExists(join(baseDir, 'cache')),
-    mkdirIfNotExists(join(baseDir, 'log')),
-    mkdirIfNotExists(join(baseDir, 'localData'))
+    mkdirIfNotExists(join(baseDir, 'localData')),
+    // 日志目录
+    mkdirIfNotExists(getPluginLogDir(identifier))
   ])
 }
 

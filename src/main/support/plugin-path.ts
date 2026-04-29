@@ -2,7 +2,7 @@ import { join, basename, extname, isAbsolute, normalize, resolve } from 'node:pa
 import { app } from 'electron'
 import { defineApi } from '$/global/DefineApi'
 import { pluginManager } from '$/global/BeanFactory'
-import { getPluginDataDir } from '$/global/Constant'
+import { getPluginDataDir, getPluginLogDir } from '$/global/Constant'
 
 export enum BaseDirectory {
   /**
@@ -130,7 +130,7 @@ export const getDirectory = (pluginId: string, directory: BaseDirectory) => {
     case BaseDirectory.AppCache:
       return join(dataDir, 'cache')
     case BaseDirectory.AppLog:
-      return join(dataDir, 'log')
+      return getPluginLogDir(pluginId)
     case BaseDirectory.Runtime:
       return entity.root
     case BaseDirectory.Desktop:

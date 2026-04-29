@@ -24,7 +24,7 @@ export const openBuiltinApp = async (
     defaultHeight: node.meta.height,
     defaultWidth: node.meta.width,
     path: APP_DATA_DB_BUILTIN_PATH,
-    file: `${node.name}.json`
+    file: `${node.meta.builtinId || node.id}.json`
   })
   const bw = new BrowserWindow({
     title: node.name,

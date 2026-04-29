@@ -1,34 +1,19 @@
-# xyz.esion.desk-pod
+# DeskPod
 
-An Electron application with Vue and TypeScript
+你的第二个桌面（副屏软件）
 
-## Recommended IDE Setup
+## 计划功能
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
-
-## Project Setup
-
-### Install
-
-```bash
-$ pnpm install
-```
-
-### Development
-
-```bash
-$ pnpm dev
-```
-
-### Build
-
-```bash
-# For windows
-$ pnpm build:win
-
-# For macOS
-$ pnpm build:mac
-
-# For Linux
-$ pnpm build:linux
-```
+- 本地功能
+  - 本地应用
+  - 本地文件
+  - 本地文件夹
+  - 本地命令
+  - 本地脚本
+- 链接
+- 小部件
+  - 内部小部件
+  - 快应用小部件
+  - 插件小部件
+- 快应用
+- 插件
