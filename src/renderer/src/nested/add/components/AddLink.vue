@@ -69,7 +69,11 @@ const data = ref<DesktopNodeMeta & { name: string; url: string; icon: string }>(
   name: '',
   url: '',
   icon: '',
-  openWith: 'default' as 'default' | 'inner'
+  openWith: 'default' as 'default' | 'inner',
+  minWidth: 800,
+  minHeight: 600,
+  width: 1200,
+  height: 800
 })
 const fetchingIcon = ref(false)
 
