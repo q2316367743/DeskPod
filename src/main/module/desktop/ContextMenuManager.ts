@@ -105,6 +105,17 @@ export function createContextMenuByDesktop(param: DesktopCreateParam) {
           click: () => openAppWrap('添加脚本', '/native/script', param)
         }
       ]
+    },
+    {
+      label: '安装',
+      submenu: [
+        {
+          label: '安装快应用'
+        },
+        {
+          label: '安装插件'
+        }
+      ]
     }
   )
   if (!param.parentId && param.desktopId !== 'dock') {

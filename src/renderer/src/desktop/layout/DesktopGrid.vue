@@ -129,8 +129,8 @@ onMounted(async () => {
 
   grid = GridStack.init(
     {
-      column: Math.floor((window.innerWidth - 56) / CELL_SIZE),
-      row: Math.floor((window.innerHeight - 66 - 56) / CELL_SIZE),
+      column: Math.floor((window.innerWidth - 16) / CELL_SIZE),
+      row: Math.floor((window.innerHeight - 82) / CELL_SIZE),
       cellHeight: CELL_SIZE,
       margin: 0,
       float: true,
@@ -182,7 +182,7 @@ watch(
 
 <style lang="less" scoped>
 .desktop-grid-container {
-  padding: 32px 8px 8px;
+  padding: 8px;
   width: calc(100vw - 16px);
   height: calc(100vh - 82px);
   overflow: auto;

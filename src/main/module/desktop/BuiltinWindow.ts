@@ -35,7 +35,7 @@ export const openBuiltinApp = async (
     fullscreen: bwEws.isFullScreen,
     minWidth: node.meta.minWidth || 800,
     minHeight: node.meta.minHeight || 600,
-    skipTaskbar: true,
+    skipTaskbar: false,
     show: true,
     autoHideMenuBar: true,
     webPreferences: {

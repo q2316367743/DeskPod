@@ -19,6 +19,7 @@ export function handleMainWindow() {
     for (const display of displays) {
       if (display.id === displayId) {
         logDebug(`使用屏幕：${display.id}`, display.bounds)
+        mainWindow.setFullScreen(false)
         // 如果找到了
         mainWindow.setBounds(display.bounds)
         break
