@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
-// import { platform } from 'node:os'
+import { platform } from 'node:os'
 import { appDirInit } from '$/global/Constant'
 import { desktopManager, pluginManager, quickManager, settingManager } from '$/global/BeanFactory'
 import { useSql } from '$/lib/sql'
@@ -40,10 +40,10 @@ app.whenReady().then(() => {
     })
   electronApp.setAppUserModelId('xyz.esion')
 
-  // if (platform() === 'darwin') {
-  //   // MacOS
-  //   app.dock?.hide()
-  // }
+  if (platform() === 'darwin') {
+    // MacOS
+    app.dock?.hide()
+  }
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)

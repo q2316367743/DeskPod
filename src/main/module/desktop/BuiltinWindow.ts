@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import { PARTITION } from '@common/global'
 import ews from 'electron-window-state'
 import { APP_DATA_DB_BUILTIN_PATH } from '$/global/Constant'
+import { taskbarManager } from '$/global/BeanFactory'
 
 const builtinWindowMap = new Map<string, BrowserWindow>()
 
@@ -46,6 +47,7 @@ export const openBuiltinApp = async (
     }
   })
   bwEws.manage(bw)
+  taskbarManager.manage({ bw, type: 'builtin', icon: node.icon, name: node.name })
   bw.on('close', () => {
     builtinWindowMap.delete(builtinId)
   })

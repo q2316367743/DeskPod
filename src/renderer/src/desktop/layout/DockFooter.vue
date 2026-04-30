@@ -38,6 +38,9 @@
             <div class="disabled-icon-wrapper">
               <item-icon :icon="t.icon" :name="t.name" :size="36" />
             </div>
+            <div class="btn-close" @click.stop="handleTaskbarClose(t)">
+              <close-icon />
+            </div>
           </div>
         </t-tooltip>
         <dock-delete-icon />
@@ -47,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { AppIcon, HomeIcon, InternetIcon, SettingIcon } from 'tdesign-icons-vue-next'
+import { AppIcon, CloseIcon, HomeIcon, InternetIcon, SettingIcon } from 'tdesign-icons-vue-next'
 import { DesktopNode } from '@common/types'
 import { builtinHomeNode, builtinList } from '@/global/BuiltinList'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
@@ -75,6 +78,10 @@ const handleItemClick = (node: DesktopNode) => {
 }
 const handleTaskbarClick = (taskbar: TaskbarView) => {
   window.taskbarAPI.toggle(taskbar.id)
+}
+
+const handleTaskbarClose = (taskbar: TaskbarView) => {
+  window.taskbarAPI.close(taskbar.id)
 }
 
 onMounted(() => {
@@ -124,6 +131,7 @@ onUnmounted(() => {
   }
 
   .disabled-btn {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -151,6 +159,21 @@ onUnmounted(() => {
     .disabled-label {
       font-size: 12px;
       color: var(--td-text-color-disabled);
+    }
+
+    .btn-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--td-error-color);
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--td-bg-color-container);
+      font-size: 12px;
     }
   }
 }
