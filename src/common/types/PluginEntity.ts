@@ -17,6 +17,8 @@ export interface PluginEntity {
   author?: string
   // 官网
   homepage?: string
+  // 许可证
+  license?: string
 
   // 开发者模式
   develop?: {

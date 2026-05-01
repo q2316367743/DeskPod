@@ -21,6 +21,7 @@ const pluginVerifyType = Type.Object({
   description: Type.Optional(Type.String()),
   author: Type.Optional(Type.String()),
   homepage: Type.Optional(Type.String()),
+  license: Type.Optional(Type.String()),
 
   // 开发者模式
   develop: Type.Optional(

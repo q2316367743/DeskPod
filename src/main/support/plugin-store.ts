@@ -1,5 +1,5 @@
 import { defineApi } from '$/global/DefineApi'
-import { storeManager } from '$/global/BeanFactory'
+import { pluginManager, storeManager } from '$/global/BeanFactory'
 import { StoreOptions } from '$/module/plugin'
 
 interface LoadArgs {
@@ -33,63 +33,78 @@ type ReloadArgs = { rid: string; ignoreDefaults?: boolean }
 
 export default [
   defineApi<LoadArgs>('plugin:store|load', async (args, _o, payload) => {
+    await pluginManager.checkBasePermission(payload, 'store', 'load')
     const { path, options } = args
     return storeManager.load(path, payload.pluginId, options)
   }),
-  defineApi<LoadArgs>('plugin:store|get_store', async (args) => {
+  defineApi<LoadArgs>('plugin:store|get_store', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'store', 'get-store')
     const { path } = args
     return storeManager.getStore(path)
   }),
   defineApi<SetArgs>('plugin:store|set', async (args, _o, payload) => {
+    await pluginManager.checkBasePermission(payload, 'store', 'set')
     const { rid, key, value } = args
     return storeManager.setValue(rid, key, value, payload)
   }),
-  defineApi<GetArgs>('plugin:store|get', async (args) => {
+  defineApi<GetArgs>('plugin:store|get', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'store', 'get')
     const { rid, key } = args
     return storeManager.getValue(rid, key)
   }),
-  defineApi<SetArgs>('plugin:store|has', async (args) => {
+  defineApi<SetArgs>('plugin:store|has', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'store', 'has')
     const { rid, key } = args
     return storeManager.hasKey(rid, key)
   }),
   defineApi<DeleteArgs>('plugin:store|delete', async (args, _o, payload) => {
+    await pluginManager.checkBasePermission(payload, 'store', 'delete')
     const { rid, key } = args
     return storeManager.deleteKey(rid, key, payload)
   }),
   defineApi<ClearArgs>('plugin:store|clear', async (args, _o, payload) => {
+    await pluginManager.checkBasePermission(payload, 'store', 'clear')
     const { rid } = args
     return storeManager.clear(rid, payload)
   }),
   defineApi<ResetArgs>('plugin:store|reset', async (args, _o, payload) => {
+    await pluginManager.checkBasePermission(payload, 'store', 'reset')
     const { rid } = args
     return storeManager.reset(rid, payload)
   }),
-  defineApi<KeysArgs>('plugin:store|keys', async (args) => {
+  defineApi<KeysArgs>('plugin:store|keys', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'store', 'keys')
     const { rid } = args
     return storeManager.keys(rid)
   }),
-  defineApi<KeysArgs>('plugin:store|values', async (args) => {
+  defineApi<KeysArgs>('plugin:store|values', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'store', 'values')
     const { rid } = args
     return storeManager.values(rid)
   }),
-  defineApi<EntryArgs>('plugin:store|entries', async (args) => {
+  defineApi<EntryArgs>('plugin:store|entries', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'store', 'entries')
     const { rid } = args
     return storeManager.entries(rid)
   }),
-  defineApi<EntryArgs>('plugin:store|length', async (args) => {
+  defineApi<EntryArgs>('plugin:store|length', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'store', 'length')
     const { rid } = args
     return storeManager.length(rid)
   }),
-  defineApi<ReloadArgs>('plugin:store|reload', async (args) => {
+  defineApi<ReloadArgs>('plugin:store|reload', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'store', 'reload')
     const { rid } = args
     return storeManager.reload(rid, args)
   }),
-  defineApi<SaveArgs>('plugin:store|save', async (args) => {
+  defineApi<SaveArgs>('plugin:store|save', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'store', 'save')
     const { rid } = args
     return storeManager.save(rid)
   }),
   // TODO: 其实不是这里的
-  defineApi<SaveArgs>('plugin:resources|close', async (args) => {
+  defineApi<SaveArgs>('plugin:resources|close', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'resources', 'close')
     const { rid } = args
     return storeManager.save(rid)
   })

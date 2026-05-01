@@ -1,4 +1,5 @@
 import { defineApi } from '$/global/DefineApi'
+import { pluginManager } from '$/global/BeanFactory'
 
 interface BaseArgs {
   level: number
@@ -7,7 +8,8 @@ interface BaseArgs {
 }
 
 export default [
-  defineApi<BaseArgs>('plugin:log|log', async (args) => {
+  defineApi<BaseArgs>('plugin:log|log', async (args, _o, p) => {
+    await pluginManager.checkBasePermission(p, 'log', 'log')
     // 插件日志
     const {
       // Trace|Debug|Info|Warn|Error

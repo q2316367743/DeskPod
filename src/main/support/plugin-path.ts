@@ -1,4 +1,4 @@
-import { join, basename, extname, isAbsolute, normalize, resolve } from 'node:path'
+import { join, basename, extname, isAbsolute, normalize, resolve, dirname } from 'node:path'
 import { app } from 'electron'
 import { defineApi } from '$/global/DefineApi'
 import { pluginManager } from '$/global/BeanFactory'
@@ -164,24 +164,32 @@ export default [
       return join(dir, path)
     }
   ),
-  defineApi<BaseArgs>('plugin:path|basename', async (args) => {
+  defineApi<BaseArgs>('plugin:path|resolve', async (args) => {
     const { path } = args
-    return basename(path)
-  }),
-  defineApi<BaseArgs>('plugin:path|extname', async (args) => {
-    const { path } = args
-    return extname(path)
-  }),
-  defineApi<BaseArgs>('plugin:path|is_absolute', async (args) => {
-    const { path } = args
-    return isAbsolute(path)
+    return resolve(path)
   }),
   defineApi<BaseArgs>('plugin:path|normalize', async (args) => {
     const { path } = args
     return normalize(path)
   }),
-  defineApi<BaseArgs>('plugin:path|resolve', async (args) => {
+  defineApi<{ paths: Array<string> }>('plugin:path|join', async (args) => {
+    const { paths } = args
+    return join(...paths)
+  }),
+  defineApi<BaseArgs>('plugin:path|dirname', async (args) => {
     const { path } = args
-    return resolve(path)
+    return dirname(path)
+  }),
+  defineApi<BaseArgs>('plugin:path|extname', async (args) => {
+    const { path } = args
+    return extname(path)
+  }),
+  defineApi<BaseArgs>('plugin:path|basename', async (args) => {
+    const { path } = args
+    return basename(path)
+  }),
+  defineApi<BaseArgs>('plugin:path|is_absolute', async (args) => {
+    const { path } = args
+    return isAbsolute(path)
   })
 ]
