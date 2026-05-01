@@ -6,7 +6,7 @@ import { is } from '@electron-toolkit/utils'
 import icon from '../../../../resources/icon.png?asset'
 import { logDebug } from '$/lib/log'
 
-let mainWindow: BrowserWindow | null = null
+let mainWindow: BrowserWindow | undefined = undefined
 export const setMainWindow = (win: BrowserWindow) => (mainWindow = win)
 export const getMainWindow = () => mainWindow
 

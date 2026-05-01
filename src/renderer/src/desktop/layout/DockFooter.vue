@@ -22,15 +22,6 @@
           </div>
         </t-tooltip>
         <div class="dock-divider"></div>
-
-        <t-tooltip v-for="b in builtinList" :key="b.id" :content="b.name">
-          <div class="disabled-btn" @click="handleItemClick(b)">
-            <div class="disabled-icon-wrapper">
-              <AppIcon v-if="b.id === 'plugin'" size="24px" />
-              <SettingIcon v-else-if="b.id === 'setting'" size="24px" />
-            </div>
-          </div>
-        </t-tooltip>
         <div class="dock-divider"></div>
         <t-tooltip v-for="t in taskbars" :key="t.id" :content="t.name">
           <div class="disabled-btn" @click="handleTaskbarClick(t)">
@@ -49,9 +40,9 @@
 </template>
 
 <script lang="ts" setup>
-import { AppIcon, CloseIcon, HomeIcon, SettingIcon } from 'tdesign-icons-vue-next'
+import { CloseIcon, HomeIcon } from 'tdesign-icons-vue-next'
 import { DesktopNode } from '@common/types'
-import { builtinHomeNode, builtinList } from '@/global/BuiltinList'
+import { builtinHomeNode } from '@/global/BuiltinList'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 import ItemNode from '@/desktop/node/ItemNode.vue'
 import { handleDesktopDockCxt } from '@/desktop/layout/func/DesktopGridCxt'

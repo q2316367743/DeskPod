@@ -28,7 +28,7 @@
 import { PlusIcon } from 'tdesign-icons-vue-next'
 import type { PluginEntityWrap } from '@common/types'
 import { MessageUtil } from '@/utils'
-import PluginCard from '@/nested/plugin/components/PluginCard.vue'
+import PluginCard from './PluginCard.vue'
 
 const plugins = ref(new Array<PluginEntityWrap>())
 const loading = ref(false)

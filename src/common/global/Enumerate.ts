@@ -13,7 +13,7 @@ export const PARTITION = {
 
 export const BUILTIN_KEY = {
   ADD: 'add',
-  QUICK: 'quick',
+  // 插件安装页面
   PLUGIN: 'plugin',
   SETTING: 'setting'
 }

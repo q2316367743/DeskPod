@@ -33,7 +33,7 @@ export class TaskbarManager {
   // 管理一个 bw
   manage(item: TaskbarForm) {
     const { bw } = item
-    bw.setParentWindow(getMainWindow())
+    bw.setParentWindow(getMainWindow() || null)
     const id = useSnowflake().nextId()
     this.map.set(id, { ...item, visible: true })
     // 监听关闭事件
