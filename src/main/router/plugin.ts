@@ -18,5 +18,9 @@ ipcMain.handle('/main/plugin/upgrade', (_e, identifier, path) => {
 })
 
 ipcMain.handle('/main/plugin/uninstall', (_e, identifier) => {
-  return pluginManager.uninstall(identifier)
+  return pluginManager.uninstall(identifier, false)
+})
+
+ipcMain.handle('/main/plugin/toggle-install', () => {
+
 })

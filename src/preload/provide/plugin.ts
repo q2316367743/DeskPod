@@ -18,6 +18,9 @@ export const pluginAPI = {
   uninstall: (identifier: string): Promise<void> => {
     return ipcRenderer.invoke('/main/plugin/uninstall', identifier)
   },
+  toggleInstall: () => {
+    return ipcRenderer.invoke('/main/plugin/toggle-install')
+  },
   preload: () => {
     return join(__dirname, 'plugin.js')
   }

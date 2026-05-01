@@ -55,6 +55,8 @@ interface PluginAPI {
   upgrade(identifier: string, path: string): Promise<void>
   uninstall(identifier: string): Promise<void>
   preload(): string
+  // 触发安装
+  toggleInstall(): Promise<void>
 }
 
 interface FileFilter {
