@@ -1,0 +1,10 @@
+<template>
+  <div class="m-8px">
+    <t-card size="small">新增插件</t-card>
+  </div>
+</template>
+<script lang="ts" setup>
+</script>
+<style scoped lang="less">
+
+</style>

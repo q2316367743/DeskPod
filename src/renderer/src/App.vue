@@ -52,7 +52,7 @@ onMounted(() => {
 }
 .desktop-bar {
   width: 100vw;
-  height: 32px;
+  height: 8px;
   z-index: 9999999;
   position: absolute;
   top: 0;

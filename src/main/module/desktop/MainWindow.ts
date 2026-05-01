@@ -6,7 +6,7 @@ import { is } from '@electron-toolkit/utils'
 import icon from '../../../../resources/icon.png?asset'
 import { logDebug } from '$/lib/log'
 
-let mainWindow: BrowserWindow | undefined = undefined
+let mainWindow: BrowserWindow | null = null
 export const setMainWindow = (win: BrowserWindow) => (mainWindow = win)
 export const getMainWindow = () => mainWindow
 
@@ -20,6 +20,8 @@ export function handleMainWindow() {
       if (display.id === displayId) {
         logDebug(`使用屏幕：${display.id}`, display.bounds)
         mainWindow.setFullScreen(false)
+        mainWindow.setSize(display.bounds.width, display.bounds.height)
+        mainWindow.setMinimumSize(display.bounds.width, display.bounds.height)
         // 如果找到了
         mainWindow.setBounds(display.bounds)
         break

@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Setting } from '@common/types'
+import { Setting } from 'src/common/types'
 
 interface DisplayInfo {
   id: number

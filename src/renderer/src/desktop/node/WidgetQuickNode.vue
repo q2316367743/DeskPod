@@ -1,6 +1,12 @@
 <template>
   <div class="quick-widget-node">
-    <webview class="w-full h-full" :src="node.meta?.root" :web-security="false"></webview>
+    <webview
+      class="w-full h-full"
+      ref="webviewRef"
+      :src="node.meta?.root"
+      :web-security="false"
+      webpreferences="webSecurity=no"
+    ></webview>
     <div class="hand">
       <move-icon />
     </div>
@@ -15,6 +21,12 @@ defineProps({
     type: Object as PropType<DesktopNode>,
     required: true
   }
+})
+const webviewRef = ref()
+
+onUnmounted(() => {
+  // 停止加载并清空内容
+  webviewRef.value?.stop()
 })
 </script>
 <style scoped lang="less">
