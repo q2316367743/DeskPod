@@ -2,16 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { sep, delimiter } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { randomUUID } from 'node:crypto'
-import {
-  EmitArgs,
-  EmitToArgs,
-  ListenArgs,
-  supportEventEmit,
-  supportEventEmitTo,
-  supportEventlisten,
-  supportEventUnListen,
-  UnListenArgs
-} from '~/event'
+import { ListenArgs, supportEventlisten, supportEventUnListen, UnListenArgs } from '~/event'
 
 const eventMap = new Map<string, (...args: Array<unknown>) => Promise<unknown> | unknown>()
 
@@ -36,29 +27,21 @@ const __TAURI_INTERNALS__ = {
    * @param options 选项
    */
   invoke: (cmd: string, args: unknown, options: unknown) => {
-    if (cmd.startsWith('plugin:event')) {
-      switch (cmd) {
-        case 'plugin:event|listen':
-          supportEventlisten(args as ListenArgs, eventMap)
-          break
-        case 'plugin:event|unlisten':
-          supportEventUnListen(args as UnListenArgs, eventMap)
-          break
-        case 'plugin:event|emit':
-          supportEventEmit(args as EmitArgs)
-          break
-        case 'plugin:event|emit_to':
-          supportEventEmitTo(args as EmitToArgs)
-          break
-      }
-      return Promise.resolve()
+    switch (cmd) {
+      case 'plugin:event|listen':
+        supportEventlisten(args as ListenArgs, eventMap)
+        return Promise.resolve()
+      case 'plugin:event|unlisten':
+        supportEventUnListen(args as UnListenArgs, eventMap)
+        return Promise.resolve()
+      default:
+        // 直接执行命令
+        return ipcRenderer.invoke('plugin:cmd', {
+          cmd: cmd,
+          args: args,
+          options: options
+        })
     }
-    // 直接执行命令
-    return ipcRenderer.invoke('plugin:cmd', {
-      cmd: cmd,
-      args: args,
-      options: options
-    })
   },
   /**
    * 注册回调
@@ -83,8 +66,11 @@ const __TAURI_INTERNALS__ = {
     return pathToFileURL(filePath).href
   },
   metadata: {
+    // 空的 label，会自动设为自身
     currentWindow: {
-      // TODO：重点
+      label: ''
+    },
+    currentWebview: {
       label: ''
     }
   },

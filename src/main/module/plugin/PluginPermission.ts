@@ -1,7 +1,7 @@
-import { PluginEntityWrap } from '@common/types'
 import { dialog } from 'electron'
 import { appPluginConfigPath } from '$/global/Constant'
 import { writeFile } from 'node:fs/promises'
+import { ApiPayload } from '$/global/DefineApi'
 
 class PermissionError extends Error {
   constructor(message: string) {
@@ -18,11 +18,8 @@ const defaultCapability: Record<string, Array<string>> = {
   sql: ['sql:allow-close', 'sql:allow-load', 'sql:allow-select']
 }
 
-export async function checkBasePermission(
-  plugin: PluginEntityWrap,
-  module: string,
-  capability: string
-) {
+export async function checkBasePermission(payload: ApiPayload, module: string, capability: string) {
+  const plugin = payload.entity
   const allow = `${module}:allow-${capability}`
   const deny = `${module}:deny-${capability}`
   const { capabilities } = plugin

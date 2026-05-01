@@ -24,7 +24,14 @@ const pluginBrowserWindowMap = new Map<string, Map<string, PbwValue>>()
 // 浏览器 ID => 浏览器
 const browserIdMap = new Map<number, { pluginId: string; label: string }>()
 
-export function getBrowserWindowByKey(pluginId: string, label: string) {
+export function getPluginWindowMap(pluginId: string) {
+  return pluginBrowserWindowMap.get(pluginId)
+}
+
+export function getPluginWindows(pluginId: string) {
+  return Array.from(pluginBrowserWindowMap.get(pluginId)?.values() || [])
+}
+export function getPluginWindowByKey(pluginId: string, label: string) {
   return pluginBrowserWindowMap.get(pluginId)?.get(label)
 }
 
@@ -102,7 +109,6 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
   })
   const iconPath = options.icon ? join(entity.root, entity.icon) : icon
   const bw = new BrowserWindow({
-    ...options,
     icon: iconPath,
     show: true,
     x: bwEws.x,
@@ -116,11 +122,17 @@ export async function createPluginWindow(options: WindowOptions, pluginId: strin
       preload: join(__dirname, '../preload/plugin.js'),
       contextIsolation: true,
       nodeIntegration: true,
-      webSecurity: false
+      webSecurity: false,
+      devTools: options.devtools
     }
   })
   bwEws.manage(bw)
-  taskbarManager.manage({ bw, type: 'plugin', icon: iconPath, name: options.title! })
+  taskbarManager.manage({
+    bw,
+    type: 'plugin',
+    icon: iconPath,
+    name: `${options.label} | ${entity.productName}`
+  })
   bw.once('close', () => {
     bw.emit(TauriEvent.WINDOW_DESTROYED)
     // 被关闭了，则移除
@@ -210,7 +222,7 @@ export async function createWebContentView(pluginId: string, label: string, opti
 }
 
 export async function moveWebContentView(pluginId: string, label: string, options: ViewOptions) {
-  const value = getBrowserWindowByKey(pluginId, label)
+  const value = getPluginWindowByKey(pluginId, label)
   if (!value) {
     return Promise.reject(Error('插件窗口未找到'))
   }

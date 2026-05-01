@@ -1,51 +1,50 @@
-export interface WindowOptions {
-  // 窗口标签，必填
-  label: string
-  // 启动的文件，必填
-  url: string
+enum ScrollBarStyle {
+  Default = 'default',
+  FluentOverlay = 'fluentOverlay'
+}
 
-  icon?: string
-  center?: boolean
-  x?: number
-  y?: number
-  width?: number
-  height?: number
-  minWidth?: number
-  minHeight?: number
-  maxWidth?: number
-  maxHeight?: number
-  // preventOverflow?: boolean | PreventOverflowMargin
-  resizable?: boolean
-  title?: string
-  fullscreen?: boolean
-  focus?: boolean
-  focusable?: boolean
+type Color =
+  | [number, number, number]
+  | [number, number, number, number]
+  | { red: number; green: number; blue: number; alpha: number }
+  | string
+
+enum BackgroundThrottlingPolicy {
+  Disabled = 'disabled',
+  Throttle = 'throttle',
+  Suspend = 'suspend'
+}
+
+export interface WebviewOptions {
+  url?: string
+  x: number
+  y: number
+  width: number
+  height: number
   transparent?: boolean
-  maximized?: boolean
-  visible?: boolean
-  decorations?: boolean
-  alwaysOnTop?: boolean
-  alwaysOnBottom?: boolean
-  contentProtected?: boolean
-  skipTaskbar?: boolean
-  shadow?: boolean
-  // theme?: Theme
-  // titleBarStyle?: TitleBarStyle
-  // trafficLightPosition?: LogicalPosition
-  hiddenTitle?: boolean
-  tabbingIdentifier?: string
-  maximizable?: boolean
-  minimizable?: boolean
-  closable?: boolean
-  // parent?: Window | WebviewWindow | string
-  visibleOnAllWorkspaces?: boolean
-  // windowEffects?: Effects
-  // backgroundColor?: Color
-  // backgroundThrottling?: BackgroundThrottlingPolicy
+  focus?: boolean
+  dragDropEnabled?: boolean
+  acceptFirstMouse?: boolean
+  userAgent?: string
+  incognito?: boolean
+  proxyUrl?: string
+  zoomHotkeysEnabled?: boolean
+  useHttpsScheme?: boolean
+  devtools?: boolean
+  backgroundColor?: Color
+  backgroundThrottling?: BackgroundThrottlingPolicy
   javascriptDisabled?: boolean
   allowLinkPreview?: boolean
   disableInputAccessoryView?: boolean
-  // scrollBarStyle?: ScrollBarStyle
+  dataDirectory?: string
+  dataStoreIdentifier?: number[]
+  scrollBarStyle?: ScrollBarStyle
+  generalAutofillEnabled?: boolean
+}
+
+export interface WindowOptions extends WebviewOptions {
+  label: string
+  icon?: string
 }
 
 export interface ViewOptions {

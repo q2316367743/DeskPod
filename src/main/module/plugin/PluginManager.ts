@@ -16,8 +16,6 @@ import { useSnowflake } from '@common/utils'
 import { databaseManager, desktopManager, storeManager } from '$/global/BeanFactory'
 import { logError, logInfo } from '$/lib/log'
 import { PARTITION } from '@common/global'
-import { checkBasePermission } from './PluginPermission'
-import { ApiPayload } from '$/global/DefineApi'
 
 /**
  * 插件管理器
@@ -233,21 +231,5 @@ export class PluginManager {
     this.pluginMap.delete(identifier)
     // 移除桌面图标
     await desktopManager.removeNodesByPluginId(identifier)
-  }
-
-  /**
-   * 检查基础权限
-   * @param payload 插件 ID
-   * @param module 模块
-   * @param capability 能力
-   */
-  async checkBasePermission(
-    payload: ApiPayload,
-    module: string,
-    capability: string
-  ): Promise<void> {
-    const plugin = this.pluginMap.get(payload.pluginId)
-    if (!plugin) return Promise.reject(new Error('插件不存在'))
-    await checkBasePermission(plugin, module, capability)
   }
 }

@@ -1,23 +1,23 @@
 import { shell } from 'electron'
 
 import { defineApi } from '$/global/DefineApi'
-import { pluginManager } from '$/global/BeanFactory'
+import { checkBasePermission } from '$/module/plugin'
 
 export default [
   defineApi<{ url: string }>('plugin:opener|open_url', async (args, _o, p) => {
-    await pluginManager.checkBasePermission(p, 'opener', 'open-url')
+    await checkBasePermission(p, 'opener', 'open-url')
     const { url } = args
     await shell.openExternal(url)
     return Promise.resolve()
   }),
   defineApi<{ path: string; with?: string }>('plugin:opener|open_path', async (args, _o, p) => {
-    await pluginManager.checkBasePermission(p, 'opener', 'open-path')
+    await checkBasePermission(p, 'opener', 'open-path')
     const { path } = args
     await shell.openPath(path)
     return Promise.resolve()
   }),
   defineApi<{ paths: Array<string> }>('plugin:opener|reveal_item_in_dir', async (args, _o, p) => {
-    await pluginManager.checkBasePermission(p, 'opener', 'reveal-item-in-dir')
+    await checkBasePermission(p, 'opener', 'reveal-item-in-dir')
     const { paths } = args
     for (const path of paths) {
       shell.showItemInFolder(path)

@@ -1,4 +1,4 @@
-import { PluginEntity } from '@common/types'
+import { PluginEntityWrap } from '@common/types'
 
 export interface ApiPayload {
   // 插件的
@@ -6,7 +6,7 @@ export interface ApiPayload {
   // 插件的窗口标签
   label: string
   // 插件实体
-  entity: PluginEntity
+  entity: PluginEntityWrap
 }
 
 export interface ApiFunc<A, O, R> {

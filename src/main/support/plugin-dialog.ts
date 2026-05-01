@@ -1,7 +1,7 @@
 import { defineApi } from '$/global/DefineApi'
 import { dialog } from 'electron'
 import { DialogFilter } from '@tauri-apps/plugin-dialog'
-import { pluginManager } from '$/global/BeanFactory'
+import { checkBasePermission } from '$/module/plugin'
 
 interface OpenDialogOptions {
   title?: string
@@ -38,7 +38,7 @@ interface MessageDialogOptions {
 
 export default [
   defineApi<{ options: OpenDialogOptions }>('plugin:dialog|open', async (args, _o, p) => {
-    await pluginManager.checkBasePermission(p, 'dialog', 'open')
+    await checkBasePermission(p, 'dialog', 'open')
     const { filePaths } = await dialog.showOpenDialog({
       ...args.options,
       properties: [
@@ -51,7 +51,7 @@ export default [
     else return filePaths ? (filePaths[0] ? filePaths[0] : null) : null
   }),
   defineApi<{ options: SaveDialogOptions }>('plugin:dialog|save', async (args, _o, p) => {
-    await pluginManager.checkBasePermission(p, 'dialog', 'save')
+    await checkBasePermission(p, 'dialog', 'save')
     const { filePath } = await dialog.showSaveDialog({
       ...args.options,
       properties: args.options.canCreateDirectories ? ['createDirectory'] : []
@@ -59,7 +59,7 @@ export default [
     return filePath ? filePath : null
   }),
   defineApi<{ options: MessageDialogOptions }>('plugin:dialog|message', async (args, _o, p) => {
-    await pluginManager.checkBasePermission(p, 'dialog', 'message')
+    await checkBasePermission(p, 'dialog', 'message')
     const { options } = args
     let buttons: Array<string> | undefined = undefined
     if (options.buttons) {

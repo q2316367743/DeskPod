@@ -3,6 +3,7 @@ import { app } from 'electron'
 import { defineApi } from '$/global/DefineApi'
 import { pluginManager } from '$/global/BeanFactory'
 import { getPluginDataDir, getPluginLogDir } from '$/global/Constant'
+import { checkBasePermission } from '$/module/plugin'
 
 export enum BaseDirectory {
   /**
@@ -154,6 +155,7 @@ export default [
   defineApi<{ path: string; directory: number }>(
     'plugin:path|resolve_directory',
     async (args, _o, payload) => {
+      await checkBasePermission(payload, 'core:path', 'resolve-directory')
       const { path, directory } = args
       const dir = getDirectory(payload.pluginId, directory)
       if (!path) {
@@ -164,31 +166,38 @@ export default [
       return join(dir, path)
     }
   ),
-  defineApi<BaseArgs>('plugin:path|resolve', async (args) => {
+  defineApi<BaseArgs>('plugin:path|resolve', async (args, _o, p) => {
+    await checkBasePermission(p, 'core:path', 'resolve')
     const { path } = args
     return resolve(path)
   }),
-  defineApi<BaseArgs>('plugin:path|normalize', async (args) => {
+  defineApi<BaseArgs>('plugin:path|normalize', async (args, _o, p) => {
+    await checkBasePermission(p, 'core:path', 'normalize')
     const { path } = args
     return normalize(path)
   }),
-  defineApi<{ paths: Array<string> }>('plugin:path|join', async (args) => {
+  defineApi<{ paths: Array<string> }>('plugin:path|join', async (args, _o, p) => {
+    await checkBasePermission(p, 'core:path', 'join')
     const { paths } = args
     return join(...paths)
   }),
-  defineApi<BaseArgs>('plugin:path|dirname', async (args) => {
+  defineApi<BaseArgs>('plugin:path|dirname', async (args, _o, p) => {
+    await checkBasePermission(p, 'core:path', 'dirname')
     const { path } = args
     return dirname(path)
   }),
-  defineApi<BaseArgs>('plugin:path|extname', async (args) => {
+  defineApi<BaseArgs>('plugin:path|extname', async (args, _o, p) => {
+    await checkBasePermission(p, 'core:path', 'extname')
     const { path } = args
     return extname(path)
   }),
-  defineApi<BaseArgs>('plugin:path|basename', async (args) => {
+  defineApi<BaseArgs>('plugin:path|basename', async (args, _o, p) => {
+    await checkBasePermission(p, 'core:path', 'basename')
     const { path } = args
     return basename(path)
   }),
-  defineApi<BaseArgs>('plugin:path|is_absolute', async (args) => {
+  defineApi<BaseArgs>('plugin:path|is_absolute', async (args, _o, p) => {
+    await checkBasePermission(p, 'core:path', 'is-absolute')
     const { path } = args
     return isAbsolute(path)
   })

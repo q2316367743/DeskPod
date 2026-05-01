@@ -3,7 +3,7 @@ import { BaseDirectory, getDirectory } from '$/support/plugin-path'
 import { existsSync } from 'node:fs'
 import { readFile, writeFile } from 'node:fs/promises'
 import { useSnowflake } from '@common/utils'
-import { getBrowserWindowByKey } from '$/module/plugin'
+import { getPluginWindowByKey } from '$/module/plugin'
 import { ApiPayload } from '$/global/DefineApi'
 
 type ReloadOptions = {
@@ -58,7 +58,7 @@ export class StoreManager {
         if (options) {
           if (options.createNew) {
             // 强制创建新的
-            this.map.set(key, { path, options, target, store: options.defaults})
+            this.map.set(key, { path, options, target, store: options.defaults })
             return key
           }
         }
@@ -88,9 +88,9 @@ export class StoreManager {
       const old = s.store[key]
       s.store[key] = value
       if (old !== value) {
-        const bw = getBrowserWindowByKey(payload.pluginId, payload.label)
+        const bw = getPluginWindowByKey(payload.pluginId, payload.label)
         if (bw) {
-          bw.emit('store://change', {
+          bw.window.webContents.send('store://change', {
             payload: {
               resourceId: rid,
               key: key,
@@ -125,9 +125,9 @@ export class StoreManager {
     const s = this.map.get(rid)
     if (s) {
       delete s.store[key]
-      const bw = getBrowserWindowByKey(payload.pluginId, payload.label)
+      const bw = getPluginWindowByKey(payload.pluginId, payload.label)
       if (bw) {
-        bw.emit('store://change', {
+        bw.window.webContents.send('store://change', {
           payload: {
             resourceId: rid,
             key: key,

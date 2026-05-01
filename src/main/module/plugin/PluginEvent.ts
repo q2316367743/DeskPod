@@ -8,12 +8,14 @@ import win from '$/support/plugin-window'
 import pluginApp from '$/support/plugin-app'
 import log from '$/support/plugin-log'
 import shell from '$/support/plugin-shell'
+import event from '$/support/plugin-event'
+import webview from '$/support/plugin-webview'
 
 // import event from './plugins/plugin-event'
 import { ApiFunc } from '$/global/DefineApi'
 import { ipcMain } from 'electron'
 import { pluginManager } from '$/global/BeanFactory'
-import { getBrowserWindowByKey, getBrowserWindowKeyById } from '$/module/plugin/index'
+import { getPluginWindowByKey, getBrowserWindowKeyById } from '$/module/plugin/index'
 import { logError } from '$/lib/log'
 
 // 事件处理器
@@ -28,7 +30,9 @@ const handleList = [
   ...win,
   ...pluginApp,
   ...log,
-  ...shell
+  ...shell,
+  ...event,
+  ...webview
 ]
 handleList.flatMap(({ cmd, plugin }) => {
   invokeHandleMap.set(cmd, plugin as ApiFunc<unknown, unknown, unknown>)
@@ -95,12 +99,12 @@ ipcMain.on('plugin:event:emit', (event, args) => {
   if (kind === 'App') {
     // 发给主线程
     const appLabel = (entity.main || entity.widgets?.[0])!.label
-    const appBw = getBrowserWindowByKey(bwk.pluginId, appLabel)
+    const appBw = getPluginWindowByKey(bwk.pluginId, appLabel)
     if (appBw) {
       appBw.window.webContents.send(channel, payload)
     }
   } else if (kind === 'WebviewWindow') {
-    const bw = getBrowserWindowByKey(bwk.pluginId, target.label)
+    const bw = getPluginWindowByKey(bwk.pluginId, target.label)
     if (bw) {
       bw.window.webContents.send(channel, payload)
     }
