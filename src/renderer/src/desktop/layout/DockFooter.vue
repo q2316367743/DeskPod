@@ -27,7 +27,6 @@
           <div class="disabled-btn" @click="handleItemClick(b)">
             <div class="disabled-icon-wrapper">
               <AppIcon v-if="b.id === 'plugin'" size="24px" />
-              <InternetIcon v-else-if="b.id === 'quick'" size="24px" />
               <SettingIcon v-else-if="b.id === 'setting'" size="24px" />
             </div>
           </div>
@@ -50,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import { AppIcon, CloseIcon, HomeIcon, InternetIcon, SettingIcon } from 'tdesign-icons-vue-next'
+import { AppIcon, CloseIcon, HomeIcon, SettingIcon } from 'tdesign-icons-vue-next'
 import { DesktopNode } from '@common/types'
 import { builtinHomeNode, builtinList } from '@/global/BuiltinList'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'

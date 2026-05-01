@@ -23,8 +23,18 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('./pages/personalization/BgSetting.vue')
   },
   {
-    name: '开发者',
-    path: '/develop',
+    name: '应用-快应用',
+    path: '/app/quick',
+    component: () => import('./pages/app/quick/AppQuickPage.vue')
+  },
+  {
+    name: '应用-快应用-编辑',
+    path: '/app/quick/edit/:id',
+    component: () => import('./pages/app/quick/pages/edit/index.vue')
+  },
+  {
+    name: '应用-开发者',
+    path: '/app/develop',
     component: () => import('@/nested/setting/pages/develop/DevelopSetting.vue')
   }
 ]

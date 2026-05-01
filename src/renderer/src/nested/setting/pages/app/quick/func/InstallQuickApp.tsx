@@ -24,6 +24,8 @@ export function openInstallQuickApp(from: QuickAppFrom, onUpdate: () => void) {
     type: 'window',
     width: 800,
     height: 600,
+    min_height: 600,
+    min_width: 800,
     root: ''
   })
 
@@ -44,9 +46,13 @@ export function openInstallQuickApp(from: QuickAppFrom, onUpdate: () => void) {
       if (value === 'widget') {
         data.value.width = 4
         data.value.height = 2
+        data.value.min_width = 4
+        data.value.min_height = 2
       } else {
         data.value.width = 800
         data.value.height = 600
+        data.value.min_width = 800
+        data.value.min_height = 600
       }
     }
   )

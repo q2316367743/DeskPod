@@ -3,9 +3,7 @@
     <header class="edit-header">
       <t-space size="small" class="edit-header__left">
         <t-button theme="primary" variant="text" shape="square" @click="handlerClick">
-          <template #icon>
-            <chevron-left-icon />
-          </template>
+          <template #icon><chevron-left-icon /></template>
         </t-button>
         <div class="edit-header__title">编辑</div>
         <div class="ml-8px">
@@ -23,22 +21,17 @@
             :loading="previewing"
             @click="handleRunPreview"
           >
-            <template #icon>
-              <PlayIcon />
-            </template>
+            <template #icon><PlayIcon /></template>
             运行预览
           </t-button>
           <t-button theme="primary" shape="square" @click="handleSave">
-            <template #icon>
-              <save-icon />
-            </template>
+            <template #icon><save-icon /></template>
           </t-button>
         </t-space>
       </div>
     </header>
 
     <div class="edit-container">
-      <!-- 基础信息区域 -->
       <div v-show="activeKey === 'base'" class="info-section">
         <div class="p-8px">
           <t-form ref="formRef" :data="formData" :rules="formRules">
@@ -63,12 +56,20 @@
             </t-form-item>
             <t-row :gutter="16" class="w-full overflow-hidden">
               <t-col :span="6">
-                <t-form-item :label="formData.type === 'widget' ? '列' : '宽'" name="width">
+                <t-form-item
+                  label-align="top"
+                  :label="formData.type === 'widget' ? '列' : '宽'"
+                  name="width"
+                >
                   <t-input-number v-model="formData.width" />
                 </t-form-item>
               </t-col>
               <t-col :span="6">
-                <t-form-item :label="formData.type === 'widget' ? '行' : '高'" name="height">
+                <t-form-item
+                  label-align="top"
+                  :label="formData.type === 'widget' ? '行' : '高'"
+                  name="height"
+                >
                   <t-input-number v-model="formData.height" />
                 </t-form-item>
               </t-col>
@@ -77,7 +78,6 @@
         </div>
       </div>
 
-      <!-- HTML内容编辑区域 -->
       <div v-show="activeKey === 'html'" class="content-section">
         <div class="editor-container">
           <div class="monaco-editor-wrapper">
@@ -94,21 +94,20 @@ import { FormInstanceFunctions, TdFormProps } from 'tdesign-vue-next'
 import { ChevronLeftIcon, SaveIcon, PlayIcon } from 'tdesign-icons-vue-next'
 import * as monaco from 'monaco-editor'
 import { QuickAppCore } from '@common/types'
-import { isDark } from '@/nested/quick/func/global'
+import { isDark } from '../../func/global'
 import { MessageUtil } from '@/utils'
-import { openCodeRunnerDrawer } from '@/nested/quick/components/CodeRunnerDrawer'
+import { openCodeRunnerDrawer } from '../../components/CodeRunnerDrawer'
 import NFileSelect from '@/components/native/NFileSelect.vue'
 
 const route = useRoute()
 const router = useRouter()
 
 function handlerClick() {
-  router.push('/')
+  router.push('/app/quick')
 }
 
 const activeKey = ref('base')
 
-// 表单数据
 const formData = ref<QuickAppCore>({
   name: '',
   description: '',
@@ -118,16 +117,16 @@ const formData = ref<QuickAppCore>({
   type: 'window',
   width: 800,
   height: 600,
-  root: ''
+  root: '',
+  min_width: 800,
+  min_height: 600
 })
 
-// 表单验证规则
 const formRules: TdFormProps['rules'] = {
   name: [{ required: true, message: '请输入应用名称', trigger: 'blur' }],
   root: [{ required: true, message: '请填写内容', trigger: 'blur' }]
 }
 
-// 组件状态
 const formRef = ref<FormInstanceFunctions>()
 const editorRef = ref()
 const saving = ref(false)
@@ -135,21 +134,23 @@ const previewing = ref(false)
 
 let editor: monaco.editor.IStandaloneCodeEditor | null = null
 
-// 监听类型切换，同步调整宽高默认值
 watch(
   () => formData.value.type,
   (value) => {
     if (value === 'widget') {
       formData.value.width = 4
       formData.value.height = 2
+      formData.value.min_width = 4
+      formData.value.min_height = 2
     } else {
       formData.value.width = 800
       formData.value.height = 600
+      formData.value.min_width = 800
+      formData.value.min_height = 600
     }
   }
 )
 
-// 初始化Monaco编辑器
 const initMonacoEditor = async () => {
   if (!editorRef.value) return
 
@@ -178,13 +179,11 @@ const initMonacoEditor = async () => {
     insertSpaces: true
   })
 
-  // 监听内容变化
   editor.onDidChangeModelContent(() => {
     formData.value.root = editor?.getValue() || ''
   })
 }
 
-// 运行预览
 const handleRunPreview = async () => {
   if (!formData.value.root.trim()) {
     MessageUtil.warning('请先输入HTML内容')
@@ -198,7 +197,6 @@ const handleRunPreview = async () => {
   })
 }
 
-// 保存工具
 const handleSave = async () => {
   try {
     const valid = await formRef.value?.validate()
@@ -216,7 +214,7 @@ const handleSave = async () => {
       await window.quickAPI.upgrade(route.params.id as string, formData.value)
     }
     MessageUtil.success('保存成功')
-    await router.push('/')
+    await router.push('/app/quick')
   } catch (error) {
     MessageUtil.error('保存失败', error)
   } finally {
@@ -234,7 +232,6 @@ onMounted(() => {
         icon: window.supportAPI.path.join(res.root, res.icon),
         root: html
       }
-
       editor?.setValue(html)
     })
   }
@@ -251,6 +248,7 @@ onUnmounted(() => {
   position: relative;
   width: 100%;
   height: 100%;
+  background-color: var(--td-bg-color-container);
 
   .edit-header {
     display: flex;
@@ -287,39 +285,12 @@ onUnmounted(() => {
   }
 }
 
-.page-content {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
 .info-section {
   margin-top: 16px;
   padding-bottom: 16px;
-
-  .icon-preview {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid var(--td-border-level-2-color);
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
 }
 
 .content-section {
-  .editor-toolbar {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--td-border-level-2-color);
-  }
-
   .editor-container {
     display: flex;
     gap: 24px;
