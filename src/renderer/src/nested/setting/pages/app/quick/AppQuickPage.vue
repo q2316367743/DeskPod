@@ -1,25 +1,29 @@
 <template>
-  <div class="app-quick-page">
-    <t-tabs v-model="activeTab">
-      <t-tab-panel value="ai" label="AI" />
-      <t-tab-panel value="html" label="html" />
-      <t-tab-panel value="zip" label="zip" />
-      <template #action>
-        <div class="pt-8px mr-8px">
-          <t-button theme="primary" @click="handleAdd">
-            <template #icon><AddIcon /></template>
-            安装快应用
-          </t-button>
+  <div class="m-8px">
+    <t-card size="small">
+      <div class="app-quick-page">
+        <t-tabs v-model="activeTab">
+          <t-tab-panel value="ai" label="AI" />
+          <t-tab-panel value="html" label="html" />
+          <t-tab-panel value="zip" label="zip" />
+          <template #action>
+            <div class="pt-8px mr-8px">
+              <t-button theme="primary" @click="handleAdd">
+                <template #icon><AddIcon /></template>
+                安装快应用
+              </t-button>
+            </div>
+          </template>
+        </t-tabs>
+        <div class="app-quick-page">
+          <t-row v-if="list.length > 0" :gutter="[8, 8]">
+            <t-col v-for="app in list" :key="app.id" flex="300px">
+              <quick-app-card :app="app" @upgrade="handleUpgrade(app)" />
+            </t-col>
+          </t-row>
         </div>
-      </template>
-    </t-tabs>
-    <div class="app-quick-page">
-      <t-row v-if="list.length > 0" :gutter="[8, 8]">
-        <t-col v-for="app in list" :key="app.id" flex="300px">
-          <quick-app-card :app="app" @upgrade="handleUpgrade(app)" />
-        </t-col>
-      </t-row>
-    </div>
+      </div>
+    </t-card>
   </div>
 </template>
 
@@ -61,16 +65,16 @@ onMounted(() => fetchList())
 </script>
 <style lang="less" scoped>
 .app-quick-page {
-  height: 100vh;
+  height: calc(100vh - 36px);
   width: 100%;
   :deep(.t-tabs__operations--right) {
     border-bottom: unset;
   }
   .app-quick-page {
-    height: calc(100vh - 65px);
-    width: calc(100% - 16px);
+    height: calc(100% - 65px);
+    width: 100%;
     overflow: auto;
-    padding: 8px;
+    padding: 8px 0;
   }
 }
 </style>

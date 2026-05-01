@@ -33,6 +33,11 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('./pages/app/quick/pages/edit/index.vue')
   },
   {
+    name: '应用-插件',
+    path: '/app/plugin',
+    component: () => import('./pages/app/plugin/AppPluginPage.vue')
+  },
+  {
     name: '应用-开发者',
     path: '/app/develop',
     component: () => import('@/nested/setting/pages/develop/DevelopSetting.vue')
