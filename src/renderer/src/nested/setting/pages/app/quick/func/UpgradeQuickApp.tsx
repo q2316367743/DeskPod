@@ -18,6 +18,7 @@ import { MessageUtil } from '@/utils'
 export function openUpgradeQuickApp(id: string, old: QuickAppCore, onUpdate: () => void) {
   const data = ref<QuickAppCore>({
     ...old,
+    icon: '',
     root: ''
   })
 

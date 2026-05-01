@@ -5,6 +5,10 @@ export function listQuickApps() {
   return useSql().query<QuickApp>('quick_app').list()
 }
 
+export function getQuickApp(id: string) {
+  return useSql().query<QuickApp>('quick_app').eq('id', id).get()
+}
+
 export function addQuickApp(quickApp: QuickApp) {
   return useSql().mapper<QuickApp>('quick_app').insertSelf(quickApp)
 }

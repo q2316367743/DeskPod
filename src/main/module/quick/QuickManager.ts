@@ -1,10 +1,10 @@
-import { copyFile, readFile, rm, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 import AdmZip from 'adm-zip'
 import { QuickApp, QuickAppCore } from '@common/types'
-import { addQuickApp, listQuickApps, removeQuickApp, updateQuickApp } from '$/service'
+import { addQuickApp, getQuickApp, listQuickApps, removeQuickApp, updateQuickApp } from '$/service'
 import { useSnowflake } from '@common/utils'
-import { createQuickAppDirs, removeQuickAppDirs } from '$/global/Constant'
+import { createQuickAppDirs } from '$/global/Constant'
 import { existsSync } from 'node:fs'
 import { closeQuickWindow } from '$/module/quick/QuickWindow'
 import { desktopManager } from '$/global/BeanFactory'
@@ -41,14 +41,21 @@ export class QuickManager {
     // 3. 判断来源
     if (from.from === 'ai') {
       // 这个最简单，把 entry 写入到文件
-      await writeFile(join(data.root, 'index.html'), from.root, 'utf-8')
+      const target = join(data.root, 'index.html')
+      if (target) await rm(target, { force: true })
+      await writeFile(target, from.root, 'utf-8')
       data.entry = 'index.html'
     } else if (from.from === 'html') {
       // 这个也简单，复制过去即可
       const t = join(data.root, 'index.html')
+      if (t) await rm(t, { force: true })
       await copyFile(from.root, t)
       data.entry = 'index.html'
     } else if (from.from === 'zip') {
+      if (existsSync(data.root)) {
+        await rm(data.root, { recursive: true, force: true })
+        await mkdir(data.root, { recursive: true })
+      }
       // 先解压
       const z = new AdmZip(from.root)
       z.extractAllTo(data.root, true)
@@ -90,12 +97,13 @@ export class QuickManager {
    */
   async upgrade(id: string, form: QuickAppCore) {
     // 创建目录
+    const old = await getQuickApp(id)
+    if (!old) return Promise.reject(new Error(`快应用 ${id} 不存在`))
     // 删除旧的目录
-    await removeQuickAppDirs(id)
-    const root = await createQuickAppDirs(id)
     const data: QuickAppCore = {
+      ...old,
       ...form,
-      root: root
+      icon: form.icon ? form.icon : old.icon
     }
     try {
       await this.handleFile(form, data)
@@ -103,7 +111,7 @@ export class QuickManager {
       await updateQuickApp(id, data)
     } catch (e) {
       // 删除目录
-      await rm(root, { recursive: true, force: true })
+      await rm(data.root, { recursive: true, force: true })
       return Promise.reject(e)
     } finally {
       // 重新获取列表
