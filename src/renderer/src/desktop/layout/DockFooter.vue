@@ -22,7 +22,6 @@
           </div>
         </t-tooltip>
         <div class="dock-divider"></div>
-        <div class="dock-divider"></div>
         <t-tooltip v-for="t in taskbars" :key="t.id" :content="t.name">
           <div class="disabled-btn" @click="handleTaskbarClick(t)">
             <div class="disabled-icon-wrapper">
@@ -33,6 +32,7 @@
             </div>
           </div>
         </t-tooltip>
+        <div v-if="taskbars.length > 0" class="dock-divider" />
         <dock-delete-icon />
       </div>
     </div>

@@ -27,43 +27,43 @@ export default [
   }),
   defineApi<BaseArgs>('plugin:window|is_fullscreen', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-fullscreen')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isFullScreen() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isFullScreen() || false
   }),
   defineApi<BaseArgs>('plugin:window|is_minimized', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-minimized')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isMinimized() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isMinimized() || false
   }),
   defineApi<BaseArgs>('plugin:window|is_maximized', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-maximized')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isMaximized() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isMaximized() || false
   }),
   defineApi<BaseArgs>('plugin:window|is_focused', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-focused')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isFocused() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isFocused() || false
   }),
   defineApi<BaseArgs>('plugin:window|is_resizable', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-resizable')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isResizable() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isResizable() || false
   }),
   defineApi<BaseArgs>('plugin:window|is_maximizable', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-maximizable')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isMaximizable() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isMaximizable() || false
   }),
   defineApi<BaseArgs>('plugin:window|is_minimizable', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-minimizable')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isMinimizable() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isMinimizable() || false
   }),
   defineApi<BaseArgs>('plugin:window|is_closable', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-closable')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isClosable() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isClosable() || false
   }),
   defineApi<BaseArgs>('plugin:window|is_visible', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-visible')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isVisible() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isVisible() || false
   }),
   defineApi<BaseArgs>('plugin:window|title', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'title')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.title || ''
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.title || ''
   }),
   defineApi<BaseArgs>('plugin:window|theme', async (_a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'theme')
@@ -71,7 +71,7 @@ export default [
   }),
   defineApi<BaseArgs>('plugin:window|is_always_on_top', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-always-on-top')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isAlwaysOnTop() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isAlwaysOnTop() || false
   }),
   defineApi<BaseArgs>('plugin:window|activity_name', async (_a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'activity-name')
@@ -85,7 +85,7 @@ export default [
   // Setters
   defineApi<BaseArgs>('plugin:window|center', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'center')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.center()
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.center()
   }),
   defineApi<BaseArgs>('plugin:window|request_user_attention', async (_a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'request-user-attention')
@@ -93,43 +93,43 @@ export default [
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_resizable', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-resizable')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setResizable(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setResizable(a.value)
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_enabled', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-enabled')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setEnabled(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setEnabled(a.value)
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|is_enabled', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'is-enabled')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.isEnabled() || false
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.isEnabled() || false
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_maximizable', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-maximizable')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setMaximizable(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setMaximizable(a.value)
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_minimizable', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-minimizable')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setMinimizable(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setMinimizable(a.value)
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_closable', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-closable')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setClosable(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setClosable(a.value)
   }),
   defineApi<ValueArgs<string>>('plugin:window|set_title', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-title')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setTitle(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setTitle(a.value)
   }),
   defineApi<BaseArgs>('plugin:window|maximize', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'maximize')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.maximize()
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.maximize()
   }),
   defineApi<BaseArgs>('plugin:window|unmaximize', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'unmaximize')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.unmaximize()
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.unmaximize()
   }),
   defineApi<BaseArgs>('plugin:window|toggle_maximize', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'toggle_maximize')
-    const w = getPluginWindowByLabel(p.pluginId, a.label)?.window
+    const w = getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window
     if (!w) return
     if (w.isMaximized()) {
       w.unmaximize()
@@ -139,27 +139,27 @@ export default [
   }),
   defineApi<BaseArgs>('plugin:window|minimize', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'minimize')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.minimize()
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.minimize()
   }),
   defineApi<BaseArgs>('plugin:window|unminimize', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'unminimize')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.restore()
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.restore()
   }),
   defineApi<BaseArgs>('plugin:window|show', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'show')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.show()
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.show()
   }),
   defineApi<BaseArgs>('plugin:window|hide', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'hide')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.hide()
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.hide()
   }),
   defineApi<BaseArgs>('plugin:window|close', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'close')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.close()
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.close()
   }),
   defineApi<BaseArgs>('plugin:window|destroy', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'destroy')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.destroy()
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.destroy()
   }),
   defineApi<BaseArgs>('plugin:window|set_decorations', async (_a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-decorations')
@@ -167,7 +167,7 @@ export default [
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_shadow', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-shadow')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setHasShadow(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setHasShadow(a.value)
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_effects', async (_a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-effects')
@@ -175,7 +175,7 @@ export default [
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_always_on_top', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-always-on-top')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setAlwaysOnTop(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setAlwaysOnTop(a.value)
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_always_on_bottom', async (_a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-always-on-bottom')
@@ -183,13 +183,15 @@ export default [
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_content_protected', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-content-protected')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setContentProtection(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setContentProtection(
+      a.value
+    )
   }),
   defineApi<ValueArgs<{ size: { width: number; height: number } }>>(
     'plugin:window|set_size',
     async (a, _o, p) => {
       await checkBasePermission(p, 'core:window', 'set-size')
-      return getPluginWindowByLabel(p.pluginId, a.label)?.window.setSize(
+      return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setSize(
         a.value.size.width,
         a.value.size.height
       )
@@ -199,7 +201,7 @@ export default [
     'plugin:window|set_min_size',
     async (a, _o, p) => {
       await checkBasePermission(p, 'core:window', 'set-size')
-      const w = getPluginWindowByLabel(p.pluginId, a.label)?.window
+      const w = getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window
       if (!w) return
       return w.setMinimumSize(a.value?.size.width || 0, a.value?.size.height || 0)
     }
@@ -208,7 +210,7 @@ export default [
     'plugin:window|set_min_size',
     async (a, _o, p) => {
       await checkBasePermission(p, 'core:window', 'set-size')
-      const w = getPluginWindowByLabel(p.pluginId, a.label)?.window
+      const w = getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window
       if (!w) return
       return w.setMaximumSize(a.value?.size.width || 10000, a.value?.size.height || 10000)
     }
@@ -221,7 +223,7 @@ export default [
     'plugin:window|set_position',
     async (a, _o, p) => {
       await checkBasePermission(p, 'core:window', 'set-position')
-      return getPluginWindowByLabel(p.pluginId, a.label)?.window.setPosition(
+      return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setPosition(
         a.value.position.x,
         a.value.position.y
       )
@@ -229,19 +231,21 @@ export default [
   ),
   defineApi<ValueArgs<boolean>>('plugin:window|set_fullscreen', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-fullscreen')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setFullScreen(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setFullScreen(a.value)
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_simple_fullscreen', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-simple-fullscreen')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setSimpleFullScreen(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setSimpleFullScreen(
+      a.value
+    )
   }),
   defineApi<BaseArgs>('plugin:window|set_focus', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-focus')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.focus()
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.focus()
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_focusable', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-focusable')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setFocusable(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setFocusable(a.value)
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_icon', async (_a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-icon')
@@ -249,7 +253,7 @@ export default [
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_skip_taskbar', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-skip-taskbar')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setSkipTaskbar(a.value)
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setSkipTaskbar(a.value)
   }),
   defineApi<ValueArgs<boolean>>('plugin:window|set_cursor_grab', async (_a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-cursor-grab')
@@ -265,7 +269,7 @@ export default [
   }),
   defineApi<ValueArgs<Color>>('plugin:window|set_background_color', async (a, _o, p) => {
     await checkBasePermission(p, 'core:window', 'set-background-color')
-    return getPluginWindowByLabel(p.pluginId, a.label)?.window.setBackgroundColor(
+    return getPluginWindowByLabel(p.pluginId, a.label || p.label)?.window.setBackgroundColor(
       colorToHex(a.value)
     )
   }),
