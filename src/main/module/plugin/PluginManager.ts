@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { app, session } from 'electron'
 import AdmZip from 'adm-zip'
 import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
-import { closePluginWindow, pluginVerify } from '$/module/plugin'
+import { closePluginAllWindow, pluginVerify } from '$/module/plugin'
 import {
   APP_DATA_PLUGIN_DIR,
   appPluginConfigPath,
@@ -195,7 +195,7 @@ export class PluginManager {
     databaseManager.closeAllPlugin(identifier)
     storeManager.closeAllPlugin(identifier)
     // 关闭打开的窗口
-    closePluginWindow(identifier)
+    closePluginAllWindow(identifier)
     const ses = session.fromPartition(PARTITION.PLUGIN(identifier))
     // 3. 清除 HTTP 缓存
     try {

@@ -9,7 +9,6 @@ export type Color =
   | { red: number; green: number; blue: number; alpha: number }
   | string
 
-
 export function colorToHex(color: Color): string {
   let r: number, g: number, b: number
   let a: number | undefined = undefined
@@ -255,8 +254,8 @@ type Theme = 'light' | 'dark'
 type TitleBarStyle = 'visible' | 'transparent' | 'overlay'
 
 interface LogicalPosition {
-  x: number;
-  y: number;
+  x: number
+  y: number
   type: 'Logical'
 }
 
@@ -492,9 +491,15 @@ export interface WindowOptions {
   requestedBySceneIdentifier?: string
 }
 
-export interface PluginWindowOptions extends WebviewOptions {
+export interface PluginWebviewWindowOptions
+  extends Omit<WebviewOptions, 'x' | 'y' | 'width' | 'height'>, WindowOptions {
   label: string
+  parent: string
   icon?: string
+}
+
+export interface PluginWebviewOptions extends WebviewOptions {
+  label: string
 }
 
 export interface ViewOptions {

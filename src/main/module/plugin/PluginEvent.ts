@@ -16,7 +16,7 @@ import pluginWindow from '$/support/plugin-window'
 import { ApiFunc } from '$/global/DefineApi'
 import { ipcMain } from 'electron'
 import { pluginManager } from '$/global/BeanFactory'
-import { getPluginWindowByKey, getBrowserWindowKeyById } from '$/module/plugin/index'
+import { getBrowserWindowKeyById } from '$/module/plugin'
 import { logError } from '$/lib/log'
 
 // 事件处理器
@@ -55,6 +55,7 @@ ipcMain.handle('plugin:cmd', (event, props) => {
     if (!entity) return Promise.reject(Error('未找到插件信息，请关闭窗口后重新打开。'))
     return handle(args, options, {
       pluginId: bwk.pluginId,
+      parent: bwk.parent,
       label: bwk.label,
       entity: entity
     })
@@ -66,49 +67,4 @@ ipcMain.handle('plugin:cmd', (event, props) => {
 // 接收 app 初始化事件
 ipcMain.on('plugin:init', (event) => {
   event.returnValue = getBrowserWindowKeyById(event.sender.id)
-})
-
-type EventTarget =
-  | { kind: 'Any' }
-  | { kind: 'AnyLabel'; label: string }
-  | { kind: 'App' }
-  | { kind: 'Window'; label: string }
-  | { kind: 'Webview'; label: string }
-  | { kind: 'WebviewWindow'; label: string }
-
-export interface EmitArgs {
-  event: string
-  payload?: unknown
-}
-
-export interface EmitToArgs extends EmitArgs {
-  target: EventTarget
-}
-
-ipcMain.on('plugin:event:emit', (event, args) => {
-  const { event: channel, payload, target } = args as EmitToArgs
-  const bwk = getBrowserWindowKeyById(event.sender.id)
-  if (!bwk) {
-    console.error(Error(`插件${event.sender.id}未找到`))
-    return
-  }
-  const entity = pluginManager.getById(bwk.pluginId)
-  if (!entity) {
-    console.error(Error(`插件${bwk.pluginId}实体未找到`))
-    return
-  }
-  const { kind } = target
-  if (kind === 'App') {
-    // 发给主线程
-    const appLabel = (entity.main || entity.widgets?.[0])!.label
-    const appBw = getPluginWindowByKey(bwk.pluginId, appLabel)
-    if (appBw) {
-      appBw.window.webContents.send(channel, payload)
-    }
-  } else if (kind === 'WebviewWindow') {
-    const bw = getPluginWindowByKey(bwk.pluginId, target.label)
-    if (bw) {
-      bw.window.webContents.send(channel, payload)
-    }
-  }
 })

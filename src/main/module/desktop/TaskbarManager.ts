@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron'
+import { BaseWindow, BrowserWindow } from 'electron'
 import { useSnowflake } from '@common/utils'
 import { getMainWindow } from '$/module/desktop/MainWindow'
 import { DeskPodEvent } from '@common/global'
@@ -10,11 +10,11 @@ interface TaskbarCore {
 }
 
 interface TaskbarForm extends TaskbarCore {
-  bw: BrowserWindow
+  bw: BrowserWindow | BaseWindow
 }
 
 interface TaskbarItem extends TaskbarCore {
-  bw: BrowserWindow
+  bw: BrowserWindow | BaseWindow
   visible: boolean
 }
 

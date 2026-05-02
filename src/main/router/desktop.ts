@@ -1,9 +1,7 @@
 import { ipcMain } from 'electron'
 import { DesktopNode } from '@common/types'
-import { ViewOptions } from '@common/params'
 import { openApp } from '$/global/OpenApp'
 import { desktopManager } from '$/global/BeanFactory'
-import { createWebContentView, moveWebContentView, removeWebContentView } from '$/module/plugin'
 import { createContextMenuByDesktop, createContextMenuByNode } from '$/module/desktop'
 import { listApps } from '$/module/native'
 
@@ -64,22 +62,20 @@ ipcMain.handle('/desktop/node/get', async (_event, id: string) => {
   return desktopManager.getNode(id)
 })
 
-ipcMain.handle(
-  '/desktop/widget/create',
-  async (_event, pluginId: string, label: string, options: ViewOptions) => {
-    return createWebContentView(pluginId, label, options)
-  }
-)
-
-ipcMain.handle(
-  '/desktop/widget/move',
-  async (_event, pluginId: string, label: string, options: ViewOptions) => {
-    return moveWebContentView(pluginId, label, options)
-  }
-)
-ipcMain.handle('/desktop/widget/delete', async (_event, pluginId: string, label) => {
-  return removeWebContentView(pluginId, label)
-})
+// TODO: 小部件要重新规划
+// ipcMain.handle(
+//   '/desktop/widget/create',
+//   async (_event, pluginId: string, label: string, options: ViewOptions) => {
+//   }
+// )
+//
+// ipcMain.handle(
+//   '/desktop/widget/move',
+//   async (_event, pluginId: string, label: string, options: ViewOptions) => {
+//   }
+// )
+// ipcMain.handle('/desktop/widget/delete', async (_event, pluginId: string, label) => {
+// })
 
 ipcMain.handle('/desktop/contextmenu/create/desktop', async (_event, param) => {
   return createContextMenuByDesktop(param)

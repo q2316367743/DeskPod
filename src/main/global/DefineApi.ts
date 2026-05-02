@@ -3,6 +3,8 @@ import { PluginEntityWrap } from '@common/types'
 export interface ApiPayload {
   // 插件的
   pluginId: string
+  // 所属哪个窗口
+  parent: string
   // 插件的窗口标签
   label: string
   // 插件实体

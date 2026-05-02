@@ -3,8 +3,8 @@ import { BaseDirectory, getDirectory } from '$/support/plugin-path'
 import { existsSync } from 'node:fs'
 import { readFile, writeFile } from 'node:fs/promises'
 import { useSnowflake } from '@common/utils'
-import { getPluginWindowByKey } from '$/module/plugin'
 import { ApiPayload } from '$/global/DefineApi'
+import { pluginEventEmit } from '$/support/plugin-event'
 
 type ReloadOptions = {
   /**
@@ -88,17 +88,19 @@ export class StoreManager {
       const old = s.store[key]
       s.store[key] = value
       if (old !== value) {
-        const bw = getPluginWindowByKey(payload.pluginId, payload.label)
-        if (bw) {
-          bw.window.webContents.send('store://change', {
+        pluginEventEmit(
+          { kind: 'App' },
+          'store://change',
+          {
             payload: {
               resourceId: rid,
               key: key,
               value: value,
               exists: true
             }
-          })
-        }
+          },
+          payload
+        )
       }
       if (s.options?.autoSave) {
         await this.save(rid)
@@ -125,16 +127,18 @@ export class StoreManager {
     const s = this.map.get(rid)
     if (s) {
       delete s.store[key]
-      const bw = getPluginWindowByKey(payload.pluginId, payload.label)
-      if (bw) {
-        bw.window.webContents.send('store://change', {
+      pluginEventEmit(
+        { kind: 'App' },
+        'store://change',
+        {
           payload: {
             resourceId: rid,
             key: key,
             exists: false
           }
-        })
-      }
+        },
+        payload
+      )
       if (s.options?.autoSave) {
         await this.save(rid)
       }

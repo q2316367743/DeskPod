@@ -1,5 +1,5 @@
 import { defineApi } from '$/global/DefineApi'
-import { checkBasePermission, getPluginWindowByKey } from '$/module/plugin'
+import { checkBasePermission, getPluginWindowByLabel } from '$/module/plugin'
 import { app } from 'electron'
 
 export default [
@@ -21,15 +21,15 @@ export default [
   }),
   defineApi('plugin:app|app_show', async (_a, _o, p) => {
     await checkBasePermission(p, 'core:app', 'app-show')
-    const pw = getPluginWindowByKey(p.pluginId, p.label)
+    const pw = getPluginWindowByLabel(p.pluginId, p.label)
     if (!pw) return Promise.reject(new Error('插件窗口未找到'))
-    if (pw.type === 'BrowserWindow') pw.window.show()
+    pw.window.show()
   }),
   defineApi('plugin:app|app_hide', async (_a, _o, p) => {
     await checkBasePermission(p, 'core:app', 'app-hide')
-    const pw = getPluginWindowByKey(p.pluginId, p.label)
+    const pw = getPluginWindowByLabel(p.pluginId, p.label)
     if (!pw) return Promise.reject(new Error('插件窗口未找到'))
-    if (pw.type === 'BrowserWindow') pw.window.hide()
+    pw.window.hide()
   }),
   defineApi('plugin:app|fetch_data_store_identifiers', async () => {
     // 获取数据存储标识符，16个数字的数组

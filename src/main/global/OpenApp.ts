@@ -1,6 +1,6 @@
 import { DesktopNode } from '@common/types'
 import { shell } from 'electron'
-import { createPluginWindow } from '$/module/plugin'
+import { createPluginWebviewWindow } from '$/module/plugin'
 import { pluginManager } from '$/global/BeanFactory'
 import { createQuickWindow } from '$/module/quick'
 import { logError } from '$/lib/log'
@@ -45,11 +45,13 @@ export async function openApp(node: DesktopNode, query?: Record<string, string>)
       // 启动插件
       const entity = pluginManager.getById(pluginId)
       if (!entity) return false
-      await createPluginWindow(
+      await createPluginWebviewWindow(
         {
           label: entity.main!.label,
+          parent: entity.main!.label,
           url: entity.main!.path,
           icon: entity.icon,
+          center: true,
           width: node.meta?.width,
           height: node.meta?.height,
           minHeight: node.meta?.minHeight,
