@@ -259,10 +259,6 @@ interface LogicalPosition {
   type: 'Logical'
 }
 
-interface WindowParent {
-  label: string
-}
-
 export interface WindowOptions {
   /** Show window in the center of the screen.. */
   center?: boolean
@@ -395,7 +391,7 @@ export interface WindowOptions {
    * - **Linux**: This makes the new window transient for parent, see <https://docs.gtk.org/gtk3/method.Window.set_transient_for.html>
    * - **macOS**: This adds the window as a child of parent, see <https://developer.apple.com/documentation/appkit/nswindow/1419152-addchildwindow?language=objc>
    */
-  parent?: WindowParent | string
+  parent?: string
   /** Whether the window should be visible on all workspaces or virtual desktops.
    *
    * #### Platform-specific
@@ -499,6 +495,10 @@ export interface PluginWebviewWindowOptions
 }
 
 export interface PluginWebviewOptions extends WebviewOptions {
+  label: string
+}
+
+export interface PluginWindowOptions extends WindowOptions {
   label: string
 }
 

@@ -3,7 +3,11 @@ import ews from 'electron-window-state'
 import { join } from 'path'
 import { pluginManager, taskbarManager } from '$/global/BeanFactory'
 import { APP_DATA_DB_STATE_PLUGIN_PATH } from '$/global/Constant'
-import { PluginWebviewWindowOptions, PluginWebviewOptions } from '@common/params'
+import {
+  PluginWebviewWindowOptions,
+  PluginWebviewOptions,
+  PluginWindowOptions
+} from '@common/params'
 import { PARTITION, TauriEvent } from '@common/global'
 import icon from '../../../../resources/icon.png?asset'
 
@@ -98,8 +102,9 @@ export function closePluginAllWindow(pluginId: string): void {
   }
 }
 
+// --------------------------- 辅助函数 ---------------------------
+
 function attachWebviewToWindow(webview: WebContentsView, window: BaseWindow) {
-  window.contentView.addChildView(webview)
   const { width, height } = window.getBounds()
   webview.setBounds({
     x: 0,
@@ -109,6 +114,7 @@ function attachWebviewToWindow(webview: WebContentsView, window: BaseWindow) {
   })
 
   window.on('resize', () => {
+    webview.webContents.send(TauriEvent.WINDOW_RESIZED)
     const { width, height } = window.getBounds()
     webview.setBounds({
       x: 0,
@@ -118,6 +124,23 @@ function attachWebviewToWindow(webview: WebContentsView, window: BaseWindow) {
     })
   })
 }
+
+function handleWindowClose(bw: BaseWindow, label: string, pluginId: string) {
+  bw.once('closed', () => {
+    // 被关闭了，则移除
+    const old = pluginBrowserWindowMap.get(pluginId)
+    if (old) {
+      // 删除全部的 webview id 映射
+      old.get(label)?.webview.forEach(({ webview }) => {
+        webviewIdMap.delete(webview.webContents.id)
+      })
+      // 删除这个窗口
+      old.delete(label)
+    }
+  })
+}
+
+// --------------------------- 创建资源 ---------------------------
 
 /**
  * 创建插件Webview窗口
@@ -174,20 +197,7 @@ export async function createPluginWebviewWindow(
     icon: iconPath,
     name: `${options.label} | ${entity.productName}`
   })
-  bw.once('closed', () => {
-    // 被关闭了，则移除
-    const old = pluginBrowserWindowMap.get(pluginId)
-    if (old) {
-      // 删除全部的 webview id 映射
-      old.get(options.label)?.webview.forEach(({ webview }) => {
-        webviewIdMap.delete(webview.webContents.id)
-      })
-      // 删除这个窗口
-      old.delete(options.label)
-    }
-  })
-  // 系统级事件
-  bw.addListener('resize', () => bw.emit(TauriEvent.WINDOW_RESIZED))
+  handleWindowClose(bw, options.parent, pluginId)
 
   const windowValue: WindowValue = { label: options.parent, window: bw, webview: new Map() }
   pluginBw.set(options.parent, windowValue)
@@ -255,7 +265,14 @@ export async function createPluginWebview(
       webSecurity: false
     }
   })
-  attachWebviewToWindow(wcv, windowValue.window)
+  // 设置位置
+  wcv.setBounds({
+    x: options.x,
+    y: options.y,
+    width: options.width,
+    height: options.height
+  })
+  windowValue.window.contentView.addChildView(wcv)
   windowValue.webview.set(options.label, {
     webview: wcv,
     label: options.label,
@@ -275,4 +292,71 @@ export async function createPluginWebview(
     parent: windowLabel,
     label: options.label
   })
+}
+
+/**
+ * 创建插件窗口
+ * @param options 窗口参数
+ * @param pluginId 插件 ID
+ */
+export async function createPluginWindow(options: PluginWindowOptions, pluginId: string) {
+  if (!options.label) return Promise.reject(Error('请提供插件标签'))
+  // 先获取插件
+  let pluginBw = pluginBrowserWindowMap.get(pluginId)
+  if (!pluginBw) {
+    pluginBw = new Map()
+    pluginBrowserWindowMap.set(pluginId, pluginBw)
+  }
+
+  if (pluginBw && pluginBw.has(options.label)) {
+    // 存在这个窗口了，先关闭
+    closePluginWindow(pluginBw, options.label)
+  }
+
+  // 获取父窗口
+  let parent: BaseWindow | undefined = undefined
+  if (options.parent) {
+    const p = getPluginWindowByLabel(pluginId, options.parent)
+    if (p) {
+      parent = p.window
+    }
+  }
+
+  // 获取插件信息
+  const entity = pluginManager.getById(pluginId)
+  if (!entity) return Promise.reject(Error('插件未找到'))
+
+  // 创建窗口
+  const bwEws = ews({
+    defaultHeight: options.height,
+    defaultWidth: options.width,
+    path: APP_DATA_DB_STATE_PLUGIN_PATH,
+    file: `${entity.identifier}-${options.label}.json`
+  })
+  const iconPath = entity.icon ? join(entity.root, entity.icon) : icon
+  const bw = new BaseWindow({
+    parent: parent,
+    icon: iconPath,
+    show: true,
+    x: bwEws.x,
+    y: bwEws.y,
+    width: bwEws.width,
+    height: bwEws.height,
+    fullscreen: bwEws.isFullScreen,
+    skipTaskbar: true
+  })
+  // 应该可以管理
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  bwEws.manage(bw)
+  taskbarManager.manage({
+    bw,
+    type: 'plugin',
+    icon: iconPath,
+    name: `${options.label} | ${entity.productName}`
+  })
+  handleWindowClose(bw, options.label, pluginId)
+
+  const windowValue: WindowValue = { label: options.label, window: bw, webview: new Map() }
+  pluginBw.set(options.label, windowValue)
 }

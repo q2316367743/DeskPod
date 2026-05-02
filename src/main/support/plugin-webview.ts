@@ -47,13 +47,7 @@ export default [
     async (a, _o, p) => {
       await checkBasePermission(p, 'core:webview', 'create-webview')
       const { windowLabel, options } = a
-      await createPluginWebview(
-        {
-          ...options
-        },
-        windowLabel,
-        p.pluginId
-      )
+      await createPluginWebview(options, windowLabel, p.pluginId)
     }
   ),
   defineApi<{ label: string }>('plugin:webview|webview_position', async (a, _o, p) => {
