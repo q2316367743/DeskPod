@@ -3,7 +3,7 @@ import { join } from 'path'
 import { pluginManager, taskbarManager } from '$/global/BeanFactory'
 import { getMainWindow } from '$/module/desktop'
 import icon from '../../../../resources/icon.png?asset'
-import { ViewOptions, WindowOptions } from '@common/params'
+import { ViewOptions, PluginWindowOptions } from '@common/params'
 import { PARTITION, TauriEvent } from '@common/global'
 import { logError } from '$/lib/log'
 import ews from 'electron-window-state'
@@ -86,7 +86,10 @@ function closeExistWindow(pluginBw: Map<string, PbwValue>, label: string) {
  * @param options 窗口参数
  * @param pluginId 插件 ID
  */
-export async function createPluginWindow(options: WindowOptions, pluginId: string): Promise<void> {
+export async function createPluginWindow(
+  options: PluginWindowOptions,
+  pluginId: string
+): Promise<void> {
   if (!options.label) return Promise.reject(Error('请提供插件标签'))
   if (!options.url) return Promise.reject(Error('请提供插件地址'))
   const pluginBw = pluginBrowserWindowMap.get(pluginId)

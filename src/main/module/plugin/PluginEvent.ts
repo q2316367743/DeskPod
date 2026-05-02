@@ -10,6 +10,7 @@ import log from '$/support/plugin-log'
 import shell from '$/support/plugin-shell'
 import event from '$/support/plugin-event'
 import webview from '$/support/plugin-webview'
+import pluginWindow from '$/support/plugin-window'
 
 // import event from './plugins/plugin-event'
 import { ApiFunc } from '$/global/DefineApi'
@@ -32,7 +33,8 @@ const handleList = [
   ...log,
   ...shell,
   ...event,
-  ...webview
+  ...webview,
+  ...pluginWindow
 ]
 handleList.flatMap(({ cmd, plugin }) => {
   invokeHandleMap.set(cmd, plugin as ApiFunc<unknown, unknown, unknown>)

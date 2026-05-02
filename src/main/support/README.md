@@ -122,8 +122,8 @@
 - `core:app:deny-default-window-icon`  Denies the default_window_icon command without any pre-configured scope.
 - `core:app:allow-name`  Enables the name command without any pre-configured scope.
 - `core:app:deny-name`  Denies the name command without any pre-configured scope.
-- `core:app:allow-set-app-theme`  Enables the set_app_theme command without any pre-configured scope.
-- `core:app:deny-set-app-theme`  Denies the set_app_theme command without any pre-configured scope.
+- ~~`core:app:allow-set-app-theme`~~  插件无法主动设置主题
+- ~~`core:app:deny-set-app-theme`~~  插件无法主动设置主题
 - `core:app:allow-tauri-version`  Enables the tauri_version command without any pre-configured scope.
 - `core:app:deny-tauri-version`  Denies the tauri_version command without any pre-configured scope.
 - `core:app:allow-version`  Enables the version command without any pre-configured scope.
@@ -213,4 +213,171 @@
 - `core:webview:allow-webview-size`	Enables the webview_size command without any pre-configured scope.
 - `core:webview:deny-webview-size`	Denies the webview_size command without any pre-configured scope.
 
+### Windows
+
+- `core:window:default`
+  - `core:window:`
+  - `core:window:allow-get-all-windows`
+  - `core:window:allow-scale-factor`
+  - `core:window:allow-inner-position`
+  - `core:window:allow-outer-position`
+  - `core:window:allow-inner-size`
+  - `core:window:allow-outer-size`
+  - `core:window:allow-is-fullscreen`
+  - `core:window:allow-is-minimized`
+  - `core:window:allow-is-maximized`
+  - `core:window:allow-is-focused`
+  - `core:window:allow-is-decorated`
+  - `core:window:allow-is-resizable`
+  - `core:window:allow-is-maximizable`
+  - `core:window:allow-is-minimizable`
+  - `core:window:allow-is-closable`
+  - `core:window:allow-is-visible`
+  - `core:window:allow-is-enabled`
+  - `core:window:allow-title`
+  - `core:window:allow-current-monitor`
+  - `core:window:allow-primary-monitor`
+  - `core:window:allow-monitor-from-point`
+  - `core:window:allow-available-monitors`
+  - `core:window:allow-cursor-position`
+  - ~~`core:window:allow-theme`~~: 插件无法主动设置主题
+  - `core:window:allow-internal-toggle-maximize`
+- `core:window:allow-available-monitors`	Enables the available_monitors command without any pre-configured scope.
+- `core:window:deny-available-monitors`	Denies the available_monitors command without any pre-configured scope.
+- `core:window:allow-center`	Enables the center command without any pre-configured scope.
+- `core:window:deny-center`	Denies the center command without any pre-configured scope.
+- `core:window:allow-close`	Enables the close command without any pre-configured scope.
+- `core:window:deny-close`	Denies the close command without any pre-configured scope.
+- `core:window:allow-create`	Enables the create command without any pre-configured scope.
+- `core:window:deny-create`	Denies the create command without any pre-configured scope.
+- `core:window:allow-current-monitor`	Enables the current_monitor command without any pre-configured scope.
+- `core:window:deny-current-monitor`	Denies the current_monitor command without any pre-configured scope.
+- `core:window:allow-cursor-position`	Enables the cursor_position command without any pre-configured scope.
+- `core:window:deny-cursor-position`	Denies the cursor_position command without any pre-configured scope.
+- `core:window:allow-destroy`	Enables the destroy command without any pre-configured scope.
+- `core:window:deny-destroy`	Denies the destroy command without any pre-configured scope.
+- `core:window:allow-get-all-windows`	Enables the get_all_windows command without any pre-configured scope.
+- `core:window:deny-get-all-windows`	Denies the get_all_windows command without any pre-configured scope.
+- `core:window:allow-hide`	Enables the hide command without any pre-configured scope.
+- `core:window:deny-hide`	Denies the hide command without any pre-configured scope.
+- `core:window:allow-inner-position`	Enables the inner_position command without any pre-configured scope.
+- `core:window:deny-inner-position`	Denies the inner_position command without any pre-configured scope.
+- `core:window:allow-inner-size`	Enables the inner_size command without any pre-configured scope.
+- `core:window:deny-inner-size`	Denies the inner_size command without any pre-configured scope.
+- `core:window:allow-internal-toggle-maximize`	Enables the internal_toggle_maximize command without any pre-configured scope.
+- `core:window:deny-internal-toggle-maximize`	Denies the internal_toggle_maximize command without any pre-configured scope.
+- `core:window:allow-is-closable`	Enables the is_closable command without any pre-configured scope.
+- `core:window:deny-is-closable`	Denies the is_closable command without any pre-configured scope.
+- `core:window:allow-is-decorated`	Enables the is_decorated command without any pre-configured scope.
+- `core:window:deny-is-decorated`	Denies the is_decorated command without any pre-configured scope.
+- `core:window:allow-is-enabled`	Enables the is_enabled command without any pre-configured scope.
+- `core:window:deny-is-enabled`	Denies the is_enabled command without any pre-configured scope.
+- `core:window:allow-is-focused`	Enables the is_focused command without any pre-configured scope.
+- `core:window:deny-is-focused`	Denies the is_focused command without any pre-configured scope.
+- `core:window:allow-is-fullscreen`	Enables the is_fullscreen command without any pre-configured scope.
+- `core:window:deny-is-fullscreen`	Denies the is_fullscreen command without any pre-configured scope.
+- `core:window:allow-is-maximizable`	Enables the is_maximizable command without any pre-configured scope.
+- `core:window:deny-is-maximizable`	Denies the is_maximizable command without any pre-configured scope.
+- `core:window:allow-is-maximized`	Enables the is_maximized command without any pre-configured scope.
+- `core:window:deny-is-maximized`	Denies the is_maximized command without any pre-configured scope.
+- `core:window:allow-is-minimizable`	Enables the is_minimizable command without any pre-configured scope.
+- `core:window:deny-is-minimizable`	Denies the is_minimizable command without any pre-configured scope.
+- `core:window:allow-is-minimized`	Enables the is_minimized command without any pre-configured scope.
+- `core:window:deny-is-minimized`	Denies the is_minimized command without any pre-configured scope.
+- `core:window:allow-is-resizable`	Enables the is_resizable command without any pre-configured scope.
+- `core:window:deny-is-resizable`	Denies the is_resizable command without any pre-configured scope.
+- `core:window:allow-is-visible`	Enables the is_visible command without any pre-configured scope.
+- `core:window:deny-is-visible`	Denies the is_visible command without any pre-configured scope.
+- `core:window:allow-maximize`	Enables the maximize command without any pre-configured scope.
+- `core:window:deny-maximize`	Denies the maximize command without any pre-configured scope.
+- `core:window:allow-minimize`	Enables the minimize command without any pre-configured scope.
+- `core:window:deny-minimize`	Denies the minimize command without any pre-configured scope.
+- `core:window:allow-monitor-from-point`	Enables the monitor_from_point command without any pre-configured scope.
+- `core:window:deny-monitor-from-point`	Denies the monitor_from_point command without any pre-configured scope.
+- `core:window:allow-outer-position`	Enables the outer_position command without any pre-configured scope.
+- `core:window:deny-outer-position`	Denies the outer_position command without any pre-configured scope.
+- `core:window:allow-outer-size`	Enables the outer_size command without any pre-configured scope.
+- `core:window:deny-outer-size`	Denies the outer_size command without any pre-configured scope.
+- `core:window:allow-primary-monitor`	Enables the primary_monitor command without any pre-configured scope.
+- `core:window:deny-primary-monitor`	Denies the primary_monitor command without any pre-configured scope.
+- `core:window:allow-request-user-attention`	Enables the request_user_attention command without any pre-configured scope.
+- `core:window:deny-request-user-attention`	Denies the request_user_attention command without any pre-configured scope.
+- `core:window:allow-scale-factor`	Enables the scale_factor command without any pre-configured scope.
+- `core:window:deny-scale-factor`	Denies the scale_factor command without any pre-configured scope.
+- `core:window:allow-set-always-on-bottom`	Enables the set_always_on_bottom command without any pre-configured scope.
+- `core:window:deny-set-always-on-bottom`	Denies the set_always_on_bottom command without any pre-configured scope.
+- `core:window:allow-set-always-on-top`	Enables the set_always_on_top command without any pre-configured scope.
+- `core:window:deny-set-always-on-top`	Denies the set_always_on_top command without any pre-configured scope.
+- `core:window:allow-set-closable`	Enables the set_closable command without any pre-configured scope.
+- `core:window:deny-set-closable`	Denies the set_closable command without any pre-configured scope.
+- `core:window:allow-set-content-protected`	Enables the set_content_protected command without any pre-configured scope.
+- `core:window:deny-set-content-protected`	Denies the set_content_protected command without any pre-configured scope.
+- `core:window:allow-set-cursor-grab`	Enables the set_cursor_grab command without any pre-configured scope.
+- `core:window:deny-set-cursor-grab`	Denies the set_cursor_grab command without any pre-configured scope.
+- `core:window:allow-set-cursor-icon`	Enables the set_cursor_icon command without any pre-configured scope.
+- `core:window:deny-set-cursor-icon`	Denies the set_cursor_icon command without any pre-configured scope.
+- `core:window:allow-set-cursor-position`	Enables the set_cursor_position command without any pre-configured scope.
+- `core:window:deny-set-cursor-position`	Denies the set_cursor_position command without any pre-configured scope.
+- `core:window:allow-set-cursor-visible`	Enables the set_cursor_visible command without any pre-configured scope.
+- `core:window:deny-set-cursor-visible`	Denies the set_cursor_visible command without any pre-configured scope.
+- `core:window:allow-set-decorations`	Enables the set_decorations command without any pre-configured scope.
+- `core:window:deny-set-decorations`	Denies the set_decorations command without any pre-configured scope.
+- `core:window:allow-set-effects`	Enables the set_effects command without any pre-configured scope.
+- `core:window:deny-set-effects`	Denies the set_effects command without any pre-configured scope.
+- `core:window:allow-set-enabled`	Enables the set_enabled command without any pre-configured scope.
+- `core:window:deny-set-enabled`	Denies the set_enabled command without any pre-configured scope.
+- `core:window:allow-set-focus`	Enables the set_focus command without any pre-configured scope.
+- `core:window:deny-set-focus`	Denies the set_focus command without any pre-configured scope.
+- `core:window:allow-set-fullscreen`	Enables the set_fullscreen command without any pre-configured scope.
+- `core:window:deny-set-fullscreen`	Denies the set_fullscreen command without any pre-configured scope.
+- `core:window:allow-set-icon`	Enables the set_icon command without any pre-configured scope.
+- `core:window:deny-set-icon`	Denies the set_icon command without any pre-configured scope.
+- `core:window:allow-set-ignore-cursor-events`	Enables the set_ignore_cursor_events command without any pre-configured scope.
+- `core:window:deny-set-ignore-cursor-events`	Denies the set_ignore_cursor_events command without any pre-configured scope.
+- `core:window:allow-set-max-size`	Enables the set_max_size command without any pre-configured scope.
+- `core:window:deny-set-max-size`	Denies the set_max_size command without any pre-configured scope.
+- `core:window:allow-set-maximizable`	Enables the set_maximizable command without any pre-configured scope.
+- `core:window:deny-set-maximizable`	Denies the set_maximizable command without any pre-configured scope.
+- `core:window:allow-set-min-size`	Enables the set_min_size command without any pre-configured scope.
+- `core:window:deny-set-min-size`	Denies the set_min_size command without any pre-configured scope.
+- `core:window:allow-set-minimizable`	Enables the set_minimizable command without any pre-configured scope.
+- `core:window:deny-set-minimizable`	Denies the set_minimizable command without any pre-configured scope.
+- `core:window:allow-set-position`	Enables the set_position command without any pre-configured scope.
+- `core:window:deny-set-position`	Denies the set_position command without any pre-configured scope.
+- `core:window:allow-set-progress-bar`	Enables the set_progress_bar command without any pre-configured scope.
+- `core:window:deny-set-progress-bar`	Denies the set_progress_bar command without any pre-configured scope.
+- `core:window:allow-set-resizable`	Enables the set_resizable command without any pre-configured scope.
+- `core:window:deny-set-resizable`	Denies the set_resizable command without any pre-configured scope.
+- `core:window:allow-set-shadow`	Enables the set_shadow command without any pre-configured scope.
+- `core:window:deny-set-shadow`	Denies the set_shadow command without any pre-configured scope.
+- `core:window:allow-set-size`	Enables the set_size command without any pre-configured scope.
+- `core:window:deny-set-size`	Denies the set_size command without any pre-configured scope.
+- `core:window:allow-set-size-constraints`	Enables the set_size_constraints command without any pre-configured scope.
+- `core:window:deny-set-size-constraints`	Denies the set_size_constraints command without any pre-configured scope.
+- `core:window:allow-set-skip-taskbar`	Enables the set_skip_taskbar command without any pre-configured scope.
+- `core:window:deny-set-skip-taskbar`	Denies the set_skip_taskbar command without any pre-configured scope.
+- ~~`core:window:allow-set-theme`~~	插件无法主动设置主题
+- ~~`core:window:deny-set-theme`~~	插件无法主动设置主题
+- `core:window:allow-set-title`	Enables the set_title command without any pre-configured scope.
+- `core:window:deny-set-title`	Denies the set_title command without any pre-configured scope.
+- `core:window:allow-set-title-bar-style`	Enables the set_title_bar_style command without any pre-configured scope.
+- `core:window:deny-set-title-bar-style`	Denies the set_title_bar_style command without any pre-configured scope.
+- `core:window:allow-set-visible-on-all-workspaces`	Enables the set_visible_on_all_workspaces command without any pre-configured scope.
+- `core:window:deny-set-visible-on-all-workspaces`	Denies the set_visible_on_all_workspaces command without any pre-configured scope.
+- `core:window:allow-show`	Enables the show command without any pre-configured scope.
+- `core:window:deny-show`	Denies the show command without any pre-configured scope.
+- `core:window:allow-start-dragging`	Enables the start_dragging command without any pre-configured scope.
+- `core:window:deny-start-dragging`	Denies the start_dragging command without any pre-configured scope.
+- `core:window:allow-start-resize-dragging`	Enables the start_resize_dragging command without any pre-configured scope.
+- `core:window:deny-start-resize-dragging`	Denies the start_resize_dragging command without any pre-configured scope.
+- `core:window:allow-theme`	Enables the theme command without any pre-configured scope.
+- `core:window:deny-theme`	Denies the theme command without any pre-configured scope.
+- `core:window:allow-title`	Enables the title command without any pre-configured scope.
+- `core:window:deny-title`	Denies the title command without any pre-configured scope.
+- `core:window:allow-toggle-maximize`	Enables the toggle_maximize command without any pre-configured scope.
+- `core:window:deny-toggle-maximize`	Denies the toggle_maximize command without any pre-configured scope.
+- `core:window:allow-unmaximize`	Enables the unmaximize command without any pre-configured scope.
+- `core:window:deny-unmaximize`	Denies the unmaximize command without any pre-configured scope.
+- `core:window:allow-unminimize`	Enables the unminimize command without any pre-configured scope.
+- `core:window:deny-unminimize`	Denies the unminimize command without any pre-configured scope.
 

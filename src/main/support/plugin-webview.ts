@@ -5,45 +5,16 @@ import {
   getPluginWindowByKey,
   getPluginWindowMap
 } from '$/module/plugin'
-import { WebviewOptions } from '@common/params'
+import { Color, colorToHex, WebviewOptions, WindowOptions } from '@common/params'
 
-type Color =
-  | [number, number, number]
-  | [number, number, number, number]
-  | { red: number; green: number; blue: number; alpha: number }
-  | string
-
-function colorToHex(color: Color): string {
-  let r: number, g: number, b: number
-  let a: number | undefined = undefined
-
-  if (typeof color === 'string') return color // 已经是字符串，直接返回
-
-  if (Array.isArray(color)) {
-    ;[r, g, b, a] = color
-  } else {
-    ;({ red: r, green: g, blue: b, alpha: a } = color)
-  }
-
-  const hex =
-    '#' +
-    [r, g, b]
-      .map((v) => {
-        const n = Math.round(v * 255)
-        return n.toString(16).padStart(2, '0')
-      })
-      .join('')
-
-  // 如果有 alpha 且不为 1，追加 alpha 通道
-  if (a !== undefined && a < 1) {
-    const alphaHex = Math.round(a * 255)
-      .toString(16)
-      .padStart(2, '0')
-    return hex + alphaHex
-  }
-
-  return hex
+interface BaseOptions {
+  parent: string
+  label: string
 }
+
+type WebviewWindowOptions = Omit<WebviewOptions, 'x' | 'y' | 'width' | 'height'> &
+  WindowOptions &
+  BaseOptions
 
 export default [
   defineApi('plugin:webview|get_all_webviews', async (_a, _o, p) => {
@@ -186,12 +157,21 @@ export default [
   defineApi<{ color: Color | null }>(
     'plugin:webview|set_webview_background_color',
     async (a, _o, p) => {
-      // TODO: 设置 webview 的背景颜色
       const pbw = getPluginWindowByKey(p.pluginId, p.label)
       if (!pbw) return Promise.reject(new Error(`Webview ${p.pluginId} not found.`))
       if (a.color) {
         pbw.window.setBackgroundColor(colorToHex(a.color))
       }
     }
-  )
+  ),
+  defineApi<WebviewWindowOptions>('plugin:webview|create_webview_window', async (a, _o, p) => {
+    await checkBasePermission(p, 'core:window', 'create-webview-window')
+    await createPluginWindow(
+      {
+        label: a.label,
+        ...a
+      },
+      p.pluginId
+    )
+  })
 ]

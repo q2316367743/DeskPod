@@ -1,27 +1,23 @@
 import { defineApi } from '$/global/DefineApi'
-import { createPluginWindow } from '$/module/plugin'
-import { WindowOptions } from '@common/params'
+import { Color, colorToHex } from '@common/params'
+import { checkBasePermission, getPluginWindowByKey, getPluginWindowMap } from '$/module/plugin'
 
 interface BaseArgs {
-  options: WindowOptions
+  color: Color
 }
 
 // 此处有问题，window 和 webview 不一样
 export default [
-  // definePlugin<BaseArgs>('plugin:window|create', async (args, _o, payload) => {
-  //   const { options } = args
-  //   if (!options.label) return Promise.reject(Error('请提供插件标签'))
-  //   if (!options.url) return Promise.reject(Error('请提供插件地址'))
-  //   // 创建窗口
-  //   const bw = new BrowserWindow(options)
-  //   // 加载文件
-  //   await bw.loadFile(
-  //     join(app.getPath('appData'), 'plugins', payload.pluginId, options.url)
-  //   )
-  //   browserWindowMap.set(`${payload.pluginId}|${options.label}`, bw)
-  // }),
-  defineApi<BaseArgs>('plugin:webview|create_webview_window', async (args, _o, payload) => {
-    const { options } = args
-    await createPluginWindow(options, payload.pluginId)
+  defineApi<BaseArgs>('plugin:window|set_background_color', async (a, _o, p) => {
+    await checkBasePermission(p, 'core:window', 'set-background-color')
+    const pbw = getPluginWindowByKey(p.pluginId, p.label)
+    if (!pbw) return Promise.reject(new Error(`Webview ${p.pluginId} not found.`))
+    if (a.color) {
+      pbw.window.setBackgroundColor(colorToHex(a.color))
+    }
+  }),
+  defineApi('plugin:window|get_all_windows', async (_a, _o, p) => {
+    await checkBasePermission(p, 'core:window', 'get-all-windows')
+    return Array.from(getPluginWindowMap(p.pluginId)?.keys() || [])
   })
 ]
