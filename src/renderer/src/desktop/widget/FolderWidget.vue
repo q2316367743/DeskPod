@@ -1,7 +1,7 @@
 <template>
   <div class="folder-widget">
     <!-- 顶部工具栏 -->
-    <div class="toolbar">
+    <div class="folder-widget-toolbar">
       <!-- 面包屑导航 -->
       <div>{{ homeText }}</div>
 
@@ -118,13 +118,14 @@ onMounted(async () => {
   height: 100%;
 }
 
-.toolbar {
+.folder-widget-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
   border-bottom: 1px solid var(--fluent-border-subtle);
   flex-shrink: 0;
+  color: var(--td-text-color-primary);
   background: var(--fluent-acrylic-bg);
 }
 
