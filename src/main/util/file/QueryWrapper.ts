@@ -1,14 +1,10 @@
 import { logDebug } from '$/lib/log'
 import { generatePlaceholders } from '@common//utils'
-import type { PageResponse } from '@common/types.ts'
+import type { PageResponse } from '@common/types'
 import { SqlBase } from '$/lib/sql'
-import { BaseEntity } from '@common/types'
+import { BaseEntity } from '@common/entity'
 
-export class QueryChain<
-  T extends BaseEntity,
-  N extends string,
-  K extends keyof T = keyof T
-> {
+export class QueryChain<T extends BaseEntity, N extends string, K extends keyof T = keyof T> {
   private readonly db: SqlBase<N>
   private readonly tableName: N
 
@@ -23,7 +19,7 @@ export class QueryChain<
     this.db = db
   }
 
-  public static from<T extends Record<string, unknown>, N extends string>(
+  public static from<T extends BaseEntity, N extends string>(
     tableName: N,
     db: SqlBase<N>,
     p?: Partial<T>
@@ -31,7 +27,7 @@ export class QueryChain<
     const qw = new QueryChain<T, N>(tableName, db)
     if (typeof p !== 'undefined') {
       Object.entries(p).forEach(([k, v]) => {
-        qw.simpleWhere(k, '=', v)
+        qw.simpleWhere(k as `id`, '=', v)
       })
     }
     return qw
@@ -70,27 +66,21 @@ export class QueryChain<
 
   like(k: K, v?: T[K]) {
     if (typeof v === 'undefined' || v === null) return this
-    this.params.push(
-      `\`${String(k)}\` like CONCAT('%', ${generatePlaceholders(1)}, '%')`
-    )
+    this.params.push(`\`${String(k)}\` like CONCAT('%', ${generatePlaceholders(1)}, '%')`)
     this.values.push(v)
     return this
   }
 
   likeLeft(k: K, v?: T[K]) {
     if (typeof v === 'undefined' || v === null) return this
-    this.params.push(
-      `\`${String(k)}\` like CONCAT('%', ${generatePlaceholders(1)})`
-    )
+    this.params.push(`\`${String(k)}\` like CONCAT('%', ${generatePlaceholders(1)})`)
     this.values.push(v)
     return this
   }
 
   likeRight(k: K, v?: T[K]) {
     if (typeof v === 'undefined' || v === null) return this
-    this.params.push(
-      `\`${String(k)}\` like CONCAT(${generatePlaceholders(1)}, '%')`
-    )
+    this.params.push(`\`${String(k)}\` like CONCAT(${generatePlaceholders(1)}, '%')`)
     this.values.push(v)
     return this
   }
@@ -115,9 +105,7 @@ export class QueryChain<
 
   in(k: K, sql: string | Array<T[K]>) {
     if (Array.isArray(sql)) {
-      this.params.push(
-        `\`${String(k)}\` in (${generatePlaceholders(sql.length)})`
-      )
+      this.params.push(`\`${String(k)}\` in (${generatePlaceholders(sql.length)})`)
       this.values.push(...sql)
     } else {
       this.params.push(`\`${String(k)}\` in (${sql})`)

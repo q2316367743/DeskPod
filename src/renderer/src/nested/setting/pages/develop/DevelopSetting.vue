@@ -37,8 +37,6 @@
 </template>
 <script lang="ts" setup>
 import { AddIcon, AppIcon, InternetIcon } from 'tdesign-icons-vue-next'
-
-const type = ref('quick')
 </script>
 <style scoped lang="less">
 :deep(.t-card) {

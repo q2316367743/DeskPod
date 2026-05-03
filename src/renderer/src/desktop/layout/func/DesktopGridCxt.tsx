@@ -12,25 +12,23 @@ export function handleDesktopGridCxt(
     desktopId: useDesktopNodeStore().desktopId,
     x: e.x,
     y: e.y,
-    column,
-    row,
-    parentId
+    nodeY: column,
+    nodeX: row,
+    parentId,
+    nodeId: ''
   })
 }
 
-export function handleDesktopDockCxt(
-  e: MouseEvent,
-  column: number,
-  row: number,
-) {
+export function handleDesktopDockCxt(e: MouseEvent, column: number, row: number) {
   e.preventDefault()
   e.stopPropagation()
   return window.desktopAPI.contextmenuCreateDesktop({
     desktopId: 'dock',
     x: e.x,
     y: e.y,
-    column,
-    row,
-    parentId: null
+    nodeY: column,
+    nodeX: row,
+    parentId: null,
+    nodeId: ''
   })
 }
