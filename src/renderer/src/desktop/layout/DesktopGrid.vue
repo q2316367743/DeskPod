@@ -27,12 +27,15 @@
 <script lang="ts" setup>
 import { DesktopNode } from '@common/types'
 import { GridStack, GridStackWidget } from 'gridstack'
+import 'gridstack/dist/gridstack.css'
+import 'gridstack/dist/gridstack.min.css'
 import { handleDesktopGridCxt } from '@/desktop/layout/func/DesktopGridCxt'
 import { useDesktopNodeStore } from '@/store/DesktopNodeStore'
 import WidgetNode from '@/desktop/node/WidgetNode.vue'
 import FolderNode from '@/desktop/node/FolderNode.vue'
 import ItemNode from '@/desktop/node/ItemNode.vue'
 import { handleDesktopNodeCxt } from '@/desktop/layout/func/DesktopNodeCxt'
+import { debounce } from 'es-toolkit'
 import { CELL_SIZE } from '@common/global'
 
 const gridContainer = ref<HTMLElement>()
@@ -115,13 +118,19 @@ const syncGridFromNodes = async () => {
   }
 }
 
+const onResize = debounce(() => {
+  if (grid) {
+    grid.column(Math.floor((window.innerWidth - 56) / CELL_SIZE), 'none')
+  }
+}, 300)
+
 onMounted(async () => {
   if (!gridStackEl.value) return
 
   grid = GridStack.init(
     {
-      column: 12,
-      row: 9,
+      column: Math.floor((window.innerWidth - 16) / CELL_SIZE),
+      row: Math.floor((window.innerHeight - 82) / CELL_SIZE),
       cellHeight: CELL_SIZE,
       margin: 0,
       float: true,
@@ -149,6 +158,8 @@ onMounted(async () => {
     const nodeId = el.dataset['nodeId']
     useDesktopNodeStore().drop(String(nodeId), null, x, y)
   })
+
+  window.addEventListener('resize', onResize)
 })
 
 onBeforeUnmount(() => {
@@ -156,6 +167,7 @@ onBeforeUnmount(() => {
     grid.destroy()
     grid = undefined
   }
+  window.removeEventListener('resize', onResize)
 })
 
 watch(
