@@ -17,6 +17,8 @@
     <AddNodeModal :visible="showModal" :type="modalType" @close="handleCloseModal" />
 
     <div class="desktop-bar"></div>
+
+    <desktop-ball />
   </div>
 </template>
 
@@ -25,6 +27,7 @@ import DesktopGrid from '@/desktop/layout/DesktopGrid.vue'
 import AddNodeModal from '@/components/desktop/AddNodeModal.vue'
 import DockFooter from '@/desktop/layout/DockFooter.vue'
 import { useDesktopNodeStore, useSettingStore } from '@/store'
+import DesktopBall from '@/desktop/layout/DesktopBall.vue'
 
 type ModalType = 'app' | 'link' | null
 
@@ -47,8 +50,10 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .desktop-home {
-  min-height: 100vh;
   background: var(--td-bg-color-container);
+  width: 1168px;
+  height: 850px;
+  overflow: hidden;
 }
 .desktop-bar {
   width: 100vw;

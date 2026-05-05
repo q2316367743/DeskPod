@@ -58,5 +58,10 @@ export const supportAPI = {
     pathToHref: (path: string) => {
       return pathToFileURL(path).href
     }
+  },
+  main: {
+    toggleSize: () => {
+      return ipcRenderer.invoke('/app/main/toggle-size')
+    }
   }
 }

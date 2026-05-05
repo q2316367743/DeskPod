@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, nativeImage, shell, Tray } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, nativeImage, shell, Tray } from 'electron'
 import ews from 'electron-window-state'
 import { join } from 'node:path'
 import { is } from '@electron-toolkit/utils'
@@ -99,3 +99,20 @@ export function createTray() {
   tray.setContextMenu(contextMenu)
   return tray
 }
+
+let isMaximized = true
+ipcMain.handle('/app/main/toggle-size', () => {
+  mainWindow?.setResizable(true)
+  try {
+    if (isMaximized) {
+      // 框高变为 48
+      mainWindow?.setSize(48, 48)
+    } else {
+      mainWindow?.setSize(1168, 850)
+    }
+  } finally {
+    mainWindow?.setResizable(false)
+  }
+  isMaximized = !isMaximized
+  return isMaximized
+})

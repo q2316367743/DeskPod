@@ -108,6 +108,9 @@ interface SupportAPI {
   url: {
     pathToHref: (path: string) => string
   }
+  main: {
+    toggleSize: () => Promise<boolean>
+  }
 }
 
 interface QuickAPI {
