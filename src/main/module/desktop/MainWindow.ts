@@ -1,53 +1,40 @@
-import { app, BrowserWindow, Menu, nativeImage, screen, shell, Tray } from 'electron'
-import { APP_NAME, PARTITION } from '@common/global'
+import { app, BrowserWindow, Menu, nativeImage, shell, Tray } from 'electron'
+import ews from 'electron-window-state'
 import { join } from 'node:path'
-import { settingManager } from '$/global/BeanFactory'
 import { is } from '@electron-toolkit/utils'
+import { APP_NAME, PARTITION } from '@common/global'
+import { APP_DATA_DB_STATE_PATH } from '$/global/Constant'
 import icon from '../../../../resources/icon.png?asset'
-import { logDebug } from '$/lib/log'
 
 let mainWindow: BrowserWindow | undefined = undefined
 export const setMainWindow = (win: BrowserWindow) => (mainWindow = win)
 export const getMainWindow = () => mainWindow
 
-export function handleMainWindow() {
-  const mainWindow = getMainWindow()
-  if (!mainWindow) return
-  const displayId = settingManager.get('displayId')
-  if (displayId) {
-    const displays = screen.getAllDisplays()
-    for (const display of displays) {
-      if (display.id === displayId) {
-        logDebug(`使用屏幕：${display.id}`, display.bounds)
-        mainWindow.setFullScreen(false)
-        mainWindow.setSize(display.bounds.width, display.bounds.height)
-        mainWindow.setMinimumSize(display.bounds.width, display.bounds.height)
-        // 如果找到了
-        mainWindow.setBounds(display.bounds)
-        break
-      }
-    }
-  }
-  mainWindow.setFullScreen(true)
-  mainWindow.show()
-}
-
 export function createMainWindow() {
   // Create the browser window.
-  const primaryDisplay = screen.getPrimaryDisplay()
+  const e = ews({
+    defaultWidth: 1168,
+    defaultHeight: 850,
+    path: APP_DATA_DB_STATE_PATH,
+    file: 'main.json',
+    maximize: false
+  })
   const mainWindow = new BrowserWindow({
     title: APP_NAME,
-    width: primaryDisplay.bounds.width,
-    height: primaryDisplay.bounds.height,
-    x: primaryDisplay.bounds.x,
-    y: primaryDisplay.bounds.y,
-    minWidth: 900,
-    minHeight: 670,
-    show: false,
+    width: e.width,
+    height: e.height,
+    x: e.x,
+    y: e.y,
+    minWidth: 1168,
+    minHeight: 850,
+    resizable: false,
+    show: true,
     skipTaskbar: true,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
+    frame: false,
     titleBarStyle: 'hidden',
+    alwaysOnTop: true,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
@@ -57,11 +44,8 @@ export function createMainWindow() {
       partition: PARTITION.BUILTIN
     }
   })
+  e.manage(mainWindow)
   setMainWindow(mainWindow)
-
-  // mainWindow.on('ready-to-show', () => {
-  handleMainWindow()
-  // })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)

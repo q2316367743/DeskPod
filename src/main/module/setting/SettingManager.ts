@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import { copyFile, mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises'
 import { extname, join } from 'node:path'
 import { APP_DATA_ASSET_DIR, APP_DATA_DB_DIR } from '$/global/Constant'
-import { getMainWindow, handleMainWindow } from '$/module/desktop'
+import { getMainWindow } from '$/module/desktop'
 import { useSnowflake } from '@common/utils'
 import { SYSTEM_EVENT } from '@common/global'
 import { AiModelSetting, defaultSetting, Setting } from '@common/types'
@@ -26,10 +26,7 @@ export class SettingManager {
   async set<K extends keyof Setting>(key: K, value: Setting[K]) {
     this.setting[key] = value
     await writeFile(this.path, JSON.stringify(this.setting, null, 2))
-    if (key === 'displayId') {
-      // 处理主窗口
-      handleMainWindow()
-    }
+    // 发送消息
     getMainWindow()?.webContents.send(SYSTEM_EVENT.SETTING_CHANGE, key, value)
     return true
   }
