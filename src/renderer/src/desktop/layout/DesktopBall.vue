@@ -1,23 +1,9 @@
 <template>
   <div class="desktop-ball" @click="handleClick">
-    <div class="ball-bar">{{ isMaximized }}</div>
+    <div class="ball-bar"></div>
   </div>
 </template>
-<script lang="ts" setup>
-const isMaximized = ref(false)
-
-const handleClick = () => {
-  console.log(isMaximized)
-  window.supportAPI.main
-    .toggleSize()
-    .then((res) => {
-      isMaximized.value = res
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-}
-</script>
+<script lang="ts" setup></script>
 <style scoped lang="less">
 .desktop-ball {
   position: fixed;

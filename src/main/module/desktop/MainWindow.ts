@@ -106,9 +106,11 @@ ipcMain.handle('/app/main/toggle-size', () => {
   try {
     if (isMaximized) {
       // 框高变为 48
+      mainWindow?.setMinimumSize(48, 48)
       mainWindow?.setSize(48, 48)
     } else {
       mainWindow?.setSize(1168, 850)
+      mainWindow?.setMinimumSize(1168, 850)
     }
   } finally {
     mainWindow?.setResizable(false)
