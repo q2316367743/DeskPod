@@ -9,38 +9,37 @@
     />
 
     <!-- 桌面图标网格 -->
-    <DesktopGrid v-show="isMaximized" />
+    <DesktopGrid />
 
-    <DockFooter v-show="isMaximized" />
+    <DockFooter />
 
     <!-- 添加节点弹窗 -->
+    <AddNodeModal :visible="showModal" :type="modalType" @close="handleCloseModal" />
 
     <div class="desktop-bar"></div>
 
-    <desktop-ball @click="handleClick" />
+    <desktop-ball />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useDesktopNodeStore, useSettingStore } from '@/store'
 import DesktopGrid from '@/desktop/layout/DesktopGrid.vue'
+import AddNodeModal from '@/components/desktop/AddNodeModal.vue'
 import DockFooter from '@/desktop/layout/DockFooter.vue'
+import { useDesktopNodeStore, useSettingStore } from '@/store'
 import DesktopBall from '@/desktop/layout/DesktopBall.vue'
+
+type ModalType = 'app' | 'link' | null
+
+const showModal = ref(false)
+const modalType = ref<ModalType>(null)
 
 const background = computed(() => useSettingStore().background)
 
-const isMaximized = ref(false)
-
-const handleClick = () => {
-  console.log(isMaximized)
-  window.supportAPI.main
-    .toggleSize()
-    .then((res) => {
-      isMaximized.value = res
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+// 关闭弹窗
+const handleCloseModal = () => {
+  showModal.value = false
+  modalType.value = null
 }
 
 onMounted(() => {
@@ -54,8 +53,6 @@ onMounted(() => {
   background: var(--td-bg-color-container);
   width: 1168px;
   height: 850px;
-  min-width: 1168px;
-  min-height: 850px;
   overflow: hidden;
 }
 .desktop-bar {
