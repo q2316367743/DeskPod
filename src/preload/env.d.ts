@@ -108,6 +108,11 @@ interface SupportAPI {
   url: {
     pathToHref: (path: string) => string
   }
+  app: {
+    main: {
+      toggleVisible: () => Promise<boolean>
+    }
+  }
 }
 
 interface QuickAPI {

@@ -8,6 +8,7 @@ import { logDebug, logError } from '$/lib/log'
 import { createTray, createMainWindow } from '$/module/desktop'
 // 导入事件
 import '$/router'
+import { createBallWindow } from '$/module/desktop/BallWindow'
 
 app.whenReady().then(() => {
   // 注册协议
@@ -29,7 +30,7 @@ app.whenReady().then(() => {
             .catch((e) => logError('快应用初始化失败', e))
 
           // 初始化完设置，再创建窗口
-
+          createBallWindow()
           createMainWindow()
           createTray()
 

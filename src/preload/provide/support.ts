@@ -58,5 +58,12 @@ export const supportAPI = {
     pathToHref: (path: string) => {
       return pathToFileURL(path).href
     }
+  },
+  app: {
+    main: {
+      toggleVisible: (): Promise<boolean> => {
+        return ipcRenderer.invoke('/app/main/toggle-visible')
+      }
+    }
   }
 }

@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>DeskPod 悬浮球</title>
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <style type="text/css">
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 48px;
+      width: 48px;
+      border-radius: 24px;
+      background-color: rgba(240, 240, 240, 0.4);
+      -webkit-app-region: drag;
+    }
+
+    #inner {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      width: 32px;
+      height: 32px;
+      background-color: rgba(240, 240, 240, 0.4);
+    }
+  </style>
+</head>
+<body>
+<div id="inner"></div>
+</body>
+<script type="module">
+  document.body.addEventListener("click", () => {
+    window.supportAPI.app.main.toggleVisible();
+  });
+</script>
+</html>

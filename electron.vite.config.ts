@@ -86,7 +86,8 @@ export default defineConfig({
           index: resolve('src/renderer/index.html'),
           plugin: resolve('src/renderer/plugin.html'),
           setting: resolve('src/renderer/setting.html'),
-          add: resolve('src/renderer/add.html')
+          add: resolve('src/renderer/add.html'),
+          ball: resolve('src/renderer/ball.html')
         }
       }
     }

@@ -1,48 +1,32 @@
-import { app, BrowserWindow, Menu, nativeImage, screen, shell, Tray } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, nativeImage, shell, Tray } from 'electron'
 import { APP_NAME, PARTITION } from '@common/global'
 import { join } from 'node:path'
-import { settingManager } from '$/global/BeanFactory'
 import { is } from '@electron-toolkit/utils'
 import icon from '../../../../resources/icon.png?asset'
-import { logDebug } from '$/lib/log'
+import ews from 'electron-window-state'
+import { APP_DATA_DB_STATE_PATH } from '$/global/Constant'
 
 let mainWindow: BrowserWindow | undefined = undefined
 export const setMainWindow = (win: BrowserWindow) => (mainWindow = win)
 export const getMainWindow = () => mainWindow
 
-export function handleMainWindow() {
-  const mainWindow = getMainWindow()
-  if (!mainWindow) return
-  const displayId = settingManager.get('displayId')
-  if (displayId) {
-    const displays = screen.getAllDisplays()
-    for (const display of displays) {
-      if (display.id === displayId) {
-        logDebug(`使用屏幕：${display.id}`, display.bounds)
-        mainWindow.setFullScreen(false)
-        mainWindow.setSize(display.bounds.width, display.bounds.height)
-        mainWindow.setMinimumSize(display.bounds.width, display.bounds.height)
-        // 如果找到了
-        mainWindow.setBounds(display.bounds)
-        break
-      }
-    }
-  }
-  mainWindow.setFullScreen(true)
-  mainWindow.show()
-}
-
 export function createMainWindow() {
+  const mainEws = ews({
+    defaultWidth: 96 * 12 + 16,
+    defaultHeight: 96 * 8 + 16 + 66,
+    path: APP_DATA_DB_STATE_PATH,
+    file: 'main.json'
+  })
   // Create the browser window.
-  const primaryDisplay = screen.getPrimaryDisplay()
   const mainWindow = new BrowserWindow({
     title: APP_NAME,
-    width: primaryDisplay.bounds.width,
-    height: primaryDisplay.bounds.height,
-    x: primaryDisplay.bounds.x,
-    y: primaryDisplay.bounds.y,
-    minWidth: 900,
-    minHeight: 670,
+    width: mainEws.width,
+    height: mainEws.height,
+    x: mainEws.x,
+    y: mainEws.y,
+    minWidth: 96 * 12 + 16,
+    minHeight: 96 * 8 + 16 + 66,
+    resizable: false,
     show: false,
     skipTaskbar: true,
     autoHideMenuBar: true,
@@ -58,10 +42,7 @@ export function createMainWindow() {
     }
   })
   setMainWindow(mainWindow)
-
-  // mainWindow.on('ready-to-show', () => {
-  handleMainWindow()
-  // })
+  mainEws.manage(mainWindow)
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
@@ -91,14 +72,7 @@ export function createTray() {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '显示 / 隐藏',
-      click: () => {
-        if (mainWindow?.isVisible()) {
-          mainWindow?.hide()
-        } else {
-          mainWindow?.show()
-          mainWindow?.focus()
-        }
-      }
+      click: () => toggleMainVisible()
     },
     {
       label: '退出',
@@ -115,3 +89,16 @@ export function createTray() {
   tray.setContextMenu(contextMenu)
   return tray
 }
+
+export function toggleMainVisible() {
+  if (!mainWindow) return false
+  if (mainWindow.isVisible()) {
+    mainWindow.hide()
+    return false
+  } else {
+    mainWindow.show()
+    return true
+  }
+}
+
+ipcMain.on('/app/main/toggle-visible', toggleMainVisible);
