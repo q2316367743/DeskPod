@@ -6,6 +6,12 @@ import { is } from '@electron-toolkit/utils'
 import ews from 'electron-window-state'
 import { APP_DATA_DB_STATE_PATH } from '$/global/Constant'
 
+let ballWindow: BrowserWindow | null = null
+
+export function getBallWindow(): BrowserWindow | null {
+  return ballWindow
+}
+
 export function createBallWindow() {
   // Create the browser window.
   const ballEws = ews({
@@ -14,7 +20,7 @@ export function createBallWindow() {
     path: APP_DATA_DB_STATE_PATH,
     file: 'ball.json'
   })
-  const ballWindow = new BrowserWindow({
+  ballWindow = new BrowserWindow({
     title: APP_NAME,
     width: ballEws.width,
     height: ballEws.height,
@@ -32,7 +38,10 @@ export function createBallWindow() {
     autoHideMenuBar: true,
     icon,
     frame: false,
+    transparent: true,
+    hasShadow: false,
     backgroundColor: '#00000000',
+    alwaysOnTop: true,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,

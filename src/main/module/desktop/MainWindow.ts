@@ -30,6 +30,7 @@ export function createMainWindow() {
     show: false,
     skipTaskbar: true,
     autoHideMenuBar: true,
+    alwaysOnTop: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     titleBarStyle: 'hidden',
     webPreferences: {
@@ -101,4 +102,4 @@ export function toggleMainVisible() {
   }
 }
 
-ipcMain.on('/app/main/toggle-visible', toggleMainVisible);
+ipcMain.handle('/app/main/toggle-visible', toggleMainVisible)

@@ -8,32 +8,83 @@
     html, body {
       margin: 0;
       padding: 0;
+      overflow: hidden;
+      user-select: none;
     }
 
-    body {
+    #no-drag-region {
       height: 48px;
       width: 48px;
-      border-radius: 24px;
+      border-radius: 50%;
       background-color: rgba(240, 240, 240, 0.4);
-      -webkit-app-region: drag;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      position: relative;
     }
 
-    #inner {
-      position: fixed;
-      top: 8px;
-      left: 8px;
-      width: 32px;
-      height: 32px;
-      background-color: rgba(240, 240, 240, 0.4);
+    /* 拖拽区域：覆盖整个球体，作为底层 */
+    #drag-region {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      -webkit-app-region: drag;
+      z-index: 0;
+    }
+
+    /* 点击区域：中心按钮，无拖拽属性，叠加在拖拽区域之上 */
+    #click-btn {
+      position: absolute;
+      top: 11px;
+      left: 11px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.2);
+      -webkit-app-region: no-drag;
+      cursor: pointer;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s;
+    }
+
+    #click-btn:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+    }
+
+    #click-btn:active {
+      background-color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* 悬浮球图标 */
+    #click-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: rgba(80, 80, 80, 0.7);
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-<div id="inner"></div>
+<div id="no-drag-region">
+  <div id="drag-region"></div>
+  <div id="click-btn" title="点击显示/隐藏主窗口">
+    <!-- 简单的应用图标 -->
+    <svg viewBox="0 0 24 24">
+      <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6l-2 3V6a2 2 0 0 1 2-2z"/>
+    </svg>
+  </div>
+</div>
 </body>
 <script type="module">
-  document.body.addEventListener("click", () => {
+  // 单击：切换主窗口显示/隐藏
+  document.getElementById("click-btn").addEventListener("click", () => {
     window.supportAPI.app.main.toggleVisible();
   });
+
 </script>
 </html>
