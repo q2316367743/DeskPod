@@ -4,7 +4,7 @@ import { createPluginWebviewWindow } from '$/module/plugin'
 import { pluginManager } from '$/global/BeanFactory'
 import { createQuickWindow } from '$/module/quick'
 import { logError } from '$/lib/log'
-import { openBuiltinApp, openLinkApp } from '$/module/desktop'
+import { hideMainWindow, openBuiltinApp, openLinkApp } from '$/module/desktop'
 import { openCommandApp, openScriptApp } from '$/module/native'
 
 const openFileApp = async (node: DesktopNode): Promise<boolean> => {
@@ -26,7 +26,7 @@ const openNativeApp = async (node: DesktopNode): Promise<boolean> => {
   return true
 }
 
-export async function openApp(node: DesktopNode, query?: Record<string, string>): Promise<boolean> {
+async function openAppWrap(node: DesktopNode, query?: Record<string, string>): Promise<boolean> {
   switch (node.type) {
     case 'app':
       return openNativeApp(node)
@@ -72,4 +72,13 @@ export async function openApp(node: DesktopNode, query?: Record<string, string>)
       logError('Unknown node type: ' + node.type)
       return false
   }
+}
+
+export async function openApp(node: DesktopNode, query?: Record<string, string>): Promise<boolean> {
+  return openAppWrap(node, query).then((res) => {
+    if (res) {
+      hideMainWindow()
+    }
+    return res
+  })
 }

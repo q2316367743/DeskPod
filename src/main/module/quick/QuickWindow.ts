@@ -29,7 +29,7 @@ export async function createQuickWindow(node: DesktopNode): Promise<boolean> {
     fullscreen: bwEws.isFullScreen,
     minWidth: node.meta?.minWidth,
     minHeight: node.meta?.minHeight,
-    skipTaskbar: true,
+    skipTaskbar: false,
     webPreferences: {
       sandbox: true,
       webSecurity: false,

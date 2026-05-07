@@ -185,7 +185,7 @@ export async function createPluginWebviewWindow(
     width: bwEws.width,
     height: bwEws.height,
     fullscreen: bwEws.isFullScreen,
-    skipTaskbar: true
+    skipTaskbar: false
   })
   // 应该可以管理
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -343,7 +343,7 @@ export async function createPluginWindow(options: PluginWindowOptions, pluginId:
     width: bwEws.width,
     height: bwEws.height,
     fullscreen: bwEws.isFullScreen,
-    skipTaskbar: true
+    skipTaskbar: false
   })
   // 应该可以管理
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

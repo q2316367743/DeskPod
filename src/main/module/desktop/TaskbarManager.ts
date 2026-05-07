@@ -1,4 +1,4 @@
-import { BaseWindow, BrowserWindow } from 'electron'
+import { app, BaseWindow, BrowserWindow } from 'electron'
 import { useSnowflake } from '@common/utils'
 import { getMainWindow } from '$/module/desktop/MainWindow'
 import { DeskPodEvent } from '@common/global'
@@ -25,15 +25,22 @@ interface TaskbarView extends TaskbarCore {
 
 export class TaskbarManager {
   private readonly map = new Map<string, TaskbarItem>()
+  private readonly isMac = process.platform === 'darwin'
 
   private onChange() {
+    if (this.isMac) {
+      if (this.map.size === 0) {
+        app.dock?.hide()
+      } else {
+        app.dock?.show()
+      }
+    }
     getMainWindow()?.webContents.send(DeskPodEvent.TASKBAR_CHANGED)
   }
 
   // 管理一个 bw
   manage(item: TaskbarForm) {
     const { bw } = item
-    bw.setParentWindow(getMainWindow() || null)
     const id = useSnowflake().nextId()
     this.map.set(id, { ...item, visible: true })
     // 监听关闭事件

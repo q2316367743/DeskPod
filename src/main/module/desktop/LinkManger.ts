@@ -18,6 +18,7 @@ export const openLinkApp = async (node: DesktopNode): Promise<boolean> => {
       path: APP_DATA_DB_STATE_LINK_PATH,
       file: `${node.id}.json`
     })
+    // TODO: 此处可以 BaseWindow + WebContentView
     const bw = new BrowserWindow({
       title: node.name,
       x: bwEws.x,
@@ -25,7 +26,8 @@ export const openLinkApp = async (node: DesktopNode): Promise<boolean> => {
       width: bwEws.width,
       height: bwEws.height,
       fullscreen: bwEws.isFullScreen,
-      skipTaskbar: true,
+      skipTaskbar: false,
+      alwaysOnTop: false,
       minWidth: node.meta?.minWidth,
       minHeight: node.meta?.minHeight,
       titleBarStyle: node.meta?.titleBarStyle,
