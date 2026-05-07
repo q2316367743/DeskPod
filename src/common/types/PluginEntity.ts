@@ -77,6 +77,8 @@ export interface PluginEntity {
 export interface PluginEntityWrap extends PluginEntity {
   // 运行时目录
   root: string
+  // 新增字段
+  source: 'installed' | 'development'
 }
 
 export interface PluginVerifyResult {

@@ -100,3 +100,11 @@ if (process.contextIsolated) {
   window.isTauri = true
   window.__TAURI_EVENT_PLUGIN_INTERNALS__ = __TAURI_EVENT_PLUGIN_INTERNALS__
 }
+
+const u = new URLSearchParams(location.search)
+const label = u.get('label') || ''
+if (label) {
+  if (window.__TAURI_INTERNALS__ && window.__TAURI_INTERNALS__.metadata) {
+    ;(window.__TAURI_INTERNALS__.metadata as Record<string, string>).label = label
+  }
+}

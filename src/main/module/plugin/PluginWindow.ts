@@ -222,9 +222,15 @@ export async function createPluginWebviewWindow(
 
   // 加载文件
   if (/https?:\/\//.test(options.url)) {
-    await wcv.webContents.loadURL(options.url)
+    const u = new URL(options.url)
+    if (u.search) {
+      u.search = `${u.search}&label=${options.label}`
+    }
+    await wcv.webContents.loadURL(u.href)
   } else {
-    await wcv.webContents.loadFile(join(entity.root, options.url))
+    await wcv.webContents.loadFile(join(entity.root, options.url), {
+      query: { label: options.label }
+    })
   }
 
   // 本质上是 WebContentView 的实例
@@ -281,11 +287,16 @@ export async function createPluginWebview(
 
   // 加载文件
   if (/https?:\/\//.test(options.url)) {
-    await wcv.webContents.loadURL(options.url)
+    const u = new URL(options.url)
+    if (u.search) {
+      u.search = `${u.search}&label=${options.label}`
+    }
+    await wcv.webContents.loadURL(u.href)
   } else {
-    await wcv.webContents.loadFile(join(entity.root, options.url))
+    await wcv.webContents.loadFile(join(entity.root, options.url), {
+      query: { label: options.label }
+    })
   }
-
   // 本质上是 WebContentView 的实例
   webviewIdMap.set(wcv.webContents.id, {
     pluginId: pluginId,

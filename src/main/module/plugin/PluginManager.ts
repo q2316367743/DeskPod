@@ -1,11 +1,12 @@
 import { mkdir, readdir, readFile, rm } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { app, session } from 'electron'
 import AdmZip from 'adm-zip'
-import { PluginEntityWrap, PluginVerifyResult } from '@common/types'
+import { PluginEntity, PluginEntityWrap, PluginVerifyResult } from '@common/types'
 import { closePluginAllWindow, pluginVerify } from '$/module/plugin'
 import {
+  APP_DATA_DB_DIR,
   APP_DATA_PLUGIN_DIR,
   appPluginConfigPath,
   createPluginDataDirs,
@@ -16,6 +17,7 @@ import { useSnowflake } from '@common/utils'
 import { databaseManager, desktopManager, storeManager } from '$/global/BeanFactory'
 import { logError, logInfo } from '$/lib/log'
 import { PARTITION } from '@common/global'
+import { PluginDevelop } from '@common/entity'
 
 /**
  * 插件管理器
@@ -29,7 +31,7 @@ export class PluginManager {
   /**
    * 初始化插件列表
    */
-  async initPlugins(): Promise<void> {
+  private async initInstallPlugins(): Promise<void> {
     const pluginIds = await readdir(APP_DATA_PLUGIN_DIR)
     const items = await Promise.allSettled(
       pluginIds.map(async (pluginId) => {
@@ -44,7 +46,8 @@ export class PluginManager {
             return {
               ...pc,
               // 运行时目录
-              root: join(APP_DATA_PLUGIN_DIR, pluginId)
+              root: join(APP_DATA_PLUGIN_DIR, pluginId),
+              source: 'installed'
             } as PluginEntityWrap
           }
         }
@@ -58,6 +61,39 @@ export class PluginManager {
         }
       }
     }
+  }
+
+  private async initDevPlugins(): Promise<void> {
+    const path = join(APP_DATA_DB_DIR, 'plugin_dev.json')
+    if (existsSync(path)) {
+      try {
+        const text = await readFile(path, 'utf-8')
+        const j = JSON.parse(text) as Array<PluginDevelop>
+        if (Array.isArray(j)) {
+          for (const pluginDevelop of j) {
+            try {
+              const folder = dirname(pluginDevelop.path)
+              const pluginText = await readFile(pluginDevelop.path, 'utf-8')
+              const pluginJson = JSON.parse(pluginText) as PluginEntity
+              this.pluginMap.set(`dev:${pluginJson.identifier}`, {
+                ...pluginJson,
+                identifier: `dev:${pluginJson.identifier}`,
+                root: folder,
+                source: 'development'
+              })
+            } catch (err) {
+              logError(`初始化开发者插件【${pluginDevelop.name}】错误`, err)
+            }
+          }
+        }
+      } catch (e) {
+        logError('初始化开发者插件错误', e)
+      }
+    }
+  }
+
+  async initPlugins(): Promise<void> {
+    await Promise.all([this.initInstallPlugins(), this.initDevPlugins()])
   }
 
   /**

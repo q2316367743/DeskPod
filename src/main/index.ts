@@ -10,34 +10,37 @@ import { createTray, createMainWindow } from '$/module/desktop'
 import '$/router'
 import { createBallWindow } from '$/module/desktop/BallWindow'
 
+appDirInit()
+  .then(() => logDebug('基础目录初始化成功'))
+  .catch((e) => logError('基础目录初始化失败', e))
+
 app.whenReady().then(() => {
-  // 注册协议
-  appDirInit()
-    .then(() => logDebug('基础目录初始化成功'))
-    .catch((e) => logError('基础目录初始化失败', e))
+  pluginManager
+    .initPlugins()
+    .then(() => logDebug('插件初始化成功'))
+    .catch((e) => logError('插件初始化失败', e))
+  Promise.allSettled([desktopManager.init(), settingManager.init()])
+    .then((res) => logDebug('基础信息初始化成功', res))
+    .catch((e) => logError('基础信息初始化失败', e))
     .finally(() => {
-      Promise.allSettled([
-        useSql().migrate(),
-        desktopManager.init(),
-        pluginManager.initPlugins(),
-        settingManager.init()
-      ])
-        .then((res) => logDebug('初始化结果：', res))
-        .finally(() => {
-          quickManager
-            .init()
-            .then(() => logDebug('快应用初始化成功'))
-            .catch((e) => logError('快应用初始化失败', e))
+      // 桌面管理、设置管理初始化完成，即可创建窗口
+      createBallWindow()
+      createTray()
+      createMainWindow()
+    })
+  // 初始化基础目录
+  useSql()
+    .migrate()
+    .then((res) => logDebug('数据库初始化结果：', res))
+    .finally(() => {
+      quickManager
+        .init()
+        .then((res) => logDebug('快应用初始化成功', res))
+        .catch((e) => logError('快应用初始化失败', e))
 
-          // 初始化完设置，再创建窗口
-          createBallWindow()
-          createMainWindow()
-          createTray()
-
-          app.on('activate', function () {
-            if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
-          })
-        })
+      app.on('activate', function () {
+        if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
+      })
     })
   electronApp.setAppUserModelId('xyz.esion')
 
