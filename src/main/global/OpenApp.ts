@@ -77,7 +77,8 @@ async function openAppWrap(node: DesktopNode, query?: Record<string, string>): P
 export async function openApp(node: DesktopNode, query?: Record<string, string>): Promise<boolean> {
   return openAppWrap(node, query).then((res) => {
     if (res) {
-      hideMainWindow()
+      // 内置窗口不隐藏
+      if (node.type !== 'builtin') hideMainWindow()
     }
     return res
   })

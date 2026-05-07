@@ -12,18 +12,18 @@
         </template>
       </t-button>
 
-      <t-button
-        v-for="w in workspaces"
-        :key="w.id"
-        theme="primary"
-        :variant="desktopId === w.id ? undefined : 'text'"
-        shape="square"
-        @click="handleClick(w.id)"
-      >
-        <template #icon>
-          <dashboard1-icon />
-        </template>
-      </t-button>
+      <t-tooltip v-for="w in workspaces" :key="w.id" :content="w.name" placement="right">
+        <t-button
+          theme="primary"
+          :variant="desktopId === w.id ? undefined : 'text'"
+          shape="square"
+          @click="handleClick(w.id)"
+        >
+          <template #icon>
+            <dashboard1-icon />
+          </template>
+        </t-button>
+      </t-tooltip>
 
       <t-button theme="primary" shape="square" variant="text" @click="openDesktopWorkspaceAdd()">
         <template #icon>

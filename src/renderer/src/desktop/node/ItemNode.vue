@@ -4,10 +4,10 @@
     :title="node.name"
     @dblclick="handleClick(node)"
   >
-    <div class="icon-wrapper">
+    <div :class="['icon-wrapper', node.type]">
       <item-icon :icon="node.icon" :name="node.name" />
     </div>
-    <span v-if="!dockMode" class="icon-name">{{ node.name }}</span>
+    <span v-if="!dockMode" :class="['icon-name', node.type]">{{ node.name }}</span>
   </div>
 </template>
 <script lang="ts" setup>
@@ -59,6 +59,12 @@ const handleClick = (node: DesktopNode) => {
 
   &:hover {
     background: var(--fluent-item-hover);
+    .icon-name {
+      &.link {
+        color: var(--td-text-color-link);
+        text-decoration: underline;
+      }
+    }
   }
 
   &:active {
@@ -78,6 +84,7 @@ const handleClick = (node: DesktopNode) => {
   align-items: center;
   justify-content: center;
   margin-bottom: 6px;
+  position: relative;
 }
 
 .icon-image {
@@ -114,5 +121,6 @@ const handleClick = (node: DesktopNode) => {
   -webkit-box-orient: vertical;
   overflow: hidden;
   max-width: 72px;
+  transition: all 0.3s ease-in-out;
 }
 </style>

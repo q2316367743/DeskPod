@@ -27,6 +27,8 @@ export function createMainWindow() {
     minWidth: 1201,
     minHeight: 816,
     resizable: false,
+    maximizable: false,
+    minimizable: false,
     show: false,
     skipTaskbar: true,
     autoHideMenuBar: true,
