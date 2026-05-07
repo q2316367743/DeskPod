@@ -1,16 +1,43 @@
 <template>
-  <div class="m-8px">
+  <div class="m-8px add-native-app">
     <t-card size="small">
-      <t-row :gutter="[16, 16]">
-        <t-col v-for="app in apps" :key="app.id" flex="96px">
-          <div class="app" :title="app.path" @click="handleAddApp(app)">
-            <div class="app-icon">
-              <img :src="app.icon" :alt="app.name" />
-            </div>
-            <div class="app-name">{{ app.name }}</div>
-          </div>
-        </t-col>
-      </t-row>
+      <!-- 方式二：使用插槽自定义下拉选项内容 -->
+      <t-form :data="data">
+        <t-form-item label="选择应用" label-align="top">
+          <t-select
+            v-model="data.appId"
+            placeholder="请选择应用"
+            :popup-props="{ overlayClassName: 'ana-select__overlay-option' }"
+            filterable
+          >
+            <t-option v-for="app in apps" :key="app.id" :value="app.id" :label="app.name">
+              <div class="add-native-app-item">
+                <div class="app-icon">
+                  <img :src="app.icon" :alt="app.name" />
+                </div>
+                <div class="app-name">{{ app.name }}</div>
+              </div>
+            </t-option>
+            <template #valueDisplay>
+              <div v-if="selectApp" class="add-native-app-item">
+                <div class="app-icon">
+                  <img :src="selectApp.icon" :alt="selectApp.name" />
+                </div>
+                <div class="app-name">{{ selectApp.name }}</div>
+              </div>
+            </template>
+          </t-select>
+        </t-form-item>
+        <t-form-item label="启动参数" label-align="top" help="回车新增参数">
+          <t-tag-input v-model="data.args" />
+        </t-form-item>
+        <t-form-item label-align="top">
+          <t-space size="small">
+            <t-button theme="primary" @click="handleSubmit()">新增</t-button>
+            <t-button theme="default" variant="outline" type="reset">重置</t-button>
+          </t-space>
+        </t-form-item>
+      </t-form>
     </t-card>
   </div>
 </template>
@@ -25,9 +52,12 @@ interface App {
 }
 const apps = ref(new Array<App>())
 
-onMounted(async () => {
-  apps.value = await window.desktopAPI.nodeAppList()
+const data = ref({
+  appId: '',
+  args: new Array<string>()
 })
+
+const selectApp = computed(() => apps.value.find((e) => e.id === data.value.appId))
 
 const handleAddApp = (app: App) => {
   const params = new URLSearchParams(location.search)
@@ -44,26 +74,40 @@ const handleAddApp = (app: App) => {
     column: 1,
     row: 1,
     meta: {
-      root: app.path
+      root: app.path,
+      args: toRaw(data.value.args)
     }
   })
 }
+
+const handleSubmit = () => {
+  if (selectApp.value) {
+    handleAddApp(selectApp.value)
+  }
+}
+
+onMounted(async () => {
+  apps.value = await window.desktopAPI.nodeAppList()
+})
 </script>
-<style scoped lang="less">
-.app {
-  width: 80px;
-  height: 80px;
-  padding: 8px;
-  border-radius: var(--td-radius-medium);
-  border: 1px solid var(--td-border-level-1-color);
+<style lang="less">
+.ana-select__overlay-option {
+  .t-select-option {
+    height: 48px !important;
+  }
+}
+.add-native-app-item {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  transition: all 0.3s ease-in-out;
+  gap: 8px;
+  padding: 8px 0;
   .app-icon {
-    height: 60px;
-    width: 60px;
+    height: 32px;
+    width: 32px;
+    img {
+      height: 32px;
+      width: 32px;
+    }
   }
   .app-name {
     overflow: hidden;
@@ -71,10 +115,6 @@ const handleAddApp = (app: App) => {
     white-space: nowrap;
     width: 100%;
     text-align: center;
-  }
-  &:hover {
-    background-color: var(--td-bg-color-container-hover);
-    border-color: var(--td-border-level-2-color);
   }
 }
 </style>
