@@ -5,7 +5,7 @@ import { desktopManager } from '$/global/BeanFactory'
 import { createContextMenuByDesktop, createContextMenuByNode } from '$/module/desktop'
 import { listApps } from '$/module/native'
 
-const DEFAULT_DESKTOP_ID = 'desktop-1'
+const DEFAULT_DESKTOP_ID = 'default'
 
 // 获取指定桌面的完整树结构
 ipcMain.handle('desktop:getTree', (_event, desktopId: string = DEFAULT_DESKTOP_ID) => {

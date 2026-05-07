@@ -1,22 +1,35 @@
 import { defineStore } from 'pinia'
-import { DesktopNode } from '@common/types'
-import { logDebug } from '@/lib/log'
-
-const DEFAULT_DOCK_ID = 'dock'
+import { DesktopNode, DesktopWorkspace } from '@common/types'
+import { useSnowflake } from '@common/utils'
 
 export const useDesktopNodeStore = defineStore('desktop-node', () => {
-  const desktopId = ref('desktop-1')
+  const desktopId = ref('default')
 
   const nodes = ref(new Array<DesktopNode>())
   const dockNodes = ref(new Array<DesktopNode>())
+  const workspaces = ref(new Array<DesktopWorkspace>())
 
-  const init = async () => {
-    logDebug('初始化节点')
+  watch(desktopId, async (val) => {
+    nodes.value = await window.desktopAPI.getTree(val)
+  })
+
+  const initWorkspace = async () => {
+    workspaces.value = await window.desktopAPI.getDesktops()
+  }
+  const initNodes = async () => {
     nodes.value = await window.desktopAPI.getTree(desktopId.value)
-    dockNodes.value = await window.desktopAPI.getTree(DEFAULT_DOCK_ID)
   }
 
-  window.desktopAPI.onChange(init)
+  const init = async () => {
+    await Promise.all([initWorkspace(), initNodes()])
+  }
+
+  window.desktopAPI.onChange(initNodes)
+
+  const addWorkspace = async (data: Omit<DesktopWorkspace, 'id'>) => {
+    await window.desktopAPI.createDesktop({ ...data, id: useSnowflake().nextId() })
+    await initWorkspace()
+  }
 
   const move = async (nodeId: string, x: number, y: number, w?: number, h?: number) => {
     for (const node of nodes.value) {
@@ -52,8 +65,10 @@ export const useDesktopNodeStore = defineStore('desktop-node', () => {
     nodes,
     dockNodes,
     desktopId,
+    workspaces,
     init,
     move,
-    drop
+    drop,
+    addWorkspace
   }
 })

@@ -1,6 +1,7 @@
 import {
   AiModelSetting,
   DesktopNode,
+  DesktopWorkspace,
   PluginEntityWrap,
   PluginVerifyResult,
   QuickApp,
@@ -17,8 +18,8 @@ interface DesktopAPI {
   updateNode: (node: DesktopNode) => Promise<DesktopNode>
   updateNodes: (nodes: DesktopNode[]) => Promise<DesktopNode[]>
   deleteNode: (nodeId: string) => Promise<string[]>
-  getDesktops: () => Promise<Array<{ id: string; name: string }>>
-  createDesktop: (desktopId: string, name: string) => Promise<{ id: string; name: string }>
+  getDesktops: () => Promise<Array<DesktopWorkspace>>
+  createDesktop: (data: DesktopWorkspace) => Promise<DesktopWorkspace>
   deleteDesktop: (desktopId: string) => Promise<boolean>
   openApp: (node: DesktopNode) => Promise<boolean>
   getInstalledApps: () => Promise<Array<{ name: string; path: string; icon?: string }>>

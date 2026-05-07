@@ -68,7 +68,7 @@ export interface DesktopNode {
   sortIndex: number // 在同一层级下的排序权重
 
   // --- 多桌面支持 ---
-  desktopId: string // 属于哪个桌面 (默认为 'desktop-1')
+  desktopId: string // 属于哪个桌面 (默认为 'default')
 
   x: number // 距离桌面左边缘的距离
   y: number // 距离桌面顶部的距离
@@ -80,4 +80,10 @@ export interface DesktopNode {
 
   // --- 按需字段 (根据 type 不同而存在) ---
   meta: DesktopNodeMeta
+}
+
+export interface DesktopWorkspace {
+  id: string
+  name: string
+  icon: string
 }

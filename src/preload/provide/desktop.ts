@@ -1,6 +1,6 @@
 // 桌面管理相关 IPC 调用
 import { ipcRenderer } from 'electron'
-import { DesktopNode } from '@common/types'
+import { DesktopNode, DesktopWorkspace } from '@common/types'
 import { SYSTEM_EVENT } from '@common/global'
 import { DesktopCreateParam, ViewOptions } from '@common/params'
 
@@ -36,13 +36,13 @@ export const desktopAPI = {
   },
 
   // 获取桌面列表
-  getDesktops: (): Promise<Array<{ id: string; name: string }>> => {
+  getDesktops: (): Promise<Array<DesktopWorkspace>> => {
     return ipcRenderer.invoke('desktop:getDesktops')
   },
 
   // 创建桌面
-  createDesktop: (desktopId: string, name: string): Promise<{ id: string; name: string }> => {
-    return ipcRenderer.invoke('desktop:createDesktop', desktopId, name)
+  createDesktop: (data: DesktopWorkspace): Promise<DesktopWorkspace> => {
+    return ipcRenderer.invoke('desktop:createDesktop', data)
   },
 
   // 删除桌面

@@ -12,8 +12,8 @@ export const getMainWindow = () => mainWindow
 
 export function createMainWindow() {
   const mainEws = ews({
-    defaultWidth: 96 * 12 + 16,
-    defaultHeight: 96 * 8 + 16 + 66,
+    defaultWidth: 1201,
+    defaultHeight: 816,
     path: APP_DATA_DB_STATE_PATH,
     file: 'main.json'
   })
@@ -24,8 +24,8 @@ export function createMainWindow() {
     height: mainEws.height,
     x: mainEws.x,
     y: mainEws.y,
-    minWidth: 96 * 12 + 16,
-    minHeight: 96 * 8 + 16 + 66,
+    minWidth: 1201,
+    minHeight: 816,
     resizable: false,
     show: false,
     skipTaskbar: true,

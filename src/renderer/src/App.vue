@@ -11,10 +11,9 @@
     <!-- 桌面图标网格 -->
     <DesktopGrid />
 
-    <DockFooter />
+    <DesktopHeader />
 
-    <!-- 添加节点弹窗 -->
-    <AddNodeModal :visible="showModal" :type="modalType" @close="handleCloseModal" />
+    <DesktopAside />
 
     <div class="desktop-bar"></div>
   </div>
@@ -22,22 +21,13 @@
 
 <script lang="ts" setup>
 import DesktopGrid from '@/desktop/layout/DesktopGrid.vue'
-import AddNodeModal from '@/components/desktop/AddNodeModal.vue'
-import DockFooter from '@/desktop/layout/DockFooter.vue'
+import DesktopHeader from '@/desktop/layout/DesktopHeader.vue'
+import DesktopAside from '@/desktop/layout/DesktopAside.vue'
 import { useDesktopNodeStore, useSettingStore } from '@/store'
-
-type ModalType = 'app' | 'link' | null
-
-const showModal = ref(false)
-const modalType = ref<ModalType>(null)
 
 const background = computed(() => useSettingStore().background)
 
 // 关闭弹窗
-const handleCloseModal = () => {
-  showModal.value = false
-  modalType.value = null
-}
 
 onMounted(() => {
   useDesktopNodeStore().init()

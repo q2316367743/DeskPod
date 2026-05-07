@@ -36,3 +36,7 @@ export const builtinHomeNode: DesktopNode = {
     builtinId: BUILTIN_KEY.SETTING
   }
 }
+
+export const openSettingWindow = () => {
+  return window.desktopAPI.openApp(builtinHomeNode)
+}

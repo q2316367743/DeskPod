@@ -1,25 +1,20 @@
 import { join } from 'node:path'
 import { existsSync } from 'node:fs'
 import { readFile, writeFile } from 'node:fs/promises'
-import { DesktopNode } from '@common/types'
+import { DesktopNode, DesktopWorkspace } from '@common/types'
 import { group } from '@common/utils'
 import { BUILTIN_KEY, SYSTEM_EVENT } from '@common/global'
 import { APP_DATA_DB_DIR } from '$/global/Constant'
 import { getMainWindow, closeBuiltinWindow, deleteLinkApp } from '$/module/desktop'
 
-interface DesktopItem {
-  id: string
-  name: string
-}
-
 interface DesktopData {
   nodes: Array<DesktopNode>
-  desktops: Array<DesktopItem>
+  desktops: Array<DesktopWorkspace>
 }
 
 export class DesktopManager {
   private nodes = new Array<DesktopNode>()
-  private desktops = new Array<DesktopItem>()
+  private desktops = new Array<DesktopWorkspace>()
   private map = new Map<string, Array<DesktopNode>>()
   private readonly path = join(APP_DATA_DB_DIR, 'desktop_data.json')
 
@@ -105,10 +100,10 @@ export class DesktopManager {
     return this.desktops
   }
 
-  async createDesktop(desktopId: string, name: string) {
-    this.desktops.push({ id: desktopId, name })
+  async createDesktop(data: DesktopWorkspace) {
+    this.desktops.push(data)
     await this.save()
-    return { id: desktopId, name }
+    return data
   }
   async deleteDesktop(desktopId: string) {
     // 删除该桌面的所有节点

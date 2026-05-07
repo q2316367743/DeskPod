@@ -6,10 +6,15 @@ import { pathToFileURL } from 'node:url'
 import { FileItemView } from '@common/views'
 import { logAPI } from '~/provide/log'
 
+const p = platform()
+const isWindows = p === 'win32'
+const isMacOS = p === 'darwin'
+const isLinux = p === 'linux'
+
 export const supportAPI = {
-  isWindows: () => platform() === 'win32',
-  isMacOS: () => platform() === 'darwin',
-  isLinux: () => platform() === 'linux',
+  isWindows: () => isWindows,
+  isMacOS: () => isMacOS,
+  isLinux: () => isLinux,
   path: {
     join,
     basename,
