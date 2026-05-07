@@ -7,7 +7,7 @@
           <div class="mt-8px">
             <t-button theme="primary" @click="handleUpload">
               <template #icon><add-icon /></template>
-              上传图片
+              上传图片/视频
             </t-button>
           </div>
         </template>
@@ -33,7 +33,15 @@
           }"
           @click="handleSelectImage(img)"
         >
-          <img :src="`file://${img}`" :alt="img" class="w-300px h-200px object-cover" />
+          <video
+            v-if="img.endsWith('mp4') || img.endsWith('web,')"
+            class="w-300px h-200px object-cover"
+            :src="`file://${img}`"
+            loop
+            autoplay
+            muted
+          />
+          <img v-else :src="`file://${img}`" :alt="img" class="w-300px h-200px object-cover" />
           <div
             v-if="selected === img"
             class="absolute top-8px right-8px bg-brand-color text-white rounded-50% w-24px h-24px flex items-center justify-center"
@@ -125,8 +133,11 @@ const handleSelectImage = async (path: string) => {
 
 const handleUpload = async () => {
   const result = await window.supportAPI.dialog.showOpenDialogSync({
-    title: '选择背景图片',
-    filters: [{ name: '图片', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp'] }],
+    title: '选择背景图片/视频',
+    filters: [
+      { name: '图片', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp'] },
+      { name: '视频', extensions: ['mp4', 'webm'] }
+    ],
     properties: ['openFile']
   })
   if (result && result.length > 0) {

@@ -10,7 +10,7 @@ export const useSettingStore = defineStore('setting', () => {
       ? setting.value.backgroundImageDark
       : setting.value.backgroundImageLight
     if (img) {
-      return `file://${img}`
+      return window.supportAPI.url.pathToHref(img)
     }
     return ''
   })
