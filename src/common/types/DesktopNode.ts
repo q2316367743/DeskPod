@@ -30,6 +30,10 @@ export interface DesktopNodeMeta {
    * - 当 type === 'script' 时，此处代表了执行的程序
    */
   openWith?: string
+  /**
+   * 是否多实例
+   */
+  multi?: boolean
 
   // type === 'plugin' 或 type ===  'widget' && source === 'extension' 或 type === 'quick' 时
   pluginId?: string // 插件的唯一ID (如 'sys-settings')

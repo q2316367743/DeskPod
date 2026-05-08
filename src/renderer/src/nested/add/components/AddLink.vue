@@ -18,6 +18,11 @@
           </t-radio-group>
         </t-form-item>
         <t-row v-if="data.openWith === 'inner'" :gutter="[16, 16]">
+          <t-col :span="12">
+            <t-form-item label="是否支持多窗口" label-align="top">
+              <t-switch v-model="data.multi" />
+            </t-form-item>
+          </t-col>
           <t-col :span="6">
             <t-form-item label="宽" label-align="top">
               <t-input-number v-model="data.width" />
@@ -78,7 +83,8 @@ const data = ref<DesktopNodeMeta & { name: string; icon: string }>({
   name: '',
   url: '',
   icon: '',
-  openWith: 'default' as 'default' | 'inner',
+  openWith: 'default',
+  multi: true,
   minWidth: 800,
   minHeight: 600,
   width: 1200,

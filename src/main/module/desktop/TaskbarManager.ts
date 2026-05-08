@@ -39,9 +39,9 @@ export class TaskbarManager {
   }
 
   // 管理一个 bw
-  manage(item: TaskbarForm) {
+  manage(item: TaskbarForm, _id?: string) {
     const { bw } = item
-    const id = useSnowflake().nextId()
+    const id = _id || useSnowflake().nextId()
     this.map.set(id, { ...item, visible: true })
     // 监听关闭事件
     bw.on('close', () => {
@@ -49,11 +49,6 @@ export class TaskbarManager {
       this.map.delete(id)
       // 删除事件
       this.onChange()
-    })
-    // 监听最小化事件
-    bw.on('minimize', () => {
-      // 调用隐藏
-      bw.hide()
     })
     bw.on('show', () => {
       const o = this.map.get(id)
@@ -86,6 +81,18 @@ export class TaskbarManager {
     return l
   }
 
+  show(id: string) {
+    const o = this.map.get(id)
+    if (o) {
+      o.bw.show()
+      o.bw.focus()
+      o.visible = true
+      this.onChange()
+      return true
+    }
+    return false
+  }
+
   toggle(id: string) {
     const o = this.map.get(id)
     if (o) {
@@ -98,7 +105,9 @@ export class TaskbarManager {
         o.visible = true
       }
       this.onChange()
+      return true
     }
+    return false
   }
   close(id: string) {
     const o = this.map.get(id)
