@@ -77,6 +77,8 @@ export interface DesktopNode {
   resizeable?: boolean // 是否支持调整大小，默认不支持
   minRow?: number // 最小占几行，默认 2
   minCol?: number // 最小占几列，默认 2
+  maxRow?: number // 最大占几行
+  maxCol?: number // 最大占几列
 
   // --- 按需字段 (根据 type 不同而存在) ---
   meta: DesktopNodeMeta

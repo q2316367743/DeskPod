@@ -107,6 +107,8 @@ const syncGridFromNodes = async () => {
     if (allowResize) {
       options.minW = item.minCol || 2
       options.minH = item.minRow || 2
+      options.maxW = item.maxCol
+      options.maxH = item.maxRow
     }
 
     if (gsNode) {

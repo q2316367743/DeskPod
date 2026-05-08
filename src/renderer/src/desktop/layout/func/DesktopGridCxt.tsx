@@ -4,7 +4,8 @@ export function handleDesktopGridCxt(
   e: MouseEvent,
   column: number,
   row: number,
-  parentId: string | null
+  parentId: string | null,
+  nodeId = ''
 ) {
   e.preventDefault()
   e.stopPropagation()
@@ -15,6 +16,6 @@ export function handleDesktopGridCxt(
     nodeY: row,
     nodeX: column,
     parentId,
-    nodeId: ''
+    nodeId: nodeId
   })
 }

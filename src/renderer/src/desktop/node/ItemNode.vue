@@ -2,7 +2,7 @@
   <div
     :class="{ 'desktop-icon': true, dock: dockMode }"
     :title="node.name"
-    @dblclick="handleClick(node)"
+    @click="handleClick(node)"
   >
     <div :class="['icon-wrapper', node.type]">
       <item-icon :icon="node.icon" :name="node.name" />
@@ -22,6 +22,10 @@ const props = defineProps({
   dockMode: {
     type: Boolean,
     default: false
+  },
+  size: {
+    type: String,
+    default: '80px'
   }
 })
 
@@ -37,8 +41,8 @@ const handleClick = (node: DesktopNode) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: v-bind(size);
+  height: v-bind(size);
   padding: 4px;
   margin: 4px;
   border-radius: var(--fluent-radius-card);

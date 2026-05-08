@@ -48,6 +48,9 @@ export const useDesktopNodeStore = defineStore('desktop-node', () => {
   const drop = async (nodeId: string, parentId: string | null, x: number, y: number) => {
     for (const node of nodes.value) {
       if (node.id === nodeId) {
+        if (node.column > 1 || node.row > 1) {
+          return false
+        }
         if (!node.meta) {
           node.meta = {}
         }
@@ -56,9 +59,10 @@ export const useDesktopNodeStore = defineStore('desktop-node', () => {
         node.y = y
         await window.desktopAPI.updateNode(toRaw(node))
         await init()
-        return
+        return true
       }
     }
+    return false
   }
 
   return {
