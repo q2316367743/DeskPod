@@ -2,7 +2,11 @@ import { ipcMain } from 'electron'
 import { DesktopNode } from '@common/types'
 import { openApp } from '$/global/OpenApp'
 import { desktopManager } from '$/global/BeanFactory'
-import { createContextMenuByDesktop, createContextMenuByNode } from '$/module/desktop'
+import {
+  createContextMenuByBall,
+  createContextMenuByDesktop,
+  createContextMenuByNode
+} from '$/module/desktop'
 import { listApps } from '$/module/native'
 
 const DEFAULT_DESKTOP_ID = 'default'
@@ -33,8 +37,8 @@ ipcMain.handle('desktop:getDesktops', () => {
 })
 
 // 新增桌面
-ipcMain.handle('desktop:createDesktop', (_event, desktopId: string, name: string) => {
-  return desktopManager.createDesktop(desktopId, name)
+ipcMain.handle('desktop:createDesktop', (_event, options) => {
+  return desktopManager.createDesktop(options)
 })
 
 // 删除桌面
@@ -83,6 +87,10 @@ ipcMain.handle('/desktop/contextmenu/create/desktop', async (_event, param) => {
 
 ipcMain.handle('/desktop/contextmenu/create/node', async (_event, nodeId, x, y) => {
   createContextMenuByNode(nodeId, x, y)
+})
+
+ipcMain.handle('/desktop/contextmenu/create/ball', async (_event, x, y) => {
+  createContextMenuByBall(x, y)
 })
 
 ipcMain.handle('/desktop/node/app/list', async () => {

@@ -75,15 +75,19 @@
   <div id="click-btn" title="点击显示/隐藏主窗口">
     <!-- 简单的应用图标 -->
     <svg viewBox="0 0 24 24">
-      <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6l-2 3V6a2 2 0 0 1 2-2z"/>
+      <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6l-2 3V6a2 2 0 0 1 2-2z" />
     </svg>
   </div>
 </div>
 </body>
 <script type="module">
   // 单击：切换主窗口显示/隐藏
-  document.getElementById("click-btn").addEventListener("click", () => {
+  const clickBtn = document.getElementById("click-btn");
+  clickBtn.addEventListener("click", () => {
     window.supportAPI.app.main.toggleVisible();
+  });
+  clickBtn.addEventListener("contextmenu", (e) => {
+    window.desktopAPI.contextmenuCreateBall(e.x, e.y);
   });
 
 </script>

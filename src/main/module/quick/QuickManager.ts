@@ -2,21 +2,20 @@ import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 import AdmZip from 'adm-zip'
 import { QuickApp, QuickAppCore } from '@common/types'
-import { addQuickApp, getQuickApp, listQuickApps, removeQuickApp, updateQuickApp } from '$/service'
 import { useSnowflake } from '@common/utils'
 import { createQuickAppDirs } from '$/global/Constant'
 import { existsSync } from 'node:fs'
 import { closeQuickWindow } from '$/module/quick/QuickWindow'
-import { desktopManager } from '$/global/BeanFactory'
+import { desktopManager, lmdbManager } from '$/global/BeanFactory'
 import { session } from 'electron'
 import { logError, logInfo } from '$/lib/log'
-import { PARTITION } from '@common/global'
+import { LMDB_MAIN_KEY, PARTITION } from '@common/global'
 
 export class QuickManager {
   private readonly map = new Map<string, QuickApp>()
 
   async init() {
-    const list = await listQuickApps()
+    const list = await lmdbManager.getMainList<QuickApp>(LMDB_MAIN_KEY.QUICK)
     this.map.clear()
     list.forEach((item) => {
       this.map.set(item.id, item)
@@ -79,14 +78,13 @@ export class QuickManager {
     try {
       await this.handleFile(form, data)
       // 创建
-      await addQuickApp(data)
+      this.map.set(data.id, data)
+      await lmdbManager.setMainList(LMDB_MAIN_KEY.QUICK, this.list())
     } catch (e) {
       // 删除目录
       await rm(root, { recursive: true, force: true })
+      this.map.delete(data.id)
       return Promise.reject(e)
-    } finally {
-      // 重新获取列表
-      await this.init()
     }
   }
 
@@ -97,25 +95,25 @@ export class QuickManager {
    */
   async upgrade(id: string, form: QuickAppCore) {
     // 创建目录
-    const old = await getQuickApp(id)
+    const old = this.map.get(id)
     if (!old) return Promise.reject(new Error(`快应用 ${id} 不存在`))
     // 删除旧的目录
-    const data: QuickAppCore = {
+    const data: QuickApp = {
       ...old,
       ...form,
-      icon: form.icon ? form.icon : old.icon
+      icon: form.icon ? form.icon : old.icon,
+      updated_at: Date.now()
     }
     try {
       await this.handleFile(form, data)
       // 更新
-      await updateQuickApp(id, data)
+      this.map.set(id, data)
+      await lmdbManager.setMainList(LMDB_MAIN_KEY.QUICK, this.list())
     } catch (e) {
       // 删除目录
       await rm(data.root, { recursive: true, force: true })
+      this.map.delete(id)
       return Promise.reject(e)
-    } finally {
-      // 重新获取列表
-      await this.init()
     }
   }
 
@@ -159,7 +157,8 @@ export class QuickManager {
     }
 
     // 删除数据库记录
-    await removeQuickApp(id)
+    this.map.delete(id)
+    await lmdbManager.setMainList(LMDB_MAIN_KEY.QUICK, this.list())
     // 删除数据
     await rm(quickApp.root, { recursive: true, force: true })
     // 删除缓存

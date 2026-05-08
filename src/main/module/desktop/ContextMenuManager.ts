@@ -1,11 +1,12 @@
-import { dialog, Menu, Notification } from 'electron'
+import { app, BrowserWindow, dialog, Menu, Notification } from 'electron'
 import { basename } from 'node:path'
 import { BUILTIN_KEY } from '@common/global'
 import { desktopManager } from '$/global/BeanFactory'
 import { openApp } from '$/global/OpenApp'
-import { getMainWindow } from '$/module/desktop'
+import { getMainWindow, toggleMainVisible } from '$/module/desktop'
 import { useSnowflake } from '@common/utils'
 import { DesktopCreateParam } from '@common/params'
+import { getBallWindow } from '$/module/desktop/BallWindow'
 
 function openAppWrap(name: string, type: string, param: Partial<DesktopCreateParam>) {
   return openApp(
@@ -212,6 +213,30 @@ export function createContextMenuByNode(nodeId: string, x: number, y: number) {
 
   Menu.buildFromTemplate(menus).popup({
     window: getMainWindow(),
+    x: x,
+    y: y
+  })
+}
+
+export function createContextMenuByBall(x: number, y: number) {
+  Menu.buildFromTemplate([
+    {
+      label: '显示 / 隐藏',
+      click: () => toggleMainVisible()
+    },
+    {
+      label: '退出',
+      click: () => {
+        // 先关闭全部窗口
+        BrowserWindow.getAllWindows().forEach((window) => {
+          window.destroy()
+        })
+        // 再退出
+        app.quit()
+      }
+    }
+  ]).popup({
+    window: getBallWindow(),
     x: x,
     y: y
   })

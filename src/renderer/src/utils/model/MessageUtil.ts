@@ -13,8 +13,7 @@ function success(message: unknown, callback: () => void): void
 function success(message: unknown, callback?: () => void): void {
   MessagePlugin.success({
     closeBtn: true,
-    content: typeof message === 'string' ? message : JSON.stringify(message),
-    placement: 'bottom-right'
+    content: typeof message === 'string' ? message : JSON.stringify(message)
   })
   if (callback) {
     callback()
@@ -24,8 +23,7 @@ function success(message: unknown, callback?: () => void): void {
 function warning(message: string, e?: unknown): void {
   MessagePlugin.warning({
     closeBtn: true,
-    content: render(message, e),
-    placement: 'bottom-right'
+    content: render(message, e)
   })
   console.error(message, e)
 }
@@ -36,8 +34,7 @@ function error(message: string, e: unknown, callback: () => void): void
 function error(message: string, e?: unknown, callback?: () => void): void {
   MessagePlugin.error({
     closeBtn: true,
-    content: render(message, e),
-    placement: 'bottom-right'
+    content: render(message, e)
   })
   console.error(message, e)
   if (callback) {
@@ -50,8 +47,7 @@ export default {
   info(message: unknown) {
     MessagePlugin.info({
       closeBtn: true,
-      content: typeof message === 'string' ? message : JSON.stringify(message),
-      placement: 'bottom-right'
+      content: typeof message === 'string' ? message : JSON.stringify(message)
     })
   },
   warning,

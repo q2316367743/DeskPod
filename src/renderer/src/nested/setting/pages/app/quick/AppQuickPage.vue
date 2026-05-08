@@ -72,9 +72,9 @@ onMounted(() => fetchList())
   }
   .app-quick-page {
     height: calc(100% - 65px);
-    width: 100%;
     overflow: auto;
     padding: 8px 0;
+    overflow-x: hidden;
   }
 }
 </style>

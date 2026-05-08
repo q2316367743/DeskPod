@@ -17,3 +17,8 @@ export const BUILTIN_KEY = {
   PLUGIN: 'plugin',
   SETTING: 'setting'
 }
+
+// lmdb 主程序使用的键
+export const LMDB_MAIN_KEY = {
+  QUICK: 'quick'
+}

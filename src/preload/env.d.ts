@@ -30,6 +30,7 @@ interface DesktopAPI {
 
   contextmenuCreateDesktop: (param: DesktopCreateParam) => Promise<void>
   contextmenuCreateNode: (nodeId: string, x: number, y: number) => Promise<void>
+  contextmenuCreateBall: (x: number, y: number) => Promise<void>
 
   nodeAppList: () => Promise<Array<{ id: string; name: string; path: string; icon: string }>>
 }

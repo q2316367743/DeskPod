@@ -40,7 +40,7 @@ export const routes: Array<RouteRecordRaw> = [
   {
     name: '应用-开发者',
     path: '/app/develop',
-    component: () => import('@/nested/setting/pages/develop/DevelopSetting.vue')
+    component: () => import('./pages/app/develop/DevelopSetting.vue')
   }
 ]
 

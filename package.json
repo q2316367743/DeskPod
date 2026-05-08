@@ -44,6 +44,7 @@
     "file-icon": "^6.0.0",
     "get-installed-apps": "^1.1.1",
     "gridstack": "^12.6.0",
+    "lmdb": "^3.5.4",
     "monaco-editor": "^0.55.1",
     "pinia": "^3.0.4",
     "tdesign-icons-vue-next": "^0.4.4",

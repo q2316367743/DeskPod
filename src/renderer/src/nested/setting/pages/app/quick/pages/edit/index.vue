@@ -209,9 +209,9 @@ const handleSave = async () => {
 
     saving.value = true
     if (route.params.id === '0') {
-      await window.quickAPI.install(formData.value)
+      await window.quickAPI.install(toRaw(formData.value))
     } else {
-      await window.quickAPI.upgrade(route.params.id as string, formData.value)
+      await window.quickAPI.upgrade(route.params.id as string, toRaw(formData.value))
     }
     MessageUtil.success('保存成功')
     await router.push('/app/quick')

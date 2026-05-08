@@ -6,9 +6,9 @@ import { is } from '@electron-toolkit/utils'
 import ews from 'electron-window-state'
 import { APP_DATA_DB_STATE_PATH } from '$/global/Constant'
 
-let ballWindow: BrowserWindow | null = null
+let ballWindow: BrowserWindow | undefined = undefined
 
-export function getBallWindow(): BrowserWindow | null {
+export function getBallWindow(): BrowserWindow | undefined {
   return ballWindow
 }
 

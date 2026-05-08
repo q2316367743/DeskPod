@@ -6,7 +6,6 @@ import { PARTITION } from '@common/global'
 import ews from 'electron-window-state'
 import { APP_DATA_DB_BUILTIN_PATH } from '$/global/Constant'
 import { taskbarManager } from '$/global/BeanFactory'
-import { getMainWindow } from '$/module/desktop/MainWindow'
 
 const builtinWindowMap = new Map<string, BrowserWindow>()
 
@@ -40,7 +39,6 @@ export const openBuiltinApp = async (
     skipTaskbar: false,
     show: true,
     autoHideMenuBar: true,
-    parent: getMainWindow(),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
