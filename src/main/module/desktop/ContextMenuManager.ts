@@ -1,6 +1,6 @@
 import { app, BrowserWindow, dialog, Menu, Notification } from 'electron'
 import { basename } from 'node:path'
-import { BUILTIN_KEY } from '@common/global'
+import { BUILTIN_KEY, builtinSettingNode } from '@common/global'
 import { desktopManager } from '$/global/BeanFactory'
 import { openApp } from '$/global/OpenApp'
 import { getMainWindow, toggleMainVisible } from '$/module/desktop'
@@ -252,6 +252,10 @@ export function createContextMenuByBall(x: number, y: number) {
     {
       label: '显示 / 隐藏',
       click: () => toggleMainVisible()
+    },
+    {
+      label: '设置',
+      click: () => openApp(builtinSettingNode)
     },
     {
       label: '退出',

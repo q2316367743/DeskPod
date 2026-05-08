@@ -85,7 +85,7 @@ watch(
 
 <style scoped lang="less">
 .monaco-editor {
-  width: 100%;
+  width: calc(100% - 2px);
   height: v-bind(height);
   border: 1px solid var(--td-border-level-1-color);
   border-radius: var(--td-radius-medium);

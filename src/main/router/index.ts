@@ -9,6 +9,7 @@ import './quick'
 // 设置事件
 import './setting'
 import './taskbar'
+import './db'
 
 // 插件事件
 import '$/module/plugin/PluginEvent'

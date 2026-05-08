@@ -1,5 +1,5 @@
 import { DesktopNode } from '@common/types'
-import { BUILTIN_KEY } from '@common/global'
+import { BUILTIN_KEY, builtinSettingNode } from '@common/global'
 
 export const builtinList: Array<DesktopNode> = [
   {
@@ -20,23 +20,6 @@ export const builtinList: Array<DesktopNode> = [
   }
 ]
 
-export const builtinHomeNode: DesktopNode = {
-  id: 'setting',
-  type: 'builtin',
-  name: '设置',
-  icon: 'setting',
-  parentId: null,
-  sortIndex: 0,
-  desktopId: 'dock',
-  row: 0,
-  column: 2,
-  x: 0,
-  y: 0,
-  meta: {
-    builtinId: BUILTIN_KEY.SETTING
-  }
-}
-
 export const openSettingWindow = () => {
-  return window.desktopAPI.openApp(builtinHomeNode)
+  return window.desktopAPI.openApp(builtinSettingNode)
 }

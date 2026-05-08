@@ -5,7 +5,7 @@ export const routes: Array<RouteRecordRaw> = [
   {
     name: '主页',
     path: '/',
-    component: () => import('@/nested/setting/pages/home/HomePage.vue')
+    component: () => import('./pages/home/HomePage.vue')
   },
   {
     name: '系统设置-基础设置',
@@ -41,6 +41,11 @@ export const routes: Array<RouteRecordRaw> = [
     name: '应用-开发者',
     path: '/app/develop',
     component: () => import('./pages/app/develop/DevelopSetting.vue')
+  },
+  {
+    name: '数据存储-lmdb',
+    path: '/db/lmdb',
+    component: () => import('./pages/db/lmdb/DbLmdbList.vue')
   }
 ]
 

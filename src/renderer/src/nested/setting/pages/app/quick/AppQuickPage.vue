@@ -29,10 +29,10 @@
 
 <script lang="ts" setup>
 import { AddIcon } from 'tdesign-icons-vue-next'
-import { openInstallQuickApp } from '@/nested/setting/pages/app/quick/func/InstallQuickApp'
+import { openInstallQuickApp } from '../../app/quick/func/InstallQuickApp'
 import { QuickApp, QuickAppFrom } from '@common/types'
-import QuickAppCard from '@/nested/setting/pages/app/quick/components/QuickAppCard.vue'
-import { openUpgradeQuickApp } from '@/nested/setting/pages/app/quick/func/UpgradeQuickApp'
+import QuickAppCard from '../../app/quick/components/QuickAppCard.vue'
+import { openUpgradeQuickApp } from '../../app/quick/func/UpgradeQuickApp'
 
 const router = useRouter()
 

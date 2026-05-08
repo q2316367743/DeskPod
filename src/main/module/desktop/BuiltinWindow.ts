@@ -66,6 +66,7 @@ export const openBuiltinApp = async (
       query: query
     })
   }
+  bw.focus()
   builtinWindowMap.set(builtinId, bw)
   return true
 }

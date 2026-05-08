@@ -1,11 +1,8 @@
-import { join } from 'node:path'
-import { existsSync } from 'node:fs'
-import { readFile, writeFile } from 'node:fs/promises'
 import { DesktopNode, DesktopWorkspace } from '@common/types'
 import { group } from '@common/utils'
-import { BUILTIN_KEY, SYSTEM_EVENT } from '@common/global'
-import { APP_DATA_DB_DIR } from '$/global/Constant'
-import { getMainWindow, closeBuiltinWindow, deleteLinkApp } from '$/module/desktop'
+import { BUILTIN_KEY, LMDB_MAIN_KEY, SYSTEM_EVENT } from '@common/global'
+import { getMainWindow, closeBuiltinWindow, deleteLinkApp, showMainWindow } from '$/module/desktop'
+import { lmdbManager } from '$/global/BeanFactory'
 
 interface DesktopData {
   nodes: Array<DesktopNode>
@@ -16,31 +13,19 @@ export class DesktopManager {
   private nodes = new Array<DesktopNode>()
   private desktops = new Array<DesktopWorkspace>()
   private map = new Map<string, Array<DesktopNode>>()
-  private readonly path = join(APP_DATA_DB_DIR, 'desktop_data.json')
 
   async init() {
-    if (existsSync(this.path)) {
-      const raw = await readFile(this.path, 'utf-8')
-      const data = JSON.parse(raw) as DesktopData
-      this.nodes = data.nodes || []
-      this.desktops = data.desktops || []
-      this.map = group(this.nodes, 'desktopId')
-    }
+    const data = await lmdbManager.getMainValue<DesktopData>(LMDB_MAIN_KEY.DESKTOP)
+    this.nodes = data?.nodes || []
+    this.desktops = data?.desktops || []
+    this.map = group(this.nodes, 'desktopId')
   }
 
   private async save() {
-    await writeFile(
-      this.path,
-      JSON.stringify(
-        {
-          nodes: this.nodes,
-          desktops: this.desktops
-        },
-        null,
-        2
-      ),
-      'utf-8'
-    )
+    await lmdbManager.setMainValue<DesktopData>(LMDB_MAIN_KEY.DESKTOP, {
+      nodes: this.nodes,
+      desktops: this.desktops
+    })
     // 更新 map
     this.map = group(this.nodes, 'desktopId')
     getMainWindow()?.webContents.send(SYSTEM_EVENT.DESKTOP_CHANGE)
@@ -67,6 +52,7 @@ export class DesktopManager {
 
     await this.save()
     await closeBuiltinWindow(BUILTIN_KEY.ADD)
+    showMainWindow()
     return node
   }
 
@@ -81,6 +67,7 @@ export class DesktopManager {
     }
 
     await this.save()
+    showMainWindow()
     return nodes
   }
 

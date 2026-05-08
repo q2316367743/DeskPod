@@ -19,7 +19,7 @@
         </t-form-item>
         <t-row v-if="data.openWith === 'inner'" :gutter="[16, 16]">
           <t-col :span="12">
-            <t-form-item label="是否支持多窗口" label-align="top">
+            <t-form-item label="是否支持多开" label-align="top">
               <t-switch v-model="data.multi" />
             </t-form-item>
           </t-col>
@@ -153,6 +153,7 @@ const handleSubmit = () => {
   const x = params.get('x')
   const y = params.get('y')
   if (parentId) node.parentId = parentId
+  else if (!old.value) node.parentId = null
   if (desktopId) node.desktopId = desktopId
   if (x) node.x = Number(x)
   if (y) node.y = Number(y)

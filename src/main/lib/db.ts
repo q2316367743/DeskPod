@@ -31,6 +31,10 @@ export class LmdbManager {
     await this.mainDb.flushed
   }
 
+  async deleteMainValue(key: string): Promise<void> {
+    await this.mainDb.remove(key)
+  }
+
   async getMainList<T>(key: string): Promise<Array<T>> {
     const res = await this.getMainValue<Array<T>>(key)
     return res || []
@@ -44,5 +48,9 @@ export class LmdbManager {
     const list = await this.getMainList<T>(key)
     list.push(value)
     await this.setMainList(key, list)
+  }
+
+  async mainKeys() {
+    return Array.from(this.mainDb.getKeys())
   }
 }

@@ -1,3 +1,4 @@
+export * from './db'
 export * from './desktop'
 export * from './plugin'
 export * from './quick'

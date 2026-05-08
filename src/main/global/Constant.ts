@@ -37,6 +37,7 @@ export const appDirInit = async () => {
     mkdir(APP_DATA_ASSET_DIR, { recursive: true }),
     mkdir(APP_DATA_DB_DIR, { recursive: true }),
     mkdir(APP_DATA_QUICK_DIR, { recursive: true }),
+    mkdir(APP_DATA_PLUGIN_DIR, { recursive: true }),
     mkdir(APP_DATA_PLUGIN_DATA_DIR, { recursive: true }),
     mkdir(APP_DATA_PLUGIN_LOG_DIR, { recursive: true })
   ])

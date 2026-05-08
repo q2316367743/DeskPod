@@ -25,6 +25,7 @@ const createBrowserWindow = async (node: DesktopNode, url: string) => {
     fullscreen: bwEws.isFullScreen,
     skipTaskbar: false,
     alwaysOnTop: false,
+    show: true,
     minWidth: node.meta?.minWidth,
     minHeight: node.meta?.minHeight,
     titleBarStyle: node.meta?.titleBarStyle,
@@ -48,10 +49,7 @@ export const openLinkApp = async (node: DesktopNode): Promise<boolean> => {
       taskbarManager.manage({ bw, type: 'link', icon: node.icon, name: node.name })
     } else {
       // 不支持多开
-      if (taskbarManager.show(node.id)) {
-        // 未打开
-        return true
-      }
+      if (taskbarManager.show(node.id)) return true
       const bw = await createBrowserWindow(node, url)
       taskbarManager.manage({ bw, type: 'link', icon: node.icon, name: node.name }, node.id)
       return true

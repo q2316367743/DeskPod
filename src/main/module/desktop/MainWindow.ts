@@ -100,12 +100,17 @@ export function toggleMainVisible() {
     return false
   } else {
     mainWindow.show()
+    mainWindow.focus()
     return true
   }
 }
 
 export function hideMainWindow() {
   mainWindow?.hide()
+}
+export function showMainWindow() {
+  mainWindow?.show()
+  mainWindow?.focus()
 }
 
 ipcMain.handle('/app/main/toggle-visible', toggleMainVisible)

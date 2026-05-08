@@ -29,6 +29,12 @@
           <t-menu-item value="3-2" to="/app/plugin"> 插件 </t-menu-item>
           <t-menu-item value="3-3" to="/app/default"> 默认应用 </t-menu-item>
         </t-submenu>
+        <t-submenu value="4" to="/db" title="数据存储">
+          <template #icon>
+            <data-base-icon />
+          </template>
+          <t-menu-item value="3-1" to="/db/lmdb"> lmdb </t-menu-item>
+        </t-submenu>
 
         <t-menu-item value="99" to="/update">
           <template #icon>
@@ -56,6 +62,7 @@ import {
   AppIcon,
   BrushIcon,
   CloudUploadIcon,
+  DataBaseIcon,
   HomeIcon,
   Setting1Icon,
   ViewListIcon

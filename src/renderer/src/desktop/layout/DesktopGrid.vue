@@ -43,9 +43,9 @@ let grid: GridStack | undefined = undefined
 const store = useDesktopNodeStore()
 
 const items = computed(() => store.nodes)
-const list = computed(() => items.value.filter((item) => item.parentId === null))
+const list = computed(() => items.value.filter((item) => item.parentId === null || !item.parentId))
 const folderMap = computed(() => {
-  const l = items.value.filter((item) => item.parentId !== null)
+  const l = items.value.filter((item) => item.parentId !== null && item.parentId)
   const map = new Map<string, Array<DesktopNode>>()
   for (let desktopNode of l) {
     const t = map.get(desktopNode.parentId!)
@@ -97,10 +97,10 @@ const syncGridFromNodes = async () => {
     const gsNode = grid.engine.nodes.find((n) => n.id === `node-${item.id}`)
     const allowResize = !!item.resizeable
     const options: Partial<GridStackWidget> = {
-      x: item.x,
-      y: item.y,
-      w: item.column,
-      h: item.row,
+      x: item.x || 1,
+      y: item.y || 1,
+      w: item.column || 1,
+      h: item.row || 1,
       noResize: !allowResize,
       noMove: false
     }

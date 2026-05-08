@@ -20,5 +20,10 @@ export const BUILTIN_KEY = {
 
 // lmdb 主程序使用的键
 export const LMDB_MAIN_KEY = {
-  QUICK: 'quick'
+  // 快应用列表
+  QUICK: '/list/quick',
+  // 桌面数据
+  DESKTOP: '/item/desktop',
+  // 设置数据
+  SETTING: '/item/setting'
 }

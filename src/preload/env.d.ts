@@ -163,6 +163,17 @@ interface LogAPI {
   debug: (...params: Array<unknown>) => void
 }
 
+interface DbAPI {
+  lmdb: {
+    main: {
+      keys: () => Promise<Array<string>>
+      value: (key: string) => Promise<Record<string, unknown>>
+      put: (key: string, value: unknown) => Promise<void>
+      delete: (key: string) => Promise<void>
+    }
+  }
+}
+
 global {
   interface Window {
     // tauri 需要的定义
@@ -178,5 +189,6 @@ global {
     settingAPI: SettingAPI
     logAPI: LogAPI
     taskbarAPI: TaskbarAPI
+    dbAPI: DbAPI
   }
 }

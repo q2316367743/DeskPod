@@ -1,20 +1,20 @@
 import { existsSync } from 'node:fs'
-import { copyFile, mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, readdir, unlink } from 'node:fs/promises'
 import { extname, join } from 'node:path'
-import { APP_DATA_ASSET_DIR, APP_DATA_DB_DIR } from '$/global/Constant'
+import { APP_DATA_ASSET_DIR } from '$/global/Constant'
 import { getMainWindow } from '$/module/desktop'
 import { useSnowflake } from '@common/utils'
-import { SYSTEM_EVENT } from '@common/global'
+import { LMDB_MAIN_KEY, SYSTEM_EVENT } from '@common/global'
 import { AiModelSetting, defaultSetting, Setting } from '@common/types'
+import { lmdbManager } from '$/global/BeanFactory'
 
 export class SettingManager {
   private defaultValue = defaultSetting()
   private setting = defaultSetting()
-  private readonly path = join(APP_DATA_DB_DIR, 'setting.json')
   async init() {
-    if (existsSync(this.path)) {
-      const raw = await readFile(this.path, 'utf-8')
-      this.setting = JSON.parse(raw)
+    const t = await lmdbManager.getMainValue<Setting>(LMDB_MAIN_KEY.SETTING)
+    if (t) {
+      this.setting = t
     }
   }
   all() {
@@ -25,7 +25,7 @@ export class SettingManager {
   }
   async set<K extends keyof Setting>(key: K, value: Setting[K]) {
     this.setting[key] = value
-    await writeFile(this.path, JSON.stringify(this.setting, null, 2))
+    await lmdbManager.setMainValue(LMDB_MAIN_KEY.SETTING, this.setting)
     getMainWindow()?.webContents.send(SYSTEM_EVENT.SETTING_CHANGE, key, value)
     return true
   }
@@ -37,11 +37,11 @@ export class SettingManager {
   }
   async addAiModel(model: AiModelSetting) {
     this.setting.models.push(model)
-    await writeFile(this.path, JSON.stringify(this.setting, null, 2))
+    await lmdbManager.setMainValue(LMDB_MAIN_KEY.SETTING, this.setting)
   }
   async deleteAiModel(id: string) {
     this.setting.models = this.setting.models.filter((model) => model.id !== id)
-    await writeFile(this.path, JSON.stringify(this.setting, null, 2))
+    await lmdbManager.setMainValue(LMDB_MAIN_KEY.SETTING, this.setting)
   }
 
   // --------------------------- 背景图片 ---------------------------
